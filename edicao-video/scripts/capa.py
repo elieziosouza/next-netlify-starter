@@ -78,6 +78,7 @@ def build(frame, kicker_text, lines, face=(239, 360), face_y=600, top=1110):
             ImageDraw.Draw(img).rectangle((W / 2 - 120, y + 8, W / 2 + 120, y + 11), fill=GOLD + (255,)); y += 40; continue
         if kind in ("stamp", "stamp_gold"):
             st = stamp(text, 128 if len(text) <= 8 else 104, color=GOLD if kind == "stamp_gold" else RED)
+            if st.width > 960: st = st.resize((960, int(st.height * 960 / st.width)), Image.LANCZOS)
             img.alpha_composite(st, (int(W / 2 - st.width / 2), int(y))); y += st.height + 4; continue
         wgt, size, col = sizes[kind]
         f = fit_font(text, wgt, size)
