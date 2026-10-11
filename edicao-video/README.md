@@ -90,6 +90,8 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
 - **Sem raios, sem giro e sem brilhos espalhados;**
 - som de "sonho e esperança" (arpejo de sinos subindo, acorde maior suave e eco), em volume discreto.
 
+**Versão TikTok (11/10/2026):** o TikTok marcou o vídeo com a estrela do 13 como violação. Todo vídeo de campanha deve sair em **duas versões**: com a estrela, para o Instagram, e **sem estrela e sem o 13**, para o TikTok. Na versão TikTok, o final volta para a tela cheia só com a legenda da fala.
+
 **Regra eleitoral para lembrar o Eliezio:** eleitor pode postar, mas não pode pagar impulsionamento de propaganda eleitoral.
 
 ## 6. Áudio
