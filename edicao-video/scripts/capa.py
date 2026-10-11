@@ -46,12 +46,12 @@ def shadow_text(img, xy, text, font, fill, anchor="mm", blur=10, alpha=170, dy=6
     img.alpha_composite(lay.filter(ImageFilter.GaussianBlur(blur)))
     ImageDraw.Draw(img).text(xy, text, font=font, fill=fill, anchor=anchor)
 
-def stamp(text, size=124, rot=-4):
+def stamp(text, size=124, rot=-4, color=RED):
     f = MF("Black", size); d0 = ImageDraw.Draw(Image.new("RGBA", (4, 4)))
     b = d0.textbbox((0, 0), text, font=f); tw, th = b[2] - b[0], b[3] - b[1]
     pad = 34; im = Image.new("RGBA", (tw + pad * 2, th + pad * 2), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    d.rounded_rectangle((6, 6, im.width - 6, im.height - 6), 18, outline=RED + (255,), width=11)
-    d.text((pad - b[0], pad - b[1]), text, font=f, fill=RED + (255,))
+    d.rounded_rectangle((6, 6, im.width - 6, im.height - 6), 18, outline=color + (255,), width=11)
+    d.text((pad - b[0], pad - b[1]), text, font=f, fill=color + (255,))
     a = np.array(im); rng = np.random.default_rng(3)
     a[..., 3] = np.where(rng.random(a.shape[:2]) < 0.07, (a[..., 3] * 0.3).astype(np.uint8), a[..., 3])
     return Image.fromarray(a).rotate(rot, Image.BICUBIC, expand=True)
@@ -61,25 +61,42 @@ def kicker(img, y, text):
     d.rounded_rectangle((W / 2 - tw / 2 - 26, y - 26, W / 2 + tw / 2 + 26, y + 26), 26, outline=GOLD + (255,), width=2, fill=NAVY + (150,))
     d.text((W / 2, y), text, font=f, fill=GOLD + (255,), anchor="mm")
 
-def cover_prova_anulada(frame):
-    img = background(frame, face_y=600)
-    kicker(img, 1110, "CASO RACHADINHA")
-    shadow_text(img, (W / 2, 1255), "PROVA", MF("Black", 150), WHITE + (255,))
-    st = stamp("ANULADA", 128)
-    img.alpha_composite(st, (int(W / 2 - st.width / 2), int(1405 - st.height / 2)))
-    shadow_text(img, (W / 2, 1572), "NÃO É INOCÊNCIA", MF("ExtraBold", 84), GOLD + (255,))
-    d = ImageDraw.Draw(img); d.rectangle((W / 2 - 120, 1630, W / 2 + 120, 1633), fill=GOLD + (255,))
+def fit_font(text, weight, size, maxw=960):
+    d = ImageDraw.Draw(Image.new("RGBA", (4, 4)))
+    while size > 30 and d.textlength(text, font=MF(weight, size)) > maxw: size -= 4
+    return MF(weight, size)
+
+def build(frame, kicker_text, lines, face=(239, 360), face_y=600, top=1110):
+    """lines: list of (kind, text). kinds: big_white, big_gold, stamp (vermelho, tom negativo), stamp_gold (tom positivo), mid_white, mid_gold, rule"""
+    img = background(frame, face=face, face_y=face_y)
+    kicker(img, top, kicker_text)
+    y = top + 70
+    sizes = {"big_white": ("Black", 150, WHITE), "big_gold": ("Black", 132, GOLD),
+             "mid_white": ("ExtraBold", 74, WHITE), "mid_gold": ("ExtraBold", 80, GOLD)}
+    for kind, text in lines:
+        if kind == "rule":
+            ImageDraw.Draw(img).rectangle((W / 2 - 120, y + 8, W / 2 + 120, y + 11), fill=GOLD + (255,)); y += 40; continue
+        if kind in ("stamp", "stamp_gold"):
+            st = stamp(text, 128 if len(text) <= 8 else 104, color=GOLD if kind == "stamp_gold" else RED)
+            img.alpha_composite(st, (int(W / 2 - st.width / 2), int(y))); y += st.height + 4; continue
+        wgt, size, col = sizes[kind]
+        f = fit_font(text, wgt, size)
+        asc, desc = f.getmetrics(); h = asc + desc
+        shadow_text(img, (W / 2, y + h / 2), text, f, col + (255,)); y += int(h * 0.98)
     return img
 
+def cover_prova_anulada(frame):
+    return build(frame, "CASO RACHADINHA", [("big_white", "PROVA"), ("stamp", "ANULADA"), ("mid_gold", "NÃO É INOCÊNCIA"), ("rule", "")], face=(239, 355))
+
 def cover_dois_milhoes(frame):
-    img = background(frame, face_y=600)
-    kicker(img, 1110, "CASO RACHADINHA")
-    shadow_text(img, (W / 2, 1250), "R$ 2 MILHÕES", MF("Black", 128), GOLD + (255,))
-    shadow_text(img, (W / 2, 1370), "NA CONTA DO QUEIROZ", MF("ExtraBold", 66), WHITE + (255,))
-    d = ImageDraw.Draw(img); d.rectangle((W / 2 - 120, 1440, W / 2 + 120, 1443), fill=GOLD + (255,))
-    shadow_text(img, (W / 2, 1530), "E POR QUE ELE NÃO", MF("ExtraBold", 74), WHITE + (255,))
-    shadow_text(img, (W / 2, 1615), "FOI CONDENADO?", MF("ExtraBold", 74), WHITE + (255,))
-    return img
+    return build(frame, "CASO RACHADINHA", [("big_gold", "R$ 2 MILHÕES"), ("mid_white", "NA CONTA DO QUEIROZ"), ("rule", ""),
+                                            ("mid_white", "E POR QUE ELE NÃO"), ("mid_white", "FOI CONDENADO?")], face=(239, 355))
+
+def clean_frame(frame, masks, fps, t):
+    """apaga legenda gravada usando as máscaras do capmask.py"""
+    import importlib; sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from clean import Cleaner
+    return Cleaner(masks).clean(frame.copy(), int(round(t * fps)))
 
 STYLES = {"prova_anulada": cover_prova_anulada, "dois_milhoes": cover_dois_milhoes}
 

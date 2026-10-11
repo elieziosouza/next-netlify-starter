@@ -93,6 +93,7 @@ O Eliezio pediu em 11/10/2026: **todo vídeo sai com capa impactante**, de prefe
   - título curto em Montserrat Black, com 2 a 4 palavras de impacto;
   - uma palavra-chave em carimbo vermelho ou em dourado;
   - linha de apoio em ExtraBold e um filete dourado.
+- **Preferida do Eliezio (11/10/2026):** a opção A, com **palavra-chave em carimbo vermelho** (ex.: "PROVA / ANULADA / NÃO É INOCÊNCIA", "EU SOU / BOLSA FAMÍLIA / E MAIS 6 PROGRAMAS", "ZONA AZUL / +150% / DE R$ 20 PARA R$ 50"). O carimbo vermelho é o padrão, mesmo em tema positivo. O dourado (`stamp_gold`) só entra se ele pedir.
 - **Duas opções:** uma com o conceito do vídeo (ex.: "PROVA ANULADA NÃO É INOCÊNCIA") e outra com o dado mais forte (ex.: "R$ 2 MILHÕES NA CONTA DO QUEIROZ").
 - **Capa embutida:** a capa escolhida (padrão: a opção A) também entra no início do vídeo. Ela fica parada até 0,42 s e se dissolve em 0,2 s, antes da primeira palavra, então o áudio não é deslocado nem cortado. Isso é feito com overlay do ffmpeg sobre o vídeo final.
 - **Entrega:** as duas capas ficam também como arquivos separados na página de download, cada uma com seu botão.
