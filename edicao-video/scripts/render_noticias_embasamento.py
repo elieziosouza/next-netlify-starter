@@ -57,7 +57,7 @@ for txt, st, en in CAPS6:
 for a_, b_ in zip(caps, caps[1:]): a_["end"] = min(a_["end"], b_["start"])
 caps[-1]["end"] = min(caps[-1]["end"] + 0.3, END_IN)
 
-CFONT = MF("ExtraBold", 66); CLH = 90; CMAXW = 900
+CFONT = MF("ExtraBold", 56); CLH = 78; CMAXW = 860
 def layout(words, ccy):
     d = ImageDraw.Draw(Image.new("RGB", (4, 4))); sp = d.textlength(" ", font=CFONT)
     wl = [d.textlength(w, font=CFONT) for w in words]
@@ -115,7 +115,7 @@ def pip_amount(t):
     for a, b in PIP_RANGES:
         k = max(k, ease_io((t - a) / TR) * (1 - ease_io((t - b) / TR)))
     return k
-WIN = (154, 798, 926, 1680)          # speaker window: whole head + shoulders, nothing cropped
+WIN = (154, 732, 926, 1680)          # speaker window: whole head + shoulders, nothing cropped
 SC_PIP = 1.615
 FACE = (239.0, 355.0); HEAD_TOP = 160.0
 ZK = [(0, 1.00), (39.83, 1.05), (41.85, 1.00), (44.89, 1.07)]
@@ -175,8 +175,13 @@ ta = np.asarray(top).astype(int); colmax = ta.max(axis=(0, 2))
 lft = int(np.argmax(colmax > 60)); rgt = len(colmax) - int(np.argmax(colmax[::-1] > 60))
 top = top.crop((lft, 0, rgt, top.height))
 top = top.resize((W, round(top.height * W / top.width)), Image.LANCZOS).convert("RGBA")
+TOP_ART = top   # full art kept for the end card
+from minitop import make_minitop
+top, _TOP_CONTENT = make_minitop(W, f"{FD}/Montserrat-SemiBold.ttf")
 bot = bot.resize((W, round(bot.height * W / bot.width)), Image.LANCZOS).convert("RGBA")
-TOPH = top.height
+from minitop import make_minifooter, handles_row
+bot, FOOT_LINE = make_minifooter(W, f"{FD}/Montserrat-SemiBold.ttf")
+TOPH = _TOP_CONTENT
 def shine_layer(size, p):
     w, h = size
     gx = np.arange(w)[None, :] + np.arange(h)[:, None] * 0.5
@@ -189,17 +194,13 @@ def draw_banners(frame, t):
     if t < BAN_IN: return
     k = back_out((t - BAN_IN) / 0.55, 1.2)
     ty = int(-TOPH * (1 - k)); by = int(H - bot.height + bot.height * (1 - k))
-    tp, bp = top, bot
-    for s in SHINES:
-        p = (t - s) / 0.9
-        if 0 <= p <= 1:
-            tp = Image.alpha_composite(top, shine_layer(top.size, p)); bp = Image.alpha_composite(bot, shine_layer(bot.size, p))
-    frame.alpha_composite(tp, (0, ty)); frame.alpha_composite(bp, (0, by))
+    frame.alpha_composite(top, (0, ty)); frame.alpha_composite(bot, (0, by))
     if t > BAN_IN + 0.4:
-        prog = clamp(t / END_IN); d = ImageDraw.Draw(frame); y = by - 7
-        d.rectangle((0, y, W, y + 6), fill=(5, 20, 34, 200))
-        d.rectangle((0, y, int(W * prog), y + 6), fill=GOLD + (255,))
-        d.ellipse((int(W * prog) - 7, y - 4, int(W * prog) + 7, y + 10), fill=GOLD_L + (255,))
+        prog = clamp(t / END_IN); d = ImageDraw.Draw(frame); y = by + FOOT_LINE
+        x0, x1 = 120, W - 120; xp = int(x0 + (x1 - x0) * prog)
+        d.rectangle((x0, y, x1, y + 2), fill=(255, 255, 255, 45))
+        d.rectangle((x0, y, xp, y + 2), fill=GOLD + (255,))
+        d.ellipse((xp - 5, y - 4, xp + 5, y + 6), fill=GOLD_L + (255,))
 
 # ---------------------------------------------------------------- line icons (thin stroke, editorial look)
 def line_icon(kind, size=46, col=GOLD):
@@ -266,7 +267,7 @@ def count(v, k, dec):
 
 # ---------------------------------------------------------------- panels
 PX0, PX1 = 40, 1040
-PY0, PY1 = TOPH + 24, 772
+PY0 = TOPH + 30; PY1 = PY0 + 520
 PW, PH = PX1 - PX0, PY1 - PY0
 F_LAB = MF("Bold", 24); F_T = MF("ExtraBold", 46); F_I = MF("Bold", 33); F_S = MF("SemiBold", 27)
 F_N = MF("Black", 84); F_N2 = MF("Black", 60); F_SRC = MF("Medium", 20); F_Q = MF("ExtraBold", 50)
@@ -554,21 +555,15 @@ def draw_panels(frame, t):
         frame.alpha_composite(fade(p, al), (PX0 + int(x), PY0))
 
 # ---------------------------------------------------------------- end card
+HROW = handles_row(W, f"{FD}/Montserrat-SemiBold.ttf", size=25, isz=28)
 def end_card(t):
     u = t - END_IN
     img = Image.fromarray(BG.astype(np.uint8)).convert("RGBA")
-    k = back_out(u / 0.7, 1.3); sc = 0.7 + 0.3 * k
-    art = fade(top.resize((int(W * sc), int(TOPH * sc)), Image.LANCZOS), clamp(u / 0.35))
-    ax, ay = (W - art.width) // 2, int(H * 0.40 - art.height / 2)
-    img.alpha_composite(art, (ax, ay))
-    d = ImageDraw.Draw(img); k2 = ease_out((u - 0.45) / 0.5)
-    if k2 > 0:
-        y = int(H * 0.55 + 40 * (1 - k2))
-        d.text((W / 2, y), "SIGA PARA MAIS", font=MF("ExtraBold", 64), fill=WHITE + (int(255 * k2),), anchor="mm")
-        d.text((W / 2, y + 74), "OPINIÃO • ATUALIDADES • REAÇÕES", font=MF("SemiBold", 40), fill=GOLD + (int(255 * k2),), anchor="mm")
-        lw = int(360 * ease_out((u - 0.6) / 0.6)); d.rectangle((W / 2 - lw, y + 120, W / 2 + lw, y + 124), fill=GOLD + (255,))
-    p = (u - 1.1) / 0.9
-    if 0 <= p <= 1: img.alpha_composite(shine_layer(art.size, p), (ax, ay))
+    cy = int(H * 0.46)
+    put(img, timg("SIGA PARA MAIS", MF("ExtraBold", 50), WH), W / 2, cy - 70, (u - 0.15) / 0.5, anchor="c")
+    d = ImageDraw.Draw(img); lw = int(140 * ease_out((u - 0.35) / 0.6))
+    if lw > 0: d.rectangle((W / 2 - lw, cy, W / 2 + lw, cy + 2), fill=GD)
+    put(img, HROW, W / 2, cy + 34, (u - 0.5) / 0.5, anchor="c")
     img.alpha_composite(bot, (0, H - bot.height))
     return img
 

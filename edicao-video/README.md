@@ -22,16 +22,18 @@ Cada vídeo novo deve seguir este guia e, quando algo for melhorado, o guia é a
 | Dourado | `#D6B674` (destaques), `#F5E2B0` (dourado claro) |
 | Texto | Branco `#FFFFFF`; secundário branco a 55% |
 | Fonte | Montserrat (ExtraBold nas legendas, Black nos números, Bold/SemiBold no resto), arquivos em `assets/fonts` |
-| Topo | `assets/topo.jpg`, com as margens escuras laterais cortadas e esticado de ponta a ponta. Entra deslizando no início, com brilho dourado passando a cada ~13 s |
-| Rodapé | `assets/rodape.jpg`, com barra de progresso dourada fina logo acima |
+| Estilo geral | **Minimalista** (pedido do Eliezio em 11/10/2026). Nada grande ocupando a tela |
+| Topo | `minitop.make_minitop`: só as redes sociais (ícones dourados de traço fino + @ezvideos_cortes, @elieziosouza78, @eliezio.souza78), Montserrat SemiBold 27, filete dourado fino com pontas esmaecidas e sombra azul suave que some no vídeo. **Sem o nome** |
+| Rodapé | `minitop.make_minifooter`: linha fina de progresso (dourada sobre trilho branco a 18%) e "OPINIÃO • ATUALIDADES • REAÇÕES" em 23 px, com ATUALIDADES em dourado |
+| Artes antigas | `assets/topo.jpg` e `assets/rodape.jpg` (com nome e botões) ficam guardadas, mas **não são mais usadas** |
 | Correção de cor | Leve curva em S, sombras levemente frias, altas levemente quentes, vinheta 24%, granulação suave |
-| Tela final | 3 s: fundo azul, topo ampliado no centro, "SIGA PARA MAIS" e "OPINIÃO • ATUALIDADES • REAÇÕES" |
+| Tela final | 3 s: fundo azul, "SIGA PARA MAIS" (ExtraBold 50), filete dourado e a linha das redes. **Sem o nome** |
 
 Exemplos aprovados em `exemplos/`.
 
 ## 3. Legendas
 
-- Estilo **karaokê**: Montserrat ExtraBold 66–72 px, MAIÚSCULAS, branco com contorno azul-marinho.
+- Estilo **karaokê**: Montserrat ExtraBold **56 px** (linha de 78 px), MAIÚSCULAS, branco com contorno azul-marinho. O Eliezio pediu a letra menor em 11/10/2026.
 - A palavra falada fica numa **pílula dourada** que desliza para a próxima palavra (0,1 s).
 - No máximo 2 linhas, até 5 palavras por bloco, quebra equilibrada.
 - Entrada da frase com "pop" curto (escala 86% → 100% em 0,2 s).
@@ -44,8 +46,8 @@ Exemplos aprovados em `exemplos/`.
 **Tela cheia:** vídeo 1080×1920, topo e rodapé por cima, legenda no peito.
 
 **Tela dividida** (`render_tela_dividida.py`):
-- Painel de dados no alto: x 40–1040, y logo abaixo do topo até 772, cantos 26 px, borda dourada fina, sombra suave.
-- Quadro do Eliezio embaixo: x 154–926, y 798–1680, escala 1,615, com 125 px de folga acima da cabeça, borda dourada de 2 px e sombra.
+- Painel de dados no alto: x 40–1040, começando 30 px abaixo da linha do topo, com 520 px de altura, cantos 26 px, borda dourada fina e sombra suave.
+- Quadro do Eliezio embaixo: x 154–926, y 732–1680, escala 1,615, com 125 px de folga acima da cabeça, borda dourada de 2 px e sombra.
 - Transição de entrada e saída: 0,7 s com aceleração suave (ease in-out).
 
 **Notícia na imprensa** (`render_recortes_noticia.py`): mesmo layout dividido, com o recorte de jornal (`cards.py`) no painel "NA IMPRENSA". O recorte traz a manchete real com a fonte embaixo, marca-texto amarelo animado e carimbo vermelho opcional.
@@ -99,3 +101,4 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
 
 - **10/10/2026:** primeira identidade aplicada (Ubatuba). Depois, versão profissional com tela dividida (Programas do governo, com 7 programas na listinha) e Ubatuba com painel "Na imprensa". O Eliezio aprovou o estilo e pediu para guardar e ir aprimorando.
 - **11/10/2026:** vídeo "Rachadinha: provas anuladas". Novidades: transcrição automática com Whisper, painéis com embasamento em notícias (denúncia, linha do tempo, manchete real e "Entenda"), entradas com motion blur e finalização com riser e whoosh sem cortar a fala.
+- **11/10/2026:** identidade minimalista aprovada: topo só com as redes, rodapé fino, tela final sem o nome e legenda menor (56 px).
