@@ -82,7 +82,7 @@ def main(src, dst):
     with wave.open(aout, "wb") as wv:
         wv.setnchannels(2); wv.setsampwidth(2); wv.setframerate(SR); wv.writeframes(pcm.tobytes())
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", src, "-i", aout, "-filter_complex",
-                    "[2:a]volume=0.45,apad[g];[1:a][g]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.89:level=false[a]",
+                    "[2:a]volume=0.45,apad[g];[1:a][g]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.79:level=false:asc=1[a]",
                     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
                     "-movflags", "+faststart", dst], check=True)
     print("ok", i)
