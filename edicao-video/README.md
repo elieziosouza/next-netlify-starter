@@ -94,6 +94,8 @@ O Eliezio pediu em 11/10/2026: **todo vídeo sai com capa impactante**, de prefe
   - uma palavra-chave em carimbo vermelho ou em dourado;
   - linha de apoio em ExtraBold e um filete dourado.
 - **Duas opções:** uma com o conceito do vídeo (ex.: "PROVA ANULADA NÃO É INOCÊNCIA") e outra com o dado mais forte (ex.: "R$ 2 MILHÕES NA CONTA DO QUEIROZ").
+- **Capa embutida:** a capa escolhida (padrão: a opção A) também entra no início do vídeo. Ela fica parada até 0,42 s e se dissolve em 0,2 s, antes da primeira palavra, então o áudio não é deslocado nem cortado. Isso é feito com overlay do ffmpeg sobre o vídeo final.
+- **Entrega:** as duas capas ficam também como arquivos separados na página de download, cada uma com seu botão.
 - **Regra de conteúdo:** a capa não afirma o que as fontes não afirmam. Pergunta e conceito podem; acusação sem base não.
 
 ## 8. Como fazer o próximo vídeo
