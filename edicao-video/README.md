@@ -74,6 +74,19 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
 - A troca entre painéis é um cruzamento: o novo entra deslizando por cima enquanto o antigo some.
 - A abertura do vídeo tem fade do preto, um zoom de 10% que recua em 0,8 s e desfoque vertical que se dissolve.
 
+**Visual minimalista dos gráficos (11/10/2026, pedido do Eliezio)** (`render_graficos_3d_estrela.py`):
+- **Sem caixa azul.** Na tela dividida, o fundo é o próprio vídeo dele desfocado e escurecido (26% de brilho), e os gráficos e textos ficam soltos sobre ele.
+- **3D:** barras com face frontal, topo mais claro e lateral mais escura, sobre um "piso" sutil, todas na mesma escala para permitir comparação.
+- **Camadas:** cartões com duas camadas douradas deslocadas por trás, que dão profundidade.
+- **Perspectiva:** os painéis entram girando em profundidade (rotação Y) junto com o deslize e o motion blur.
+
+**Estrela do 13 (vídeos de campanha):** quando ele fala "dia 25", ele fica no quadro embaixo e a estrela vermelha com "13" branco entra em cima, **sempre acima da cabeça, nunca sobre o rosto**:
+- entrada girando com escala elástica, brilho pulsando, raios de luz suaves (só acima do quadro) e pequenos brilhos;
+- "DIA 25" embaixo da estrela;
+- som de "sonho e esperança": arpejo de sinos subindo, acorde maior suave e eco.
+
+**Regra eleitoral para lembrar o Eliezio:** eleitor pode postar, mas não pode pagar impulsionamento de propaganda eleitoral.
+
 ## 6. Áudio
 
 - Voz: passa-alta 80 Hz, compressão leve, loudnorm em duas passagens com alvo de **-15 LUFS** e pico de -2 dBTP. Sem reverb.
@@ -121,4 +134,5 @@ O Eliezio pediu em 11/10/2026: **todo vídeo sai com capa impactante**, de prefe
 - **10/10/2026:** primeira identidade aplicada (Ubatuba). Depois, versão profissional com tela dividida (Programas do governo, com 7 programas na listinha) e Ubatuba com painel "Na imprensa". O Eliezio aprovou o estilo e pediu para guardar e ir aprimorando.
 - **11/10/2026:** vídeo "Rachadinha: provas anuladas". Novidades: transcrição automática com Whisper, painéis com embasamento em notícias (denúncia, linha do tempo, manchete real e "Entenda"), entradas com motion blur e finalização com riser e whoosh sem cortar a fala.
 - **11/10/2026:** identidade minimalista aprovada: topo só com as redes, rodapé fino, tela final sem o nome e legenda menor (56 px).
+- **11/10/2026:** vídeo do salário mínimo: fundo escurecido no lugar do azul, gráficos 3D, camadas, perspectiva e estrela do 13 acima da cabeça.
 - **11/10/2026:** capa impactante passa a ser obrigatória em todo vídeo (`capa.py`).
