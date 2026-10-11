@@ -22,4 +22,6 @@ Material pronto:
 
 Todo vídeo sai com duas opções de capa impactante (`edicao-video/scripts/capa.py`, seção 7 do README). Antes de fechar o vídeo, mostre as duas e espere o Eliezio escolher qual vai embutida no início.
 
+Ao entregar cada vídeo, termine sempre com título (opções), legenda do post, hashtags e título para Shorts (seção 7.1 do README).
+
 Quando o Eliezio aprovar uma melhoria, atualize o README (seções 1 a 6 e o histórico) e faça commit.

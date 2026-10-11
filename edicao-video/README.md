@@ -118,6 +118,16 @@ O Eliezio pediu em 11/10/2026: **todo vídeo sai com capa impactante**, de prefe
 - **Entrega:** as duas capas ficam também como arquivos separados na página de download, cada uma com seu botão.
 - **Regra de conteúdo:** a capa não afirma o que as fontes não afirmam. Pergunta e conceito podem; acusação sem base não.
 
+## 7.1 Título, legenda e hashtags (obrigatório na entrega)
+
+Toda entrega de vídeo termina com, no chat:
+- 3 a 4 opções de **título**, indicando a preferida;
+- **legenda do post** para Instagram e TikTok, com fatos com fonte e uma chamada para comentar;
+- **hashtags**: uma lista completa e uma versão enxuta com 5 a 6;
+- **título para o YouTube Shorts**, com até 100 caracteres.
+
+Em vídeo de campanha, lembrar que o eleitor não pode pagar impulsionamento.
+
 ## 8. Como fazer o próximo vídeo
 
 1. O Eliezio exporta do CapCut em 1080p, de preferência **sem** legenda.
