@@ -66,7 +66,8 @@ def fit_font(text, weight, size, maxw=960):
     while size > 30 and d.textlength(text, font=MF(weight, size)) > maxw: size -= 4
     return MF(weight, size)
 
-def build(frame, kicker_text, lines, face=(239, 360), face_y=600, top=1110):
+def build(frame, kicker_text, lines, face=(239, 360), face_y=770, top=1110):
+    # face_y alto = cabeça inteira com folga em cima (regra: nunca cortar o rosto do Eliezio)
     """lines: list of (kind, text). kinds: big_white, big_gold, stamp (vermelho, tom negativo), stamp_gold (tom positivo), mid_white, mid_gold, rule"""
     img = background(frame, face=face, face_y=face_y)
     kicker(img, top, kicker_text)

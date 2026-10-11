@@ -130,6 +130,7 @@ O Eliezio pediu em 11/10/2026: **todo vídeo sai com capa impactante**, de prefe
 - **O Eliezio escolhe a capa antes de fechar o vídeo (regra fixa).** Primeiro mostre as duas opções e espere a escolha. Só depois embuta a capa e entregue o vídeo final. Nunca embutir por conta própria.
 - **Capa embutida:** a capa que ele escolheu entra no início do vídeo. Ela fica parada até 0,42 s e se dissolve em 0,2 s, antes da primeira palavra, então o áudio não é deslocado nem cortado. Isso é feito com overlay do ffmpeg sobre o vídeo final.
 - **Entrega:** as duas capas ficam também como arquivos separados na página de download, cada uma com seu botão.
+- **Nunca cortar o rosto nem o topo da cabeça** (pedido de 11/10/2026). A cabeça aparece inteira, com folga em cima (`face_y` ≈ 770). O mesmo vale para o quadro dele em react e na tela dividida.
 - **Regra de conteúdo:** a capa não afirma o que as fontes não afirmam. Pergunta e conceito podem; acusação sem base não.
 
 ## 7.1 Título, legenda e hashtags (obrigatório na entrega)
