@@ -28,7 +28,7 @@ Cada vídeo novo deve seguir este guia e, quando algo for melhorado, o guia é a
 | Topo | `minitop.make_minitop`: só as redes sociais (ícones dourados de traço fino + @ezvideos_cortes, @elieziosouza78, @eliezio.souza78), Montserrat SemiBold 27, filete dourado fino com pontas esmaecidas e sombra azul suave que some no vídeo. **Sem o nome** |
 | Rodapé | `minitop.make_minifooter`: linha fina de progresso (dourada sobre trilho branco a 18%) e "OPINIÃO • ATUALIDADES • REAÇÕES" em 23 px, com ATUALIDADES em dourado |
 | Artes antigas | `assets/topo.jpg` e `assets/rodape.jpg` (com nome e botões) ficam guardadas, mas **não são mais usadas** |
-| Correção de cor | Leve curva em S, sombras levemente frias, altas levemente quentes, vinheta 24%, granulação suave |
+| Correção de cor | **Padrão desde 11/10/2026: "Cinema azul e dourado"** (`scripts/grading.py`, função `cinema`): sombras puxadas para o azul-marinho, luzes e pele levemente quentes, fundo menos saturado, verde forte contido, pele protegida por máscara, curva em S com ombro que segura os claros e clareza leve no rosto. Aplicar nas fontes com `grading.Fast(grading.cinema, 'lut_cinema.npy')` (tabela 256³, ~20 ms por quadro). Alternativa para denúncias pesadas: `investig` (documentário). Vinheta 24% e granulação suave por cima. |
 | Tela final | 3 s: fundo azul, "SIGA PARA MAIS" (ExtraBold 50), filete dourado e a linha das redes. **Sem o nome** |
 
 Exemplos aprovados em `exemplos/`.
@@ -51,6 +51,13 @@ Exemplos aprovados em `exemplos/`.
 - Painel de dados no alto: x 40–1040, começando 30 px abaixo da linha do topo, com 520 px de altura, cantos 26 px, borda dourada fina e sombra suave.
 - Quadro do Eliezio embaixo: x 154–926, y 732–1680, escala 1,615, com 125 px de folga acima da cabeça, borda dourada de 2 px e sombra.
 - Transição de entrada e saída: 0,7 s com aceleração suave (ease in-out).
+
+**React com dois vídeos e áudio** (`render_react_audio.py`, caso Vorcaro):
+- Vídeo de rua num cartão 3D que desce do topo com desfoque de movimento; o Eliezio fica numa janelinha embaixo reagindo (trecho dele em silêncio, em vai e volta).
+- Legendas gravadas no vídeo de terceiros são apagadas (detecção por cor + inpaint + vidro fosco suave que não pisca). Fala do protagonista em legenda dourada no lugar da original; fala do repórter numa linha menor com o rótulo "REPÓRTER".
+- Áudio vazado vira painel: "ÁUDIO" entra grande e sobe para o topo com data e fonte, fotos dos envolvidos em 3D viradas uma para a outra, borda de quem fala brilha com o volume, onda sonora dourada guiada pelo áudio real e palavras de cobrança com destaque vermelho.
+- Cartões de fato entram em camada por cima (manchete real, números com contagem animada), com fonte.
+- Conclusão com "OS FATOS": linha do tempo em cartões numerados (negou, o áudio, admitiu).
 
 **Notícia na imprensa** (`render_recortes_noticia.py`): mesmo layout dividido, com o recorte de jornal (`cards.py`) no painel "NA IMPRENSA". O recorte traz a manchete real com a fonte embaixo, marca-texto amarelo animado e carimbo vermelho opcional.
 
@@ -170,3 +177,4 @@ Em vídeo de campanha, lembrar que o eleitor não pode pagar impulsionamento.
 - **11/10/2026:** vídeo do salário mínimo: fundo escurecido no lugar do azul, gráficos 3D, camadas, perspectiva e estrela do 13 acima da cabeça.
 - **11/10/2026:** lettering editorial (referência enviada pelo Eliezio) aprovado como estilo **só para corretor de imóveis**, guardado em `estilo-corretor/`. O canal de opinião mantém a identidade.
 - **11/10/2026:** capa impactante passa a ser obrigatória em todo vídeo (`capa.py`).
+- **11/10/2026:** react Flávio x Vorcaro (negação + áudio): layout de react com áudio, remoção de legenda gravada com vidro fosco, linha do tempo dos fatos. Nova correção de cor "Cinema azul e dourado" vira padrão.
