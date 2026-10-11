@@ -102,6 +102,18 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
 - **Finalização sem cortar o áudio:** a tela final só começa 0,4 s depois da última palavra. Um riser de 2 s (tom subindo com ruído) cresce por baixo das últimas frases, depois vem um whoosh e uma batida grave na entrada da tela final.
 - Conferir no final: duração do áudio igual à do vídeo, -15 LUFS, pico abaixo de -1 dBTP.
 
+## 6.1 Assinatura de abertura: glitch (marca registrada, obrigatória)
+
+Pedido do Eliezio em 11/10/2026: **todo vídeo começa com o efeito glitch**. É a última etapa, depois de embutir a capa:
+
+```
+python3 edicao-video/scripts/glitch_intro.py video_com_capa.mp4 video_final.mp4
+```
+
+- **Som:** cerca de 0,4 s de estalos picotados (tons quadrados, ruído bitcrush, sample-hold) e um zap descendo, sempre o mesmo (seed fixa), para virar marca sonora.
+- **Imagem:** faixas horizontais deslocadas, separação RGB, linhas de varredura e um flash curto, de forma intermitente, nos primeiros 0,34 s. Um glitch menor repete na passagem capa → vídeo (0,40 a 0,50 s).
+- Não desloca nem corta o áudio. O glitch é somado por cima.
+
 ## 7. Capa (obrigatória em todo vídeo)
 
 O Eliezio pediu em 11/10/2026: **todo vídeo sai com capa impactante**, de preferência em duas opções. O script é o `scripts/capa.py`.
@@ -144,7 +156,8 @@ Em vídeo de campanha, lembrar que o eleitor não pode pagar impulsionamento.
 4. Copiar o script de render mais parecido e trocar `SRC`, as legendas (`TXT`/`PHRASES`), `PIP_RANGES`, `ZK` (zooms) e os painéis.
 5. Testar quadros soltos (`frames:t1,t2,...`) antes de renderizar o vídeo inteiro.
 6. Gerar as duas capas com `capa.py`, mostrar ao Eliezio e **esperar ele escolher**.
-7. Render final a 30 fps, com a capa escolhida embutida no início. Para entregar no celular, gerar cópias de ~13 MB (1080p, duas passagens com ~1,6 Mbps) e publicar numa página privada com botão "Baixar vídeo", porque o app nem sempre salva vídeo direto.
+7. Render final a 30 fps, com a capa escolhida embutida no início.
+8. Aplicar a assinatura glitch (`glitch_intro.py`) como última etapa. Para entregar no celular, gerar cópias de ~13 MB (1080p, duas passagens com ~1,6 Mbps) e publicar numa página privada com botão "Baixar vídeo", porque o app nem sempre salva vídeo direto.
 
 ## 9. Histórico
 
