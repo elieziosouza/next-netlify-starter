@@ -110,7 +110,7 @@ Pedido do Eliezio em 11/10/2026: **todo vídeo começa com o efeito glitch**. É
 python3 edicao-video/scripts/glitch_intro.py video_com_capa.mp4 video_final.mp4
 ```
 
-- **Som:** cerca de 0,4 s de estalos picotados (tons quadrados, ruído bitcrush, sample-hold) e um zap descendo, sempre o mesmo (seed fixa), para virar marca sonora.
+- **Som:** cerca de 0,4 s de estalos picotados (tons quadrados, ruído bitcrush, sample-hold) sem zap final (pedido do Eliezio), sempre o mesmo (seed fixa), para virar marca sonora.
 - **Imagem:** faixas horizontais deslocadas, separação RGB, linhas de varredura e um flash curto, de forma intermitente, nos primeiros 0,34 s. Um glitch menor repete na passagem capa → vídeo (0,40 a 0,50 s).
 - Não desloca nem corta o áudio. O glitch é somado por cima.
 

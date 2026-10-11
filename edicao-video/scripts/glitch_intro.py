@@ -9,9 +9,9 @@ import numpy as np
 SR = 48000
 
 def glitch_sound(seed=7):
-    """~0.42 s: stutter de tons quadrados, ruído bitcrush, sample-hold e um zap descendo"""
+    """~0.3 s: stutter de tons quadrados, ruído bitcrush e sample-hold (sem o zap final, pedido do Eliezio)"""
     rng = np.random.default_rng(seed)
-    n = int(0.42 * SR); out = np.zeros(n)
+    n = int(0.32 * SR); out = np.zeros(n)
     t = 0
     while t < int(0.30 * SR):                      # stutter blocks
         L = int(rng.uniform(0.012, 0.035) * SR)
@@ -30,10 +30,6 @@ def glitch_sound(seed=7):
         env = np.ones(L); env[:30] = np.linspace(0, 1, 30); env[-30:] = np.linspace(1, 0, 30)
         e = min(n, t + L); out[t:e] += (blk * env)[:e - t]
         t += L
-    zl = int(0.16 * SR); zt = np.arange(zl) / SR                       # downward zap
-    f = 2400 * np.exp(-zt * 18) + 80
-    zap = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-zt * 10) * 0.7
-    s = int(0.24 * SR); out[s:s + zl] += zap[:n - s]
     out = np.tanh(out * 1.4); out /= np.abs(out).max() + 1e-9
     return np.stack([out, np.roll(out, 90)], 1)
 
