@@ -95,7 +95,8 @@ O Eliezio pediu em 11/10/2026: **todo vídeo sai com capa impactante**, de prefe
   - linha de apoio em ExtraBold e um filete dourado.
 - **Preferida do Eliezio (11/10/2026):** a opção A, com **palavra-chave em carimbo vermelho** (ex.: "PROVA / ANULADA / NÃO É INOCÊNCIA", "EU SOU / BOLSA FAMÍLIA / E MAIS 6 PROGRAMAS", "ZONA AZUL / +150% / DE R$ 20 PARA R$ 50"). O carimbo vermelho é o padrão, mesmo em tema positivo. O dourado (`stamp_gold`) só entra se ele pedir.
 - **Duas opções:** uma com o conceito do vídeo (ex.: "PROVA ANULADA NÃO É INOCÊNCIA") e outra com o dado mais forte (ex.: "R$ 2 MILHÕES NA CONTA DO QUEIROZ").
-- **Capa embutida:** a capa escolhida (padrão: a opção A) também entra no início do vídeo. Ela fica parada até 0,42 s e se dissolve em 0,2 s, antes da primeira palavra, então o áudio não é deslocado nem cortado. Isso é feito com overlay do ffmpeg sobre o vídeo final.
+- **O Eliezio escolhe a capa antes de fechar o vídeo (regra fixa).** Primeiro mostre as duas opções e espere a escolha. Só depois embuta a capa e entregue o vídeo final. Nunca embutir por conta própria.
+- **Capa embutida:** a capa que ele escolheu entra no início do vídeo. Ela fica parada até 0,42 s e se dissolve em 0,2 s, antes da primeira palavra, então o áudio não é deslocado nem cortado. Isso é feito com overlay do ffmpeg sobre o vídeo final.
 - **Entrega:** as duas capas ficam também como arquivos separados na página de download, cada uma com seu botão.
 - **Regra de conteúdo:** a capa não afirma o que as fontes não afirmam. Pergunta e conceito podem; acusação sem base não.
 
@@ -112,8 +113,8 @@ O Eliezio pediu em 11/10/2026: **todo vídeo sai com capa impactante**, de prefe
 3. Listar os assuntos e pesquisar os números com fonte.
 4. Copiar o script de render mais parecido e trocar `SRC`, as legendas (`TXT`/`PHRASES`), `PIP_RANGES`, `ZK` (zooms) e os painéis.
 5. Testar quadros soltos (`frames:t1,t2,...`) antes de renderizar o vídeo inteiro.
-6. Gerar as duas capas com `capa.py`.
-7. Render final a 30 fps. Para entregar no celular, gerar cópias de ~13 MB (1080p, duas passagens com ~1,6 Mbps) e publicar numa página privada com botão "Baixar vídeo", porque o app nem sempre salva vídeo direto.
+6. Gerar as duas capas com `capa.py`, mostrar ao Eliezio e **esperar ele escolher**.
+7. Render final a 30 fps, com a capa escolhida embutida no início. Para entregar no celular, gerar cópias de ~13 MB (1080p, duas passagens com ~1,6 Mbps) e publicar numa página privada com botão "Baixar vídeo", porque o app nem sempre salva vídeo direto.
 
 ## 9. Histórico
 
