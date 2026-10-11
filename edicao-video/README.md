@@ -81,9 +81,14 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
 - **Perspectiva:** os painéis entram girando em profundidade (rotação Y) junto com o deslize e o motion blur.
 
 **Estrela do 13 (vídeos de campanha):** quando ele fala "dia 25", ele fica no quadro embaixo e a estrela vermelha com "13" branco entra em cima, **sempre acima da cabeça, nunca sobre o rosto**:
-- entrada girando com escala elástica, brilho pulsando, raios de luz suaves (só acima do quadro) e pequenos brilhos;
-- "DIA 25" embaixo da estrela;
-- som de "sonho e esperança": arpejo de sinos subindo, acorde maior suave e eco.
+- **entrada minimalista (aprovada em 11/10/2026):**
+  1. contorno branco fino se desenha em 0,65 s;
+  2. vermelho chapado (#D6262E) preenche de baixo para cima;
+  3. "13" branco sai do desfoque;
+  4. "D I A 2 5" em letras espaçadas, com filete dourado que se estende;
+  5. um único brilho suave passa pela estrela.
+- **Sem raios, sem giro e sem brilhos espalhados;**
+- som de "sonho e esperança" (arpejo de sinos subindo, acorde maior suave e eco), em volume discreto.
 
 **Regra eleitoral para lembrar o Eliezio:** eleitor pode postar, mas não pode pagar impulsionamento de propaganda eleitoral.
 

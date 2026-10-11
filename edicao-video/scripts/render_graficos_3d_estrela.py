@@ -579,38 +579,66 @@ STAR, STAR_GLOW = make_star(170)
 _rng = np.random.default_rng(13)
 SPARKS = [(_rng.uniform(-1, 1), _rng.uniform(-1, 1), _rng.uniform(0, 1.2), _rng.uniform(6, 14)) for _ in range(14)]
 
+STAR_R = 150
+def _star_layers(R=STAR_R):
+    s = int(R * 2.4); c = s / 2
+    pts = star_poly(c, c + R * 0.06, R, 0)
+    fill = Image.new("RGBA", (s, s), (0, 0, 0, 0)); fd = ImageDraw.Draw(fill)
+    fd.polygon(pts, fill=(214, 38, 46, 255))
+    num = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    ImageDraw.Draw(num).text((c, c + R * 0.13), "13", font=MF("Black", int(R * 0.74)), fill=(255, 255, 255, 255), anchor="mm")
+    glow_m = Image.new("L", (s, s), 0); ImageDraw.Draw(glow_m).polygon(pts, fill=90)
+    glow = Image.new("RGBA", (s, s), (214, 38, 46, 0)); glow.putalpha(glow_m.filter(ImageFilter.GaussianBlur(R * 0.22)))
+    # perimeter as a dense polyline for the stroke reveal
+    per = []
+    for i in range(10):
+        p0, p1 = pts[i], pts[(i + 1) % 10]
+        for j in range(12): per.append((p0[0] + (p1[0] - p0[0]) * j / 12, p0[1] + (p1[1] - p0[1]) * j / 12))
+    per.append(pts[0])
+    return s, fill, num, glow, per
+SS, SFILL, SNUM, SGLOW, SPER = _star_layers()
+LBL = None
+
 def draw_star(frame, t):
+    """minimalist entrance: outline draws itself, red fills bottom-up, 13 un-blurs, label with hairline"""
+    global LBL
     u = t - STAR_IN
     if u < 0: return
-    cx, cy = W / 2, 420
-    # dim the video softly so the star reads as the climax
-
-    # slow light rays behind the star
-    ka = smooth(u / 0.8)
-    rays = Image.new("RGBA", (W, H), (0, 0, 0, 0)); rd = ImageDraw.Draw(rays)
-    for i in range(12):
-        a0 = math.radians(i * 30 + u * 8); a1 = a0 + math.radians(7)
-        rd.polygon([(cx, cy), (cx + 1400 * math.cos(a0), cy + 1400 * math.sin(a0)), (cx + 1400 * math.cos(a1), cy + 1400 * math.sin(a1))], fill=(255, 214, 160, int(26 * ka)))
-    rays = rays.filter(ImageFilter.GaussianBlur(18))
-    _rm = np.asarray(rays).copy(); _rm[WIN[1] - 20:, :, 3] = 0          # rays stay above the speaker window
-    frame.alpha_composite(Image.fromarray(_rm, "RGBA"))
-    sc = clamp(back_out(u / 0.75, 1.6), 0, 1.2); rot = -120 * (1 - ease_out(u / 0.75))
-    if sc > 0.01:
-        pulse = 1 + 0.04 * math.sin(u * 3.2) * smooth((u - 0.8) / 0.4)
-        s = sc * pulse
-        g = STAR_GLOW.resize((max(1, int(STAR_GLOW.width * s * 1.15)), max(1, int(STAR_GLOW.height * s * 1.15))), Image.BICUBIC).rotate(rot, Image.BICUBIC)
-        g = fade(g, 0.75 + 0.25 * math.sin(u * 2.4))
-        frame.alpha_composite(g, (int(cx - g.width / 2), int(cy - g.height / 2)))
-        st = STAR.resize((max(1, int(STAR.width * s)), max(1, int(STAR.height * s))), Image.BICUBIC).rotate(rot, Image.BICUBIC)
-        frame.alpha_composite(st, (int(cx - st.width / 2), int(cy - st.height / 2)))
-    d = ImageDraw.Draw(frame)
-    for (dx, dy, ph, r) in SPARKS:   # gentle twinkles around the star
-        k = math.sin(math.pi * clamp((u - ph) / 1.4))
-        if k <= 0: continue
-        x = cx + dx * 330; y = cy + dy * 200; rr = r * k
-        d.line((x - rr, y, x + rr, y), fill=(255, 236, 200, int(220 * k)), width=2)
-        d.line((x, y - rr, x, y + rr), fill=(255, 236, 200, int(220 * k)), width=2)
-    put(frame, timg("DIA 25", MF("ExtraBold", 58), WH), cx, cy + 212, (u - 0.15) / 0.5, anchor="c")
+    cx, cy = W / 2, 430
+    ox, oy = int(cx - SS / 2), int(cy - SS / 2)
+    sc = 0.96 + 0.04 * ease_out(u / 1.2)
+    lay = Image.new("RGBA", (SS, SS), (0, 0, 0, 0))
+    # soft, very low glow once filled
+    kg = smooth((u - 0.7) / 0.6)
+    if kg > 0: lay.alpha_composite(fade(SGLOW, kg * 0.9))
+    # red fill rising from the bottom
+    kf = ease_out((u - 0.45) / 0.55)
+    if kf > 0:
+        m = Image.new("L", (SS, SS), 0); top = int(SS - SS * kf)
+        ImageDraw.Draw(m).rectangle((0, top, SS, SS), fill=255)
+        f2 = SFILL.copy(); f2.putalpha(Image.fromarray(np.minimum(np.asarray(SFILL.getchannel("A")), np.asarray(m))))
+        lay.alpha_composite(f2)
+    # outline drawing itself along the perimeter
+    ko = ease_out(u / 0.65)
+    n = max(2, int(len(SPER) * ko))
+    ImageDraw.Draw(lay).line(SPER[:n], fill=(255, 255, 255, int(235 * (1 - 0.6 * kf))), width=4, joint="curve")
+    # 13 blur-in
+    kn = (u - 0.8) / 0.45
+    if kn > 0: put(lay, SNUM, 12, 12 + 14 * (1 - ease_out(clamp(kn))), clamp(kn), dy=0)
+    # one gentle shine sweep
+    p = (u - 1.35) / 0.8
+    if 0 <= p <= 1:
+        sh = shine_layer((SS, SS), p); sh.putalpha(Image.fromarray(np.minimum(np.asarray(sh.getchannel("A")), np.asarray(SFILL.getchannel("A")) // 3)))
+        lay.alpha_composite(sh)
+    if abs(sc - 1) > 0.002:
+        lay = lay.resize((int(SS * sc), int(SS * sc)), Image.BICUBIC); ox, oy = int(cx - lay.width / 2), int(cy - lay.height / 2)
+    frame.alpha_composite(lay, (ox, oy))
+    # label: spaced letters + gold hairline that extends
+    if LBL is None: LBL = timg("D I A   2 5", MF("SemiBold", 34), WH)
+    kl = (u - 1.0) / 0.5
+    put(frame, LBL, cx, cy + STAR_R + 46, kl, anchor="c", dy=10)
+    hw = int(70 * ease_out((u - 1.15) / 0.6))
+    if hw > 0: ImageDraw.Draw(frame).rectangle((cx - hw, cy + STAR_R + 104, cx + hw, cy + STAR_R + 106), fill=GD)
 
 # ---------------------------------------------------------------- end card
 HROW = handles_row(W, f"{FD}/Montserrat-SemiBold.ttf", size=25, isz=28)
@@ -697,7 +725,7 @@ def main():
         k_ = int(dly * SR_); out_[k_:] += dream[:-k_] * g_
     out_ /= np.abs(out_).max() + 1e-9
     DREAM = np.stack([out_, np.roll(out_, 240)], 1)
-    ev += [(STAR_IN - 0.05, DREAM, 0.42), (END_IN - 0.3, sfx.whoosh(0.6), 0.22)]
+    ev += [(STAR_IN - 0.05, DREAM, 0.34), (END_IN - 0.3, sfx.whoosh(0.6), 0.22)]
     ev = [(a - ss, b, c) for a, b, c in ev if 0 <= a - ss < du - 0.9]
     sfx.build(ev, du, f"{V3}/v7_sfx.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-ss", str(ss), "-i", f"{V3}/vox.wav", "-i", f"{V3}/v7_sfx.wav",
