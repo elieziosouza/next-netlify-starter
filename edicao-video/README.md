@@ -82,7 +82,21 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
 - **Finalização sem cortar o áudio:** a tela final só começa 0,4 s depois da última palavra. Um riser de 2 s (tom subindo com ruído) cresce por baixo das últimas frases, depois vem um whoosh e uma batida grave na entrada da tela final.
 - Conferir no final: duração do áudio igual à do vídeo, -15 LUFS, pico abaixo de -1 dBTP.
 
-## 7. Como fazer o próximo vídeo
+## 7. Capa (obrigatória em todo vídeo)
+
+O Eliezio pediu em 11/10/2026: **todo vídeo sai com capa impactante**, de preferência em duas opções. O script é o `scripts/capa.py`.
+
+- **Formato:** 1080×1920. Todo o texto fica dentro da faixa central 3:4 (y 240 a 1680), que é o que aparece na grade do perfil.
+- **Foto:** um quadro do próprio vídeo com expressão forte (olhos abertos, fala intensa ou gesto). Rosto grande no alto, contraste reforçado, vinheta e degradê azul-marinho do peito para baixo.
+- **Texto:**
+  - etiqueta dourada pequena com o tema (ex.: "CASO RACHADINHA");
+  - título curto em Montserrat Black, com 2 a 4 palavras de impacto;
+  - uma palavra-chave em carimbo vermelho ou em dourado;
+  - linha de apoio em ExtraBold e um filete dourado.
+- **Duas opções:** uma com o conceito do vídeo (ex.: "PROVA ANULADA NÃO É INOCÊNCIA") e outra com o dado mais forte (ex.: "R$ 2 MILHÕES NA CONTA DO QUEIROZ").
+- **Regra de conteúdo:** a capa não afirma o que as fontes não afirmam. Pergunta e conceito podem; acusação sem base não.
+
+## 8. Como fazer o próximo vídeo
 
 1. O Eliezio exporta do CapCut em 1080p, de preferência **sem** legenda.
    - Para transcrever, use `transcrever.py` (Whisper small + VAD via sherpa-onnx). O Hugging Face é bloqueado na rede da sessão, mas o modelo baixa pelo GitHub:
@@ -95,10 +109,12 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
 3. Listar os assuntos e pesquisar os números com fonte.
 4. Copiar o script de render mais parecido e trocar `SRC`, as legendas (`TXT`/`PHRASES`), `PIP_RANGES`, `ZK` (zooms) e os painéis.
 5. Testar quadros soltos (`frames:t1,t2,...`) antes de renderizar o vídeo inteiro.
-6. Render final a 30 fps. Para entregar no celular, gerar cópias de ~13 MB (1080p, duas passagens com ~1,6 Mbps) e publicar numa página privada com botão "Baixar vídeo", porque o app nem sempre salva vídeo direto.
+6. Gerar as duas capas com `capa.py`.
+7. Render final a 30 fps. Para entregar no celular, gerar cópias de ~13 MB (1080p, duas passagens com ~1,6 Mbps) e publicar numa página privada com botão "Baixar vídeo", porque o app nem sempre salva vídeo direto.
 
-## 8. Histórico
+## 9. Histórico
 
 - **10/10/2026:** primeira identidade aplicada (Ubatuba). Depois, versão profissional com tela dividida (Programas do governo, com 7 programas na listinha) e Ubatuba com painel "Na imprensa". O Eliezio aprovou o estilo e pediu para guardar e ir aprimorando.
 - **11/10/2026:** vídeo "Rachadinha: provas anuladas". Novidades: transcrição automática com Whisper, painéis com embasamento em notícias (denúncia, linha do tempo, manchete real e "Entenda"), entradas com motion blur e finalização com riser e whoosh sem cortar a fala.
 - **11/10/2026:** identidade minimalista aprovada: topo só com as redes, rodapé fino, tela final sem o nome e legenda menor (56 px).
+- **11/10/2026:** capa impactante passa a ser obrigatória em todo vídeo (`capa.py`).
