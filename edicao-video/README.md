@@ -59,16 +59,36 @@ Exemplos aprovados em `exemplos/`.
 - Cada item aparece no instante em que é falado.
 - "Dados: Governo Federal" ou a fonte da manchete, sempre visível no painel.
 
+**Vídeo com embasamento em notícias** (`render_noticias_embasamento.py`): sequência de painéis encadeados durante a tela dividida:
+- número da denúncia ou dado principal;
+- linha do tempo do caso, com a etapa citada na fala destacada em dourado;
+- manchete real do jornal, com marca-texto e carimbo. O carimbo nunca cobre a manchete nem o crédito da fonte;
+- painel "Entenda", que explica o conceito jurídico (ex.: prova anulada não é prova inexistente; anulação não é absolvição).
+
+Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusações", quando for o caso.
+
+**Entradas com motion blur:**
+- Os painéis entram deslizando da direita com desfoque de movimento horizontal, proporcional à velocidade, e um "whoosh".
+- A troca entre painéis é um cruzamento: o novo entra deslizando por cima enquanto o antigo some.
+- A abertura do vídeo tem fade do preto, um zoom de 10% que recua em 0,8 s e desfoque vertical que se dissolve.
+
 ## 6. Áudio
 
 - Voz: passa-alta 80 Hz, compressão leve, loudnorm em duas passagens com alvo de **-15 LUFS** e pico de -2 dBTP. Sem reverb.
 - Música: trilha própria (`music.py`, 96 BPM, tom menor), com volume 0,30 e **ducking** automático quando a voz entra.
 - Efeitos (`sfx.py`): "whoosh" curto na troca de layout e de painel, "tic" em itens de lista, batida grave em carimbo. Todos baixos.
+- **Finalização sem cortar o áudio:** a tela final só começa 0,4 s depois da última palavra. Um riser de 2 s (tom subindo com ruído) cresce por baixo das últimas frases, depois vem um whoosh e uma batida grave na entrada da tela final.
 - Conferir no final: duração do áudio igual à do vídeo, -15 LUFS, pico abaixo de -1 dBTP.
 
 ## 7. Como fazer o próximo vídeo
 
-1. O Eliezio exporta do CapCut em 1080p. O ideal são duas versões: **com** e **sem** legenda automática. A versão com legenda serve para ler o texto e os tempos, porque a transcrição automática fica bloqueada na rede da sessão.
+1. O Eliezio exporta do CapCut em 1080p, de preferência **sem** legenda.
+   - Para transcrever, use `transcrever.py` (Whisper small + VAD via sherpa-onnx). O Hugging Face é bloqueado na rede da sessão, mas o modelo baixa pelo GitHub:
+     - `pip install sherpa-onnx`
+     - `github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-whisper-small.tar.bz2`
+     - `.../asr-models/silero_vad.onnx`
+   - Trechos confusos devem ser transcritos de novo com mais contexto, usando o modelo sem int8.
+   - Se o vídeo vier com legenda gravada, use `capmask.py` + `segment.py` para ler os tempos e `clean.py` para apagar a legenda.
 2. `capmask.py` + `segment.py` extraem os tempos das frases da legenda. Depois é preciso conferir em tiras de imagem com 5 fps, porque falas curtas podem se juntar.
 3. Listar os assuntos e pesquisar os números com fonte.
 4. Copiar o script de render mais parecido e trocar `SRC`, as legendas (`TXT`/`PHRASES`), `PIP_RANGES`, `ZK` (zooms) e os painéis.
@@ -78,3 +98,4 @@ Exemplos aprovados em `exemplos/`.
 ## 8. Histórico
 
 - **10/10/2026:** primeira identidade aplicada (Ubatuba). Depois, versão profissional com tela dividida (Programas do governo, com 7 programas na listinha) e Ubatuba com painel "Na imprensa". O Eliezio aprovou o estilo e pediu para guardar e ir aprimorando.
+- **11/10/2026:** vídeo "Rachadinha: provas anuladas". Novidades: transcrição automática com Whisper, painéis com embasamento em notícias (denúncia, linha do tempo, manchete real e "Entenda"), entradas com motion blur e finalização com riser e whoosh sem cortar a fala.
