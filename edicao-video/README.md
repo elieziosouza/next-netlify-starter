@@ -4,6 +4,8 @@ Padrão visual e técnico dos vídeos verticais do canal (Opinião · Atualidade
 Tudo aqui foi aprovado em outubro de 2026 e serve de base para os próximos vídeos.
 Cada vídeo novo deve seguir este guia e, quando algo for melhorado, o guia é atualizado.
 
+> Vídeos de **corretor de imóveis** usam outro estilo (lettering editorial): veja `estilo-corretor/README.md`. Este guia é do canal de opinião.
+
 ## 1. Preferências do Eliezio (prioridade máxima)
 
 1. **Nada de cara de amador.** Visual de telejornal: tipografia limpa, linhas finas douradas, números grandes. Sem partículas, sem desenho animado, sem check verde, sem recorte girando.
@@ -166,4 +168,5 @@ Em vídeo de campanha, lembrar que o eleitor não pode pagar impulsionamento.
 - **11/10/2026:** vídeo "Rachadinha: provas anuladas". Novidades: transcrição automática com Whisper, painéis com embasamento em notícias (denúncia, linha do tempo, manchete real e "Entenda"), entradas com motion blur e finalização com riser e whoosh sem cortar a fala.
 - **11/10/2026:** identidade minimalista aprovada: topo só com as redes, rodapé fino, tela final sem o nome e legenda menor (56 px).
 - **11/10/2026:** vídeo do salário mínimo: fundo escurecido no lugar do azul, gráficos 3D, camadas, perspectiva e estrela do 13 acima da cabeça.
+- **11/10/2026:** lettering editorial (referência enviada pelo Eliezio) aprovado como estilo **só para corretor de imóveis**, guardado em `estilo-corretor/`. O canal de opinião mantém a identidade.
 - **11/10/2026:** capa impactante passa a ser obrigatória em todo vídeo (`capa.py`).
