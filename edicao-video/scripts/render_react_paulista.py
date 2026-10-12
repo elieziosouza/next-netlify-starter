@@ -8,8 +8,8 @@ sys.path.insert(0, f"{S}/work")
 import sfx, grading
 from minitop import make_minitop, make_minifooter, handles_row
 from segment_person import PersonSeg
-GRADE = grading.Fast(grading.cinema_skin, f"{S}/grade/lut_cinema_pele.npy", 0.1, 6)
-def GRADE_ME(a): return grading.face_light(GRADE(a), 239, 380)
+GRADE = grading.Fast(grading.cinema_skin, f"{S}/grade/lut_cinema_pele2.npy", 0.1, 6)
+def GRADE_ME(a): return GRADE(a)                       # sem luz extra no rosto (pedido de 12/10)
 
 V = f"{S}/v10"; FD = f"{S}/fontdl"
 ME, AE, IG = f"{V}/me.mp4", f"{V}/aereo.mp4", f"{V}/ig.mp4"
@@ -506,7 +506,7 @@ def render_frame(t):
         react_tag(frame, t, "REACT  ·  PAULISTA ONTEM", 0.9, 6.2)
     elif s["src"] == "me":
         z = 0.035 * smooth((t - out_t("me", 19.7)) / 3.5)                                         # aproxima no "dia 25"
-        out = me_in_paulista(img, person_matte(img), aebg_frame(u), t, z).astype(np.float32)
+        out = (me_full(img, t, z).astype(np.float32) * VIG)                                          # fundo real dele, sem recorte
         kin = ease_io(u / 0.6)                                                                    # a janelinha cresce até a tela cheia
         if kin < 1:
             bg = blur_bg(_last_ae[0], 0.26) if _last_ae[0] is not None else NAVYBG.copy()

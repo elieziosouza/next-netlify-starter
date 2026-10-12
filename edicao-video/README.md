@@ -28,7 +28,7 @@ Cada vídeo novo deve seguir este guia e, quando algo for melhorado, o guia é a
 | Topo | `minitop.make_minitop`: só as redes sociais (ícones dourados de traço fino + @ezvideos_cortes, @elieziosouza78, @eliezio.souza78), Montserrat SemiBold 27, filete dourado fino com pontas esmaecidas e sombra azul suave que some no vídeo. **Sem o nome** |
 | Rodapé | `minitop.make_minifooter`: linha fina de progresso (dourada sobre trilho branco a 18%) e "OPINIÃO • ATUALIDADES • REAÇÕES" em 23 px, com ATUALIDADES em dourado |
 | Artes antigas | `assets/topo.jpg` e `assets/rodape.jpg` (com nome e botões) ficam guardadas, mas **não são mais usadas** |
-| Correção de cor | **Padrão desde 11/10/2026: "Cinema azul e dourado"** (`scripts/grading.py`, função `cinema`): sombras puxadas para o azul-marinho, luzes e pele levemente quentes, fundo menos saturado, verde forte contido, pele protegida por máscara, curva em S com ombro que segura os claros e clareza leve no rosto. Aplicar nas fontes com `grading.Fast(grading.cinema, 'lut_cinema.npy')` (tabela 256³, ~20 ms por quadro). Alternativa para denúncias pesadas: `investig` (documentário). **Desde 12/10/2026 a pele também é corrigida** (`cinema_skin`: menos laranja, brilho da careca contido, sombras do rosto abertas) e entra uma luz suave de preenchimento no rosto (`face_light`). Vinheta 24% e granulação suave por cima. |
+| Correção de cor | **Padrão desde 11/10/2026: "Cinema azul e dourado"** (`scripts/grading.py`, função `cinema`): sombras puxadas para o azul-marinho, luzes e pele levemente quentes, fundo menos saturado, verde forte contido, pele protegida por máscara, curva em S com ombro que segura os claros e clareza leve no rosto. Aplicar nas fontes com `grading.Fast(grading.cinema, 'lut_cinema.npy')` (tabela 256³, ~20 ms por quadro). Alternativa para denúncias pesadas: `investig` (documentário). **Desde 12/10/2026 a pele também é corrigida** (`cinema_skin`: menos laranja, brilho da careca contido, sombras do rosto abertas) e os claros da pele são segurados (luz forte de frente). **Não usar `face_light` no vídeo**: o Eliezio achou a luz no rosto forte demais (12/10/2026). Vinheta 24% e granulação suave por cima. |
 | Tela final | 3 s: fundo azul, "SIGA PARA MAIS" (ExtraBold 50), filete dourado e a linha das redes. **Sem o nome** |
 
 Exemplos aprovados em `exemplos/`.
@@ -61,7 +61,7 @@ Exemplos aprovados em `exemplos/`.
 
 **React com imagens de ato e números** (`render_react_paulista.py`, Paulista 12/10/2026):
 - Imagens de terceiros em cartões 3D empilhados: o primeiro desce do topo, o segundo entra girando por cima e o de baixo recua e escurece. O som dos vídeos de terceiros é cortado (evita direitos autorais) e a trilha sobe.
-- **Ele "no lugar":** recorte da pessoa com U2Net (`segment_person.py`), máscara suavizada no tempo e luz de contorno; o fundo do quarto é trocado pela filmagem do assunto, desfocada e escurecida. Também vale para a capa.
+- **Recorte da pessoa com fundo trocado:** existe (`segment_person.py`), mas o Eliezio **não gostou no vídeo** (12/10/2026). No vídeo, manter o fundo real dele. Na capa pode usar.
 - **Cartões de vidro fosco** acima da cabeça (o próprio quadro desfocado atrás), com número animado e fonte. Nunca encostam no rosto.
 - **Gesto escrito em luz:** rastreamento da mão por cor de pele (`hand.json`), suavizado; o traço dourado é "escrito" acompanhando a mão (ex.: o L), com ponta brilhante, faíscas e som de marcador.
 - A janelinha do react cresce até a tela cheia quando ele volta a falar (sem imagem dupla).
@@ -193,4 +193,5 @@ Em vídeo de campanha, lembrar que o eleitor não pode pagar impulsionamento.
 - **11/10/2026:** lettering editorial (referência enviada pelo Eliezio) aprovado como estilo **só para corretor de imóveis**, guardado em `estilo-corretor/`. O canal de opinião mantém a identidade.
 - **11/10/2026:** capa impactante passa a ser obrigatória em todo vídeo (`capa.py`).
 - **11/10/2026:** react Flávio x Vorcaro (negação + áudio): layout de react com áudio, remoção de legenda gravada com vidro fosco, linha do tempo dos fatos. Nova correção de cor "Cinema azul e dourado" vira padrão.
+- **12/10/2026:** o Eliezio não gostou do recorte com fundo trocado nem da luz extra no rosto; versão final com o fundo real e a pele com os claros segurados.
 - **12/10/2026:** react da Paulista: ele recortado na frente da multidão, cartões de vidro fosco, L escrito em luz acompanhando a mão. Nova abertura `embutir_capa.py`: glitch só sobre a capa, nunca em cima da fala. Reforço do Eliezio: **nunca cortar o rosto dele**.

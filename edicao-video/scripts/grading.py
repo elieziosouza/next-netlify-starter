@@ -78,8 +78,9 @@ def skin_fix(img):
     m = sk[..., 0]
     h2 = h - 5.0 * m                                       # laranja → tom de pele mais neutro
     s2 = s * (1 - 0.26 * m)                                # menos saturado
-    hi = np.clip((v - 0.62) / 0.38, 0, 1)
-    v2 = v - m * hi * (v - 0.62) * 0.45                    # segura o brilho (careca, testa)
+    hi = np.clip((v - 0.50) / 0.50, 0, 1)
+    v2 = v - m * hi * (v - 0.50) * 0.62                    # segura o brilho (careca, testa) e a luz forte de frente
+    v2 = v2 * (1 - 0.06 * m)                               # pele um pouco menos exposta
     lo = np.clip(1 - v / 0.45, 0, 1)
     v2 = v2 + m * lo * 0.05                                # abre um pouco as sombras do rosto
     out = cv2.cvtColor(np.dstack([np.mod(h2, 256), np.clip(s2, 0, 255), np.clip(v2, 0, 1) * 255]).astype(np.uint8), cv2.COLOR_HSV2RGB_FULL)
