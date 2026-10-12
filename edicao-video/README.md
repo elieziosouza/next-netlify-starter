@@ -68,6 +68,13 @@ Exemplos aprovados em `exemplos/`.
 - **Gesto escrito em luz:** rastreamento da mão por cor de pele (`hand.json`), suavizado; o traço dourado é "escrito" acompanhando a mão (ex.: o L), com ponta brilhante, faíscas e som de marcador.
 - A janelinha do react fica parada até o fim das imagens e cresce **uma única vez** até a tela cheia, já com a fala dele (sem imagem dupla e sem transição dobrada).
 
+**React com o vídeo rolando inteiro e tela dividida** (`render_react_lula_v2.py`, preferido pelo Eliezio em 12/10/2026):
+- O vídeo de terceiros **roda inteiro, sem cortes**, com o som original (quando ele quiser). Os momentos do vídeo ficam longos.
+- Quando ele fala, a tela **divide**: o vídeo continua rolando em cima (0–840) e ele aparece embaixo, grande, da cabeça ao peito (recorte do próprio quadro em tela cheia, com folga acima da cabeça). Entre as falas, o vídeo ocupa a tela toda.
+- **Cortar os trechos em que ele está de cabeça baixa** assistindo. Ele só aparece falando para a câmera.
+- Falas encaixadas na cena certa; a última fala fecha em tela cheia, com a divisão se abrindo até ele ocupar tudo (sem imagem dupla).
+- Duração alvo: cerca de 50 s.
+
 **React com reação real na janelinha** (`render_react_lula.py`, Lula na Paulista 12/10/2026):
 - O trecho em que ele assiste e reage (risada, "olha o pique do véio") vai na janelinha, sincronizado com a cena certa do vídeo de terceiros; a voz dele corre junto.
 - **Janelinha maior (pedido de 12/10/2026):** 440×578 px (x 320–760, y 1168–1746). O cartão do vídeo fica com 590 px de largura (cenas largas, 880 px) e a legenda entre os dois.
