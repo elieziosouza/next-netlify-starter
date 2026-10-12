@@ -378,44 +378,48 @@ def to_out(p, t, z):
     sc = W / 478 * (1.03 + 0.01 * math.sin(t * 0.3) + z)
     return (sc * p[0] + W / 2 - FACE[0] * sc, sc * p[1] + FACE[1] * W / 478 - FACE[1] * sc)
 _rngF = np.random.default_rng(4)
-EMBERS = [(F_PEAK + _rngF.uniform(0, 0.5), _rngF.uniform(0, 2 * math.pi), _rngF.uniform(180, 420), _rngF.uniform(0.5, 1.0), _rngF.uniform(2, 5)) for _ in range(40)]
+# partículas de luz subindo devagar (esperança), mais do lado do punho e nas bordas, longe do rosto
+MOTES = []
+for _ in range(70):
+    x = float(np.clip(_rngF.beta(1.3, 3.2) * W, 10, W - 10)) if _rngF.random() < 0.75 else float(_rngF.uniform(W * 0.78, W - 10))
+    MOTES.append((33.25 + _rngF.uniform(0, 1.8), x, _rngF.uniform(1150, 1750), _rngF.uniform(55, 130), _rngF.uniform(2.5, 9), _rngF.uniform(2.2, 3.4), _rngF.uniform(0, 6.28)))
+def add_light(frame, layer, gain=1.0):
+    """luz somada (tela), cor quente sem escurecer as bordas"""
+    f = np.asarray(frame, np.float32); l = np.asarray(layer, np.float32)
+    a = l[..., 3:4] / 255 * gain
+    rgb = f[..., :3] + (255 - f[..., :3]) * a * (l[..., :3] / 255)
+    out = np.concatenate([np.clip(rgb, 0, 255), f[..., 3:4]], 2).astype(np.uint8)
+    frame.paste(Image.fromarray(out, "RGBA"))
+
+WARM = (255, 222, 165)
 def draw_fist(frame, t, z, srct):
-    if srct < F_T[0] + 0.05 or srct > 36.45: return
-    fo = 1 - smooth((srct - 36.2) / 0.25)
-    lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
-    # rastro de luz na subida
-    if srct < F_PEAK + 0.35:
-        pts = [to_out(fist_at(srct - k * 0.02), t, z) for k in range(16)]
-        for k in range(len(pts) - 1):
-            al = int(230 * (1 - k / 15) * clamp(1 - (srct - F_PEAK) / 0.35)); wdt = int(26 * (1 - k / 15)) + 2
-            d.line([pts[k], pts[k + 1]], fill=GOLD_L + (al,), width=wdt)
-    c = to_out(fist_at(srct), t, z)
-    # brilho em volta do punho enquanto ele segura
-    frame.alpha_composite(lay.filter(ImageFilter.GaussianBlur(18))); frame.alpha_composite(fade(lay.filter(ImageFilter.GaussianBlur(2)), 0.85))
-    g = clamp((srct - (F_PEAK - 0.25)) / 0.25) * fo
-    if g > 0:                                            # halo suave atrás da luz, sem cobrir a mão
-        halo = Image.new("RGBA", (W, H), (0, 0, 0, 0)); dh = ImageDraw.Draw(halo)
-        r = 150 + 12 * math.sin(t * 6)
-        dh.ellipse((c[0] - r, c[1] - r, c[0] + r, c[1] + r), outline=GOLD_L + (int(150 * g),), width=10)
-        frame.alpha_composite(halo.filter(ImageFilter.GaussianBlur(26)))
-    # onda de choque no pico
-    q = srct - F_PEAK
-    if 0 <= q < 0.7:
-        ring = Image.new("RGBA", (W, H), (0, 0, 0, 0)); dr = ImageDraw.Draw(ring)
-        for j, dl in enumerate((0, 0.12)):
-            qq = q - dl
-            if qq < 0: continue
-            rr = 60 + 760 * ease_out(qq / 0.7); al = int(230 * (1 - qq / 0.7) ** 1.5)
-            dr.ellipse((c[0] - rr, c[1] - rr, c[0] + rr, c[1] + rr), outline=GOLD_L + (al,), width=int(10 - 6 * qq / 0.7) - 2 * j)
-        frame.alpha_composite(ring.filter(ImageFilter.GaussianBlur(2))); frame.alpha_composite(fade(ring.filter(ImageFilter.GaussianBlur(14)), 0.8))
-    # faíscas
-    sp = ImageDraw.Draw(frame)
-    for st, ang, spd, life, r in EMBERS:
+    """efeito de esperança: luz quente nascendo atrás do punho, raios suaves para cima e partículas de luz subindo"""
+    if srct < 33.2: return
+    k = smooth((srct - 33.2) / 0.9) * (1 - smooth((t - (EDIT_END - 0.5)) / 0.5))
+    if k <= 0: return
+    c = to_out(fist_at(min(srct, 36.3)), t, z)
+    breath = 1 + 0.06 * math.sin(t * 2.2)
+    lay = Image.new("RGBA", (W, H), WARM + (0,)); d = ImageDraw.Draw(lay)
+    for r, al in ((560, 60), (380, 90), (230, 120), (120, 150)):         # amanhecer atrás do punho
+        rr = r * breath * (0.6 + 0.4 * k); d.ellipse((c[0] - rr, c[1] - rr, c[0] + rr, c[1] + rr), fill=WARM + (int(al * k),))
+    sun = lay.filter(ImageFilter.GaussianBlur(70))
+    rays = Image.new("RGBA", (W, H), WARM + (0,)); d = ImageDraw.Draw(rays)
+    rot = (srct - 33.2) * 4
+    for i in range(7):                                                      # raios para cima e para fora, longe do rosto
+        ang = math.radians(196 + i * 12 + 4 * math.sin(rot * 0.3 + i)); L = 1150; wd = math.radians(2.4 + (i % 3) * 0.8)
+        p1 = (c[0] + L * math.cos(ang - wd), c[1] + L * math.sin(ang - wd)); p2 = (c[0] + L * math.cos(ang + wd), c[1] + L * math.sin(ang + wd))
+        d.polygon([c, p1, p2], fill=WARM + (int((95 + 40 * math.sin(rot + i * 1.7)) * k),))
+    rays = rays.filter(ImageFilter.GaussianBlur(16))
+    add_light(frame, sun, 0.9); add_light(frame, rays, 0.7)
+    pl = Image.new("RGBA", (W, H), (255, 220, 150, 0)); d = ImageDraw.Draw(pl)
+    for st, x0, y0, spd, r, life, ph in MOTES:
         age = srct - st
         if age < 0 or age > life: continue
-        x = c[0] + math.cos(ang) * spd * age; y = c[1] + math.sin(ang) * spd * age + 140 * age * age
-        al = int(255 * (1 - age / life) * fo); rr = r * (1 - 0.5 * age / life)
-        sp.ellipse((x - rr, y - rr, x + rr, y + rr), fill=GOLD_L + (al,))
+        x = x0 + 18 * math.sin(age * 1.6 + ph); y = y0 - spd * age
+        if ((x - 540) / 300) ** 2 + ((y - 760) / 420) ** 2 < 1: continue       # nada sobre o rosto
+        a = math.sin(math.pi * age / life) * k; rr = r * 1.3
+        d.ellipse((x - rr, y - rr, x + rr, y + rr), fill=(255, 220, 150, int(240 * a)))
+    add_light(frame, pl.filter(ImageFilter.GaussianBlur(10)), 1.0); add_light(frame, pl.filter(ImageFilter.GaussianBlur(2)), 0.9)
 
 # ---------------------------------------------------------------- render
 _cache = {}
@@ -442,7 +446,7 @@ def render_frame(t):
         frame = clip_frame(c, img, t, s, u)
     else:
         z = 0.0
-        if srct > 33.9: z = 0.035 * back_out((srct - 34.0) / 0.35, 1.2) * (1 - smooth((srct - 35.6) / 0.8))      # soco leve no "histórico"
+        pass
         frame = Image.fromarray(me_full(img, t, z)).convert("RGBA")
         kin = ease_io(u / 0.6) if (segs.index(s) > 0 and segs[segs.index(s) - 1]["src"] == "cl") else 1.0
         if kin < 1:                                            # a janelinha cresce uma vez até a tela cheia
@@ -458,7 +462,7 @@ def render_frame(t):
             o2 = bg.copy(); o2[int(y0):int(y0) + h, int(x0):int(x0) + w] = o2[int(y0):int(y0) + h, int(x0):int(x0) + w] * (1 - m) + win * m
             frame = Image.fromarray(np.clip(o2, 0, 255).astype(np.uint8)).convert("RGBA")
         draw_glass(frame, t)
-        draw_fist(frame, t, z, srct)
+        # punho sem efeito (pedido de 12/10)
         draw_caption(frame, t, 1450, 56, ("me",))
         if s is segs[0]: react_tag(frame, t, "REACT  ·  LULA NA PAULISTA", 0.9, 2.7)
     draw_banners(frame, t)
@@ -497,7 +501,7 @@ def main():
         if s["src"] == "me" and i > 0 and segs[i - 1]["src"] == "cl": ev += [(s["t0"] - 0.1, sfx.whoosh(0.5, False), 0.24)]
     ev += [(out_t(6.35), sfx.thud(), 0.3), (out_t(6.35) + 0.05, sfx.paper(), 0.2)]
     for a, b, k in GLASS: ev += [(a - 0.08, sfx.whoosh(0.4), 0.22), (a + 0.45, sfx.thud(), 0.22)]
-    ev += [(out_t(33.25), sfx.whoosh(0.4), 0.28), (out_t(F_PEAK), sfx.thud(0.6), 0.42), (out_t(F_PEAK) + 0.02, sfx.marker(0.7), 0.2)]
+    pass
     ev += [(END_IN - 0.3, sfx.whoosh(0.6), 0.25)]
     ev = [e for e in ev if 0 <= e[0] < TOTAL - 0.9]
     sfx.build(ev, TOTAL, f"{V}/sfx.wav")

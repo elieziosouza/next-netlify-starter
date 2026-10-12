@@ -72,8 +72,8 @@ Exemplos aprovados em `exemplos/`.
 - O trecho em que ele assiste e reage (risada, "olha o pique do véio") vai na janelinha, sincronizado com a cena certa do vídeo de terceiros; a voz dele corre junto.
 - **Janelinha maior (pedido de 12/10/2026):** 440×578 px (x 320–760, y 1168–1746). O cartão do vídeo fica com 590 px de largura (cenas largas, 880 px) e a legenda entre os dois.
 - Selo com número sobre o cartão (ex.: "80 ANOS · faz 81 no dia 27/10"), entrando com pulo e batida.
-- **Punho erguido:** rastreado (`fist.json`); rastro de luz dourada na subida, onda de choque em anel e faíscas no pico da fala, com soco leve de zoom e som grave.
-- Música de vídeo de terceiros com direitos (ex.: "Under Pressure") é sempre retirada.
+- **Gestos (punho etc.):** o Eliezio preferiu **sem efeito** no punho (12/10/2026). Não colocar efeito em gesto sem ele pedir. O L escrito em luz foi pedido por ele, então continua valendo quando ele pedir.
+- Som de vídeo de terceiros: se ele quiser manter (ex.: o som da Paulista), entra só nos trechos do vídeo, abaixando quando ele fala, e a nossa trilha sai nesses trechos (`remix_paulista.py`). Quando a música tem direitos autorais, entregar também uma **versão YouTube** sem esse som.
 
 **Notícia na imprensa** (`render_recortes_noticia.py`): mesmo layout dividido, com o recorte de jornal (`cards.py`) no painel "NA IMPRENSA". O recorte traz a manchete real com a fonte embaixo, marca-texto amarelo animado e carimbo vermelho opcional.
 

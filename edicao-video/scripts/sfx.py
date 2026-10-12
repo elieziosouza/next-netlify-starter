@@ -58,3 +58,19 @@ def build(events, total, path):
     pcm = (np.clip(buf, -1, 1) * 32000).astype(np.int16)
     with wave.open(path, "wb") as w:
         w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes(pcm.tobytes())
+
+def hope(dur=3.6, seed=5):
+    """som de esperança: arpejo de sinos subindo sobre um pad suave, com ecos (usado na estrela do 13 e no punho)"""
+    n = int(dur * SR); tt = np.arange(n) / SR; dream = np.zeros(n)
+    for i, m in enumerate([60, 64, 67, 71, 74, 76, 79, 83]):
+        t0 = i * 0.13; f = 440 * 2 ** ((m + 12 - 69) / 12); idx = tt >= t0; tl = tt[idx] - t0
+        dream[idx] += (np.sin(2 * np.pi * f * tl) + 0.35 * np.sin(2 * np.pi * f * 2.76 * tl) * np.exp(-tl * 6)) * np.exp(-tl * 2.2) * 0.22
+    env = np.clip(tt / 0.9, 0, 1) * np.clip((dur - tt) / 1.2, 0, 1)
+    for m in [48, 55, 60, 64, 67, 71]:
+        f = 440 * 2 ** ((m - 69) / 12); dream += (np.sin(2 * np.pi * f * tt) + 0.3 * np.sin(2 * np.pi * f * 1.003 * tt + 1)) * env * 0.07
+    nz = np.random.default_rng(seed).normal(0, 1, n); nz = nz - np.convolve(nz, np.ones(8) / 8, "same"); dream += nz * env * 0.03
+    out = dream.copy()
+    for d, g in [(0.21, 0.45), (0.37, 0.3), (0.55, 0.2)]:
+        k = int(d * SR); out[k:] += dream[:-k] * g
+    out /= np.abs(out).max() + 1e-9
+    return np.stack([out, np.roll(out, 240)], 1)
