@@ -8,8 +8,8 @@ sys.path.insert(0, f"{S}/work")
 import sfx, grading
 from minitop import make_minitop, make_minifooter, handles_row
 from segment_person import PersonSeg
-GRADE = grading.Fast(grading.cinema_skin, f"{S}/grade/lut_cinema_pele2.npy", 0.1, 6)
-def GRADE_ME(a): return GRADE(a)                       # sem luz extra no rosto (pedido de 12/10)
+GRADE = grading.Fast(grading.cinema_skin, f"{S}/grade/lut_cinema_pele4.npy", 0.1, 6)
+def GRADE_ME(a): return grading.tame_face(GRADE(a), 239, 380)      # menos luz no rosto (pedido de 12/10)
 
 V = f"{S}/v10"; FD = f"{S}/fontdl"
 ME, AE, IG = f"{V}/me.mp4", f"{V}/aereo.mp4", f"{V}/ig.mp4"

@@ -78,11 +78,7 @@ def skin_fix(img):
     m = sk[..., 0]
     h2 = h - 5.0 * m                                       # laranja → tom de pele mais neutro
     s2 = s * (1 - 0.26 * m)                                # menos saturado
-    hi = np.clip((v - 0.50) / 0.50, 0, 1)
-    v2 = v - m * hi * (v - 0.50) * 0.62                    # segura o brilho (careca, testa) e a luz forte de frente
-    v2 = v2 * (1 - 0.06 * m)                               # pele um pouco menos exposta
-    lo = np.clip(1 - v / 0.45, 0, 1)
-    v2 = v2 + m * lo * 0.05                                # abre um pouco as sombras do rosto
+    v2 = v                                                 # brilho do rosto é tratado à parte (face_light negativo + ombro), sem manchas
     out = cv2.cvtColor(np.dstack([np.mod(h2, 256), np.clip(s2, 0, 255), np.clip(v2, 0, 1) * 255]).astype(np.uint8), cv2.COLOR_HSV2RGB_FULL)
     return out
 def cinema_skin(img):
@@ -133,3 +129,11 @@ class Fast:
             d = (y - cv2.GaussianBlur(y, (0, 0), r or self.r)) * self.clar
             out = np.clip(out.astype(np.float32) + d[..., None], 0, 255).astype(np.uint8)
         return out
+
+_x = np.arange(256) / 255.0
+_SHOULDER = np.clip(np.where(_x < 0.55, _x, 0.55 + (_x - 0.55) * 0.62), 0, 1) * 255
+SHOULDER = _SHOULDER.astype(np.uint8)
+def tame_face(img, cx, cy, amount=0.18, rx=175, ry=235):
+    """menos luz no rosto: ombro suave nos claros + exposição um pouco menor na região do rosto (uniforme, sem manchas)"""
+    out = cv2.LUT(img, SHOULDER)
+    return face_light(out, cx, cy, rx, ry, -amount)
