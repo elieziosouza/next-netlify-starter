@@ -8,6 +8,8 @@ Cada vídeo novo deve seguir este guia e, quando algo for melhorado, o guia é a
 
 ## 1. Preferências do Eliezio (prioridade máxima)
 
+- **Cores e luz do vídeo dele ficam como ele gravou (12/10/2026):** sem correção de cor, sem vinheta, sem granulação e sem mexer na luz do rosto. A correção de cor só entra nas imagens de terceiros, se ele não pedir o contrário.
+
 1. **Nada de cara de amador.** Visual de telejornal: tipografia limpa, linhas finas douradas, números grandes. Sem partículas, sem desenho animado, sem check verde, sem recorte girando.
 2. **Não cortar o Eliezio.** Na tela dividida ele aparece inteiro: cabeça completa, folga acima e ombros. Nada fica por cima da cabeça.
 3. **Zooms discretos.** No máximo 5 a 7%, com transição suave de 0,6 s, e só em falas fortes. Nunca dar zoom de tranco.
@@ -64,7 +66,7 @@ Exemplos aprovados em `exemplos/`.
 - **Recorte da pessoa com fundo trocado:** existe (`segment_person.py`), mas o Eliezio **não gostou no vídeo** (12/10/2026). No vídeo, manter o fundo real dele. Na capa pode usar.
 - **Cartões de vidro fosco** acima da cabeça (o próprio quadro desfocado atrás), com número animado e fonte. Nunca encostam no rosto.
 - **Gesto escrito em luz:** rastreamento da mão por cor de pele (`hand.json`), suavizado; o traço dourado é "escrito" acompanhando a mão (ex.: o L), com ponta brilhante, faíscas e som de marcador.
-- A janelinha do react cresce até a tela cheia quando ele volta a falar (sem imagem dupla).
+- A janelinha do react fica parada até o fim das imagens e cresce **uma única vez** até a tela cheia, já com a fala dele (sem imagem dupla e sem transição dobrada).
 
 **Notícia na imprensa** (`render_recortes_noticia.py`): mesmo layout dividido, com o recorte de jornal (`cards.py`) no painel "NA IMPRENSA". O recorte traz a manchete real com a fonte embaixo, marca-texto amarelo animado e carimbo vermelho opcional.
 

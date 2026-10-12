@@ -9,7 +9,7 @@ import sfx, grading
 from minitop import make_minitop, make_minifooter, handles_row
 from segment_person import PersonSeg
 GRADE = grading.Fast(grading.cinema_skin, f"{S}/grade/lut_cinema_pele4.npy", 0.1, 6)
-def GRADE_ME(a): return grading.tame_face(GRADE(a), 239, 380)      # menos luz no rosto (pedido de 12/10)
+def GRADE_ME(a): return a                                   # cores e luz originais do vídeo dele (pedido de 12/10)
 
 V = f"{S}/v10"; FD = f"{S}/fontdl"
 ME, AE, IG = f"{V}/me.mp4", f"{V}/aereo.mp4", f"{V}/ig.mp4"
@@ -172,7 +172,7 @@ def blur_bg(img, dark=0.24, aspect_src=None):
 
 def compose_me_layer(bg, me_img, t, rect, k):
     """ele em tela cheia mistura com o fundo e encolhe para a janelinha"""
-    full = me_full(me_img, t).astype(np.float32) * VIG
+    full = me_full(me_img, t).astype(np.float32)
     out = full * (1 - k) + bg * k if k < 1 else bg.copy()
     if k > 0.002:
         x0, y0, x1, y1 = [lerp(a, b, k) for a, b in zip((0, 0, W, H), rect)]
@@ -271,6 +271,7 @@ def end_card(t):
     return img
 
 def finish(frame, t):
+    return frame.convert("RGB")                                 # sem granulação: imagem original
     a = np.asarray(frame.convert("RGB"), np.float32)
     g = cv2.resize(GRAIN[int(t * FPS) % len(GRAIN)], (W, H), interpolation=cv2.INTER_LINEAR)[..., None]
     return Image.fromarray(np.clip(a + g, 0, 255).astype(np.uint8))
@@ -291,7 +292,7 @@ CA_W = 640; CA_H = int(AH * CA_W / AW)                    # 881
 CI_W = 590; CI_H = int(IH * CI_W / IW)                    # 819
 WINC = (380, 1262, 700, 1690)
 def win_k(t):
-    return ease_io((t - CL_IN) / 0.6) * (1 - ease_io((t - (CL_OUT - 0.55)) / 0.55))
+    return ease_io((t - CL_IN) / 0.6)                    # fica na janelinha até o fim das imagens; a volta à tela cheia é uma só, já com a fala
 
 def card_rgba(img, w, h):
     return rounded(cv2.resize(img, (w, h), interpolation=cv2.INTER_AREA), 26, 3)
@@ -501,12 +502,12 @@ def render_frame(t):
     img = fr[min(len(fr) - 1, int(u * FPS))]
     if s["src"] == "me" and s["a"] < 1:
         z = 0.03 * smooth((t - out_t("me", 3.75)) / 0.25) * (1 - smooth((t - out_t("me", 4.7)) / 0.5))   # "Cuidado!"
-        frame = Image.fromarray(np.clip(me_full(img, t, z).astype(np.float32) * VIG, 0, 255).astype(np.uint8)).convert("RGBA")
+        frame = Image.fromarray(me_full(img, t, z)).convert("RGBA")
         draw_caption(frame, t, 1450, 56, ("me",))
         react_tag(frame, t, "REACT  ·  PAULISTA ONTEM", 0.9, 6.2)
     elif s["src"] == "me":
         z = 0.035 * smooth((t - out_t("me", 19.7)) / 3.5)                                         # aproxima no "dia 25"
-        out = (me_full(img, t, z).astype(np.float32) * VIG)                                          # fundo real dele, sem recorte
+        out = me_full(img, t, z).astype(np.float32)                                          # fundo real dele, sem recorte
         kin = ease_io(u / 0.6)                                                                    # a janelinha cresce até a tela cheia
         if kin < 1:
             bg = blur_bg(_last_ae[0], 0.26) if _last_ae[0] is not None else NAVYBG.copy()

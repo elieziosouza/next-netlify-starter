@@ -8,6 +8,7 @@ description: Padrão de edição dos vídeos verticais do Eliezio Souza (canal O
 Antes de editar qualquer vídeo, leia `edicao-video/README.md` na raiz deste repositório. Ele tem o guia de estilo aprovado, as preferências do Eliezio e o passo a passo.
 
 Regras que nunca mudam sem ele pedir:
+- Não mudar cores nem luz do vídeo original dele (sem correção de cor, vinheta ou granulação na imagem dele).
 - Visual profissional de telejornal, nunca amador.
 - Não cortar o Eliezio: na tela dividida ele aparece inteiro, com folga acima da cabeça.
 - Zooms de no máximo 7%, sempre suaves.
