@@ -69,6 +69,30 @@ def investig(img):         # D: documentário investigativo
     f = sat(f, 0.65, sk, 0.8); f = clarity(f, 0.16, 6)
     return (np.clip(f, 0, 1) * 255).astype(np.uint8)
 
+def skin_fix(img):
+    """pele mais natural: menos laranja, menos brilho na careca, sombras do rosto levemente abertas (por pixel, entra na tabela)"""
+    f = img.astype(np.float32) / 255
+    sk = skin_mask(f)
+    hsv = cv2.cvtColor((f * 255).astype(np.uint8), cv2.COLOR_RGB2HSV_FULL).astype(np.float32)
+    h, s, v = hsv[..., 0], hsv[..., 1], hsv[..., 2] / 255
+    m = sk[..., 0]
+    h2 = h - 5.0 * m                                       # laranja → tom de pele mais neutro
+    s2 = s * (1 - 0.26 * m)                                # menos saturado
+    hi = np.clip((v - 0.62) / 0.38, 0, 1)
+    v2 = v - m * hi * (v - 0.62) * 0.45                    # segura o brilho (careca, testa)
+    lo = np.clip(1 - v / 0.45, 0, 1)
+    v2 = v2 + m * lo * 0.05                                # abre um pouco as sombras do rosto
+    out = cv2.cvtColor(np.dstack([np.mod(h2, 256), np.clip(s2, 0, 255), np.clip(v2, 0, 1) * 255]).astype(np.uint8), cv2.COLOR_HSV2RGB_FULL)
+    return out
+def cinema_skin(img):
+    return cinema(skin_fix(img))
+def face_light(img, cx, cy, rx=150, ry=200, gain=0.06):
+    """luz de preenchimento suave no rosto (espacial, aplicada depois)"""
+    h, w = img.shape[:2]; yy, xx = np.mgrid[0:h, 0:w]
+    g = 1 + gain * np.exp(-(((xx - cx) / rx) ** 2 + ((yy - cy) / ry) ** 2))
+    return np.clip(img.astype(np.float32) * g[..., None], 0, 255).astype(np.uint8)
+
+# padrão desde 12/10/2026: cinema + pele natural
 GRADES = [("ATUAL", current), ("B · PREMIUM LIMPO", premium), ("C · CINEMA AZUL E DOURADO", cinema), ("D · DOCUMENTÁRIO", investig)]
 if __name__ == "__main__":
     me = cv2.cvtColor(cv2.imread("me.png"), cv2.COLOR_BGR2RGB); fl = cv2.cvtColor(cv2.imread("fl.png"), cv2.COLOR_BGR2RGB)

@@ -8,7 +8,8 @@ sys.path.insert(0, f"{S}/work")
 import sfx, grading
 from minitop import make_minitop, make_minifooter, handles_row
 from segment_person import PersonSeg
-GRADE = grading.Fast(grading.cinema, f"{S}/grade/lut_cinema.npy", 0.1, 6)
+GRADE = grading.Fast(grading.cinema_skin, f"{S}/grade/lut_cinema_pele.npy", 0.1, 6)
+def GRADE_ME(a): return grading.face_light(GRADE(a), 239, 380)
 
 V = f"{S}/v10"; FD = f"{S}/fontdl"
 ME, AE, IG = f"{V}/me.mp4", f"{V}/aereo.mp4", f"{V}/ig.mp4"
@@ -278,7 +279,7 @@ def finish(frame, t):
 CAPS = build_caps(ME_CAPS, "me", 5, "me")
 top, TOPH = make_minitop(W, f"{FD}/Montserrat-SemiBold.ttf")
 FACE = (239.0, 380.0)
-REACT = np.stack([GRADE(f) for f in decode(ME, 24.4, 36.3, 478, 850)])       # ele assistindo, em silêncio
+REACT = np.stack([GRADE_ME(f) for f in decode(ME, 24.4, 36.3, 478, 850)])       # ele assistindo, em silêncio
 def react_frame(t):
     n = len(REACT); period = 2 * (n - 1); k = int(t * FPS * 0.85) % period
     return REACT[k if k < n else period - k]
@@ -483,7 +484,7 @@ def seg_frames(s):
     if key not in _cache:
         _cache.clear()
         if s["src"] == "me":
-            fr = np.stack([GRADE(f) for f in decode(ME, s["a"], s["b"], 478, 850)])
+            fr = np.stack([GRADE_ME(f) for f in decode(ME, s["a"], s["b"], 478, 850)])
             _cache[key] = fr
         elif s["src"] == "ae": _cache[key] = np.stack([GRADE(f) for f in decode(AE, s["a"], s["b"], AW, AH, AECROP)])
         else: _cache[key] = np.stack([GRADE(f) for f in decode(IG, s["a"], s["b"], IW, IH, IGCROP)])

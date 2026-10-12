@@ -20,7 +20,7 @@ Material pronto:
 - Scripts em `edicao-video/scripts/`: `render_tela_dividida.py` (painéis de dados), `render_recortes_noticia.py` (recortes de jornal), `clean.py` (apaga legenda gravada), `capmask.py`/`segment.py` (lê tempos da legenda), `sfx.py`, `music.py` e `cards.py`.
 - Exemplos aprovados em `edicao-video/exemplos/`.
 
-Todo vídeo sai com duas opções de capa impactante (`edicao-video/scripts/capa.py`, seção 7 do README). Antes de fechar o vídeo, mostre as duas e espere o Eliezio escolher qual vai embutida no início.
+Todo vídeo sai com três opções de capa impactante (A e B com o rosto dele, C sem o rosto) (`edicao-video/scripts/capa.py`, seção 7 do README). Antes de fechar o vídeo, mostre as duas e espere o Eliezio escolher qual vai embutida no início.
 
 Todo vídeo começa com a capa escolhida e a assinatura glitch, numa etapa só: `edicao-video/scripts/embutir_capa.py VIDEO CAPA SAIDA`. O glitch fica só sobre a capa e nunca em cima da fala inicial.
 

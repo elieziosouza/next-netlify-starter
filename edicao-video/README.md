@@ -28,7 +28,7 @@ Cada vídeo novo deve seguir este guia e, quando algo for melhorado, o guia é a
 | Topo | `minitop.make_minitop`: só as redes sociais (ícones dourados de traço fino + @ezvideos_cortes, @elieziosouza78, @eliezio.souza78), Montserrat SemiBold 27, filete dourado fino com pontas esmaecidas e sombra azul suave que some no vídeo. **Sem o nome** |
 | Rodapé | `minitop.make_minifooter`: linha fina de progresso (dourada sobre trilho branco a 18%) e "OPINIÃO • ATUALIDADES • REAÇÕES" em 23 px, com ATUALIDADES em dourado |
 | Artes antigas | `assets/topo.jpg` e `assets/rodape.jpg` (com nome e botões) ficam guardadas, mas **não são mais usadas** |
-| Correção de cor | **Padrão desde 11/10/2026: "Cinema azul e dourado"** (`scripts/grading.py`, função `cinema`): sombras puxadas para o azul-marinho, luzes e pele levemente quentes, fundo menos saturado, verde forte contido, pele protegida por máscara, curva em S com ombro que segura os claros e clareza leve no rosto. Aplicar nas fontes com `grading.Fast(grading.cinema, 'lut_cinema.npy')` (tabela 256³, ~20 ms por quadro). Alternativa para denúncias pesadas: `investig` (documentário). Vinheta 24% e granulação suave por cima. |
+| Correção de cor | **Padrão desde 11/10/2026: "Cinema azul e dourado"** (`scripts/grading.py`, função `cinema`): sombras puxadas para o azul-marinho, luzes e pele levemente quentes, fundo menos saturado, verde forte contido, pele protegida por máscara, curva em S com ombro que segura os claros e clareza leve no rosto. Aplicar nas fontes com `grading.Fast(grading.cinema, 'lut_cinema.npy')` (tabela 256³, ~20 ms por quadro). Alternativa para denúncias pesadas: `investig` (documentário). **Desde 12/10/2026 a pele também é corrigida** (`cinema_skin`: menos laranja, brilho da careca contido, sombras do rosto abertas) e entra uma luz suave de preenchimento no rosto (`face_light`). Vinheta 24% e granulação suave por cima. |
 | Tela final | 3 s: fundo azul, "SIGA PARA MAIS" (ExtraBold 50), filete dourado e a linha das redes. **Sem o nome** |
 
 Exemplos aprovados em `exemplos/`.
@@ -144,6 +144,11 @@ O Eliezio pediu em 11/10/2026: **todo vídeo sai com capa impactante**, de prefe
   - título curto em Montserrat Black, com 2 a 4 palavras de impacto;
   - uma palavra-chave em carimbo vermelho ou em dourado;
   - linha de apoio em ExtraBold e um filete dourado.
+- **Sempre três opções (pedido de 12/10/2026):** A e B com o rosto dele, e **C sem o rosto** (só a imagem do assunto, com o mesmo texto forte e carimbo vermelho).
+- **Rosto na capa (12/10/2026):** o vídeo do WhatsApp tem só 478 px de largura, então ampliar demais deixa o rosto "duro".
+  - Usar pouca ampliação (zoom 1,0), nitidez leve, redução de ruído e a pele corrigida (`grading.cinema_skin` + `face_light`).
+  - Escolher o melhor quadro em **todos os vídeos dele**, não só no atual: o quadro mais nítido, com olhos abertos e expressão firme. Os melhores até agora são os do vídeo do Vorcaro (blazer, luz suave).
+  - Pode trocar o fundo pela imagem do assunto (recorte da pessoa). Nunca cortar cabeça nem orelha: para tirar algo do fundo, remover pela cor, não pelo formato.
 - **Preferida do Eliezio (11/10/2026):** a opção A, com **palavra-chave em carimbo vermelho** (ex.: "PROVA / ANULADA / NÃO É INOCÊNCIA", "EU SOU / BOLSA FAMÍLIA / E MAIS 6 PROGRAMAS", "ZONA AZUL / +150% / DE R$ 20 PARA R$ 50"). O carimbo vermelho é o padrão, mesmo em tema positivo. O dourado (`stamp_gold`) só entra se ele pedir.
 - **Duas opções:** uma com o conceito do vídeo (ex.: "PROVA ANULADA NÃO É INOCÊNCIA") e outra com o dado mais forte (ex.: "R$ 2 MILHÕES NA CONTA DO QUEIROZ").
 - **O Eliezio escolhe a capa antes de fechar o vídeo (regra fixa).** Primeiro mostre as duas opções e espere a escolha. Só depois embuta a capa e entregue o vídeo final. Nunca embutir por conta própria.
