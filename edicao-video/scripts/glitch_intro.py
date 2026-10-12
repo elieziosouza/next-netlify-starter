@@ -1,6 +1,6 @@
 """Assinatura de abertura do canal: glitch sonoro + glitch visual nos primeiros quadros.
 
-Uso: python3 glitch_intro.py ENTRADA.mp4 SAIDA.mp4
+Uso: python3 glitch_intro.py ENTRADA.mp4 SAIDA.mp4 [SEGUNDO_DA_PASSAGEM]
 Aplicar como última etapa, depois de embutir a capa. Não desloca nem corta o áudio.
 """
 import sys, subprocess, wave, tempfile, os
@@ -53,9 +53,10 @@ def glitch_frame(img, k, rng):
         out = np.clip(out.astype(np.int16) + 60, 0, 255).astype(np.uint8)
     return out
 
+CUT = 0.45                                               # passagem capa → vídeo (embutir_capa.py usa 0,62)
 def intensity(t):
     if t < 0.34: return 1.0 - 0.6 * (t / 0.34)          # abertura
-    if 0.40 <= t < 0.50: return 0.55                     # passagem capa → vídeo
+    if CUT - 0.05 <= t < CUT + 0.05: return 0.55         # passagem capa → vídeo
     return 0.0
 
 def main(src, dst):
@@ -88,4 +89,5 @@ def main(src, dst):
     print("ok", i)
 
 if __name__ == "__main__":
+    if len(sys.argv) > 3: CUT = float(sys.argv[3])
     main(sys.argv[1], sys.argv[2])

@@ -22,7 +22,9 @@ Material pronto:
 
 Todo vídeo sai com duas opções de capa impactante (`edicao-video/scripts/capa.py`, seção 7 do README). Antes de fechar o vídeo, mostre as duas e espere o Eliezio escolher qual vai embutida no início.
 
-Todo vídeo começa com a assinatura glitch (`edicao-video/scripts/glitch_intro.py`), aplicada por último, depois da capa.
+Todo vídeo começa com a capa escolhida e a assinatura glitch, numa etapa só: `edicao-video/scripts/embutir_capa.py VIDEO CAPA SAIDA`. O glitch fica só sobre a capa e nunca em cima da fala inicial.
+
+Nunca cortar o rosto nem o topo da cabeça do Eliezio (vídeo, janelinha, capa, transições). Conferir em quadros soltos antes do render.
 
 Ao entregar cada vídeo, termine sempre com título (opções), legenda do post, hashtags e título para Shorts (seção 7.1 do README).
 

@@ -59,6 +59,13 @@ Exemplos aprovados em `exemplos/`.
 - Cartões de fato entram em camada por cima (manchete real, números com contagem animada), com fonte.
 - Conclusão com "OS FATOS": linha do tempo em cartões numerados (negou, o áudio, admitiu).
 
+**React com imagens de ato e números** (`render_react_paulista.py`, Paulista 12/10/2026):
+- Imagens de terceiros em cartões 3D empilhados: o primeiro desce do topo, o segundo entra girando por cima e o de baixo recua e escurece. O som dos vídeos de terceiros é cortado (evita direitos autorais) e a trilha sobe.
+- **Ele "no lugar":** recorte da pessoa com U2Net (`segment_person.py`), máscara suavizada no tempo e luz de contorno; o fundo do quarto é trocado pela filmagem do assunto, desfocada e escurecida. Também vale para a capa.
+- **Cartões de vidro fosco** acima da cabeça (o próprio quadro desfocado atrás), com número animado e fonte. Nunca encostam no rosto.
+- **Gesto escrito em luz:** rastreamento da mão por cor de pele (`hand.json`), suavizado; o traço dourado é "escrito" acompanhando a mão (ex.: o L), com ponta brilhante, faíscas e som de marcador.
+- A janelinha do react cresce até a tela cheia quando ele volta a falar (sem imagem dupla).
+
 **Notícia na imprensa** (`render_recortes_noticia.py`): mesmo layout dividido, com o recorte de jornal (`cards.py`) no painel "NA IMPRENSA". O recorte traz a manchete real com a fonte embaixo, marca-texto amarelo animado e carimbo vermelho opcional.
 
 ## 5. Painéis e animação
@@ -113,14 +120,17 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
 
 ## 6.1 Assinatura de abertura: glitch (marca registrada, obrigatória)
 
-Pedido do Eliezio em 11/10/2026: **todo vídeo começa com o efeito glitch**. É a última etapa, depois de embutir a capa:
+Pedido do Eliezio em 11/10/2026: **todo vídeo começa com o efeito glitch**. Em 12/10/2026 ele pediu: **o glitch nunca fica em cima da fala inicial**. Por isso a capa e o glitch são feitos juntos, numa etapa só:
 
 ```
-python3 edicao-video/scripts/glitch_intro.py video_com_capa.mp4 video_final.mp4
+python3 edicao-video/scripts/embutir_capa.py video_editado.mp4 capa_escolhida.jpg video_final.mp4
 ```
+
+- A capa aparece sozinha por 0,8 s (com avanço leve de 2%), o vídeo entra com fusão de 0,18 s e a fala começa só depois de 0,62 s.
+- O glitch cobre a capa (0 a 0,34 s) e a passagem capa → vídeo. O som do glitch dura 0,32 s, então termina antes da primeira palavra.
 
 - **Som:** cerca de 0,4 s de estalos picotados (tons quadrados, ruído bitcrush, sample-hold) sem zap final (pedido do Eliezio), sempre o mesmo (seed fixa), para virar marca sonora.
-- **Imagem:** faixas horizontais deslocadas, separação RGB, linhas de varredura e um flash curto, de forma intermitente, nos primeiros 0,34 s. Um glitch menor repete na passagem capa → vídeo (0,40 a 0,50 s).
+- **Imagem:** faixas horizontais deslocadas, separação RGB, linhas de varredura e um flash curto, de forma intermitente, nos primeiros 0,34 s. Um glitch menor repete na passagem capa → vídeo.
 - Não desloca nem corta o áudio. O glitch é somado por cima.
 
 ## 7. Capa (obrigatória em todo vídeo)
@@ -178,3 +188,4 @@ Em vídeo de campanha, lembrar que o eleitor não pode pagar impulsionamento.
 - **11/10/2026:** lettering editorial (referência enviada pelo Eliezio) aprovado como estilo **só para corretor de imóveis**, guardado em `estilo-corretor/`. O canal de opinião mantém a identidade.
 - **11/10/2026:** capa impactante passa a ser obrigatória em todo vídeo (`capa.py`).
 - **11/10/2026:** react Flávio x Vorcaro (negação + áudio): layout de react com áudio, remoção de legenda gravada com vidro fosco, linha do tempo dos fatos. Nova correção de cor "Cinema azul e dourado" vira padrão.
+- **12/10/2026:** react da Paulista: ele recortado na frente da multidão, cartões de vidro fosco, L escrito em luz acompanhando a mão. Nova abertura `embutir_capa.py`: glitch só sobre a capa, nunca em cima da fala. Reforço do Eliezio: **nunca cortar o rosto dele**.
