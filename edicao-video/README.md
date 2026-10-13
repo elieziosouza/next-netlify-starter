@@ -68,6 +68,13 @@ Exemplos aprovados em `exemplos/`.
 - **Gesto escrito em luz:** rastreamento da mão por cor de pele (`hand.json`), suavizado; o traço dourado é "escrito" acompanhando a mão (ex.: o L), com ponta brilhante, faíscas e som de marcador.
 - A janelinha do react fica parada até o fim das imagens e cresce **uma única vez** até a tela cheia, já com a fala dele (sem imagem dupla e sem transição dobrada).
 
+**Pesquisa eleitoral em gráfico animado** (`render_pesquisa.py`, PoderData 13/10/2026):
+- Conferir a pesquisa na fonte antes (instituto, datas de campo, entrevistas, margem, registro no TSE) e mostrar tudo no rodapé do painel.
+- A matéria roda num cartão em cima; embaixo, painel de vidro com barras de base zero (proporcionais), foto de cada candidato e o número contando.
+- **Mudança entre rodadas (pedido do Eliezio):** selo "ANTERIOR · data" que gira para "NOVA · data", barras andando do valor antigo para o novo com fantasma da rodada anterior, tags −/+ e colchete da diferença encolhendo; no fim, gráfico de linhas desenhado na tela (anterior → nova).
+- Carimbo vermelho "EMPATE TÉCNICO" no canto do painel, sem cobrir as barras. Chamada final "COMENTE O QUE VOCÊ ACHA".
+- Capa sem rosto pode usar fotos da matéria, mas sem logos de jornal.
+
 **React com o vídeo rolando inteiro e tela dividida** (`render_react_lula_v2.py`, preferido pelo Eliezio em 12/10/2026):
 - O vídeo de terceiros **roda inteiro, sem cortes**, com o som original (quando ele quiser). Os momentos do vídeo ficam longos.
 - Quando ele fala, a tela **divide**: o vídeo continua rolando em cima (0–840) e ele aparece embaixo, grande, da cabeça ao peito (recorte do próprio quadro em tela cheia, com folga acima da cabeça). Entre as falas, o vídeo ocupa a tela toda.
