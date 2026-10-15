@@ -10,6 +10,10 @@ Cada vídeo novo deve seguir este guia e, quando algo for melhorado, o guia é a
 
 - **Redes do canal (15/10/2026):** Instagram @ezvideos_cortes · TikTok e **Kwai** @elieziosouza78 · YouTube @eliezio.souza78. No topo e na tela final, TikTok e Kwai dividem o mesmo @ (dois ícones lado a lado), em `scripts/minitop.py` (`ITEMS`). Incluir o Kwai também nas legendas dos posts.
 
+- **Ele aponta para baixo = ele em cima (15/10/2026):** quando ele aponta o dedo para baixo ao chamar o vídeo, ele sobe para uma janela no topo (400×536, cabeça inteira com folga) e o vídeo de terceiros entra embaixo num cartão 3D inclinado para ele, sobre o fundo escuro desfocado (estilo do react da folga, que passou de 20 mil visualizações). Ver `scripts/render_react_canella.py`.
+- **Música "vai dar PT" no final (15/10/2026):** entra baixinha no "dia 25" (com ducking sob a voz), fica cheia quando ele termina de falar, e a letra aparece grande abaixo do rosto com o **"PT" em pílula vermelha**. **Sem a estrela amarela** (ele não gostou). Se ele faz o L no final, a letra fica abaixo da mão.
+- **Título e hashtags juntos (15/10/2026):** na entrega, dar o título já com as hashtags num bloco só, pronto para copiar e colar.
+
 - **Cores e luz do vídeo dele ficam como ele gravou (12/10/2026):** sem correção de cor, sem vinheta, sem granulação e sem mexer na luz do rosto. A correção de cor só entra nas imagens de terceiros, se ele não pedir o contrário.
 
 1. **Nada de cara de amador.** Visual de telejornal: tipografia limpa, linhas finas douradas, números grandes. Sem partículas, sem desenho animado, sem check verde, sem recorte girando.
@@ -184,7 +188,7 @@ O Eliezio pediu em 11/10/2026: **todo vídeo sai com capa impactante**, de prefe
 
 ## 7.1 Título, legenda e hashtags (obrigatório na entrega)
 
-Toda entrega de vídeo termina com, no chat:
+Toda entrega de vídeo termina com, no chat (título + hashtags num bloco de código pronto para copiar e colar, pedido de 15/10/2026):
 - 3 a 4 opções de **título**, indicando a preferida;
 - **legenda do post** para Instagram e TikTok, com fatos com fonte e uma chamada para comentar;
 - **hashtags**: uma lista completa e uma versão enxuta com 5 a 6;
@@ -220,3 +224,4 @@ Em vídeo de campanha, lembrar que o eleitor não pode pagar impulsionamento.
 - **11/10/2026:** react Flávio x Vorcaro (negação + áudio): layout de react com áudio, remoção de legenda gravada com vidro fosco, linha do tempo dos fatos. Nova correção de cor "Cinema azul e dourado" vira padrão.
 - **12/10/2026:** o Eliezio não gostou do recorte com fundo trocado nem da luz extra no rosto; versão final com o fundo real e a pele com os claros segurados.
 - **12/10/2026:** react da Paulista: ele recortado na frente da multidão, cartões de vidro fosco, L escrito em luz acompanhando a mão. Nova abertura `embutir_capa.py`: glitch só sobre a capa, nunca em cima da fala. Reforço do Eliezio: **nunca cortar o rosto dele**.
+- **15/10/2026:** react da prisão de Márcio Canella: ele aponta para baixo e sobe para a janela do topo, vídeo em cartão 3D embaixo (`render_react_canella.py`), selo de notícia e de valor conferidos, "vai dar PT" no final sem estrela. O vídeo do Lula às 5h30 foi refeito sem a estrela. React do chinelo de pé gigante (`render_react_chinelo.py`) com legenda gravada em inglês trocada por cartão em português.
