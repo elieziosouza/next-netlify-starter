@@ -50,6 +50,17 @@ def marker(dur=0.7):
     out = bp * env; out /= np.abs(out).max() + 1e-9
     return np.stack([out, out], 1)
 
+def click(seed=11):
+    """clique de mouse: estalo curto de apertar + estalo menor de soltar"""
+    rng = np.random.default_rng(seed); n = int(0.11 * SR); out = np.zeros(n)
+    for t0, g, f0 in ((0.0, 1.0, 3200), (0.065, 0.55, 2600)):
+        i = int(t0 * SR); m = int(0.012 * SR); tt = np.arange(m) / SR
+        burst = rng.normal(0, 1, m) * np.exp(-tt / 0.0016) + 0.8 * np.sin(2 * np.pi * f0 * tt) * np.exp(-tt / 0.003)
+        out[i:i + m] += g * burst
+    out = np.diff(np.concatenate([[0], out])) * 0.6 + out * 0.4
+    out /= np.abs(out).max() + 1e-9
+    return np.stack([out, out], 1)
+
 def build(events, total, path):
     buf = np.zeros((int(total * SR) + SR, 2))
     for t0, snd, g in events:
