@@ -8,6 +8,8 @@ Cada vídeo novo deve seguir este guia e, quando algo for melhorado, o guia é a
 
 ## 1. Preferências do Eliezio (prioridade máxima)
 
+- **Redes do canal (15/10/2026):** Instagram @ezvideos_cortes · TikTok e **Kwai** @elieziosouza78 · YouTube @eliezio.souza78. No topo e na tela final, TikTok e Kwai dividem o mesmo @ (dois ícones lado a lado), em `scripts/minitop.py` (`ITEMS`). Incluir o Kwai também nas legendas dos posts.
+
 - **Cores e luz do vídeo dele ficam como ele gravou (12/10/2026):** sem correção de cor, sem vinheta, sem granulação e sem mexer na luz do rosto. A correção de cor só entra nas imagens de terceiros, se ele não pedir o contrário.
 
 1. **Nada de cara de amador.** Visual de telejornal: tipografia limpa, linhas finas douradas, números grandes. Sem partículas, sem desenho animado, sem check verde, sem recorte girando.
