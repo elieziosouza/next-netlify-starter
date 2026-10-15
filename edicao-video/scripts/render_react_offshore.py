@@ -17,7 +17,11 @@ EDL = [("me", 2.75, 9.25), ("cl", 0.18, 6.25), ("cl", 10.20, 32.55), ("cl", 35.0
 segs = []; acc = 0.0
 for src, a, b in EDL:
     segs.append(dict(src=src, a=a, b=b, t0=acc, t1=acc + (b - a))); acc += b - a
-FIN_IN = acc; FIN_LEN = 3.0; EDIT_END = FIN_IN + FIN_LEN; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
+FIN_IN = acc
+MUS_IN = segs[-1]["t0"]                      # música original entra baixinho no "dia 25"
+LYR = [(0.0, 1.43, "ESSE ANO"), (1.43, 2.87, "O LULA BOTA"), (2.87, 3.87, "O BOLSONARO"), (3.87, 4.87, "PRA MAMAR"),
+       (4.87, 5.73, "VAI DAR PT"), (5.73, 6.73, "VAI DAR"), (6.73, 8.23, "VAI DAR PT"), (8.23, 9.43, "VAI DAR PT")]
+FIN_LEN = 9.45 - (FIN_IN - MUS_IN); EDIT_END = FIN_IN + FIN_LEN; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
 CL_IN = segs[1]["t0"]; CL_OUT = segs[3]["t1"]
 def seg_at(t):
     for s in segs:
@@ -364,6 +368,28 @@ def vai_dar_pt(frame, t):
     frame.alpha_composite(blk.filter(ImageFilter.GaussianBlur(10)), (int(W / 2 - lay.width / 2) + 4, 1620 - lay.height // 2 + 8))
     frame.alpha_composite(lay, (int(W / 2 - lay.width / 2), 1620 - lay.height // 2))
 
+def lyrics(frame, t):
+    """letra da música no lugar da legenda (abaixo do rosto), 'PT' em pílula vermelha"""
+    mt = t - MUS_IN; k_all = clamp((t - FIN_IN) / 0.4)
+    g = Image.new("RGBA", (W, 760), (0, 0, 0, 0)); ImageDraw.Draw(g).rectangle((0, 0, W, 760), fill=(4, 10, 20, 255))
+    g.putalpha(Image.linear_gradient("L").resize((W, 760)).point(lambda v: int(v * 0.72 * k_all)))
+    frame.alpha_composite(g, (0, H - 760))
+    for a, b, txt in LYR:
+        if not (a <= mt < b): continue
+        u = mt - a; k = back_out(u / 0.18, 2.0); pt = txt.endswith("PT")
+        f = MF("ExtraBold", 108 if len(txt) <= 10 else 88)
+        lay = Image.new("RGBA", (W, 200), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+        if pt:
+            pre = txt[:-2]; wp = d.textlength(pre, font=f); wt = d.textlength("PT", font=f); x0 = W / 2 - (wp + wt + 30) / 2
+            d.text((x0, 100), pre, font=f, fill=WH, anchor="lm")
+            d.rounded_rectangle((x0 + wp + 2, 30, x0 + wp + wt + 34, 172), 18, fill=RED + (255,)); d.text((x0 + wp + 18, 100), "PT", font=f, fill=WH, anchor="lm")
+        else:
+            d.text((W / 2, 100), txt, font=f, fill=WH, anchor="mm")
+        sc = 0.7 + 0.3 * k; lay = fade(lay.resize((int(W * sc), int(200 * sc)), Image.BICUBIC), k_all)
+        blk = Image.new("RGBA", lay.size, (0, 0, 0, 255)); blk.putalpha(lay.getchannel("A").point(lambda v: int(v * 0.6)))
+        frame.alpha_composite(blk.filter(ImageFilter.GaussianBlur(10)), (int(W / 2 - lay.width / 2) + 4, 1630 - lay.height // 2 + 8))
+        frame.alpha_composite(lay, (int(W / 2 - lay.width / 2), 1630 - lay.height // 2))
+
 def me_fin_frame(tt):
     """final: ele segura o L (vai e volta no fim da fala)"""
     u = (tt - FIN_IN) * 0.8; L0, L1 = 15.70, 16.68; Lq = L1 - L0; p = u % (2 * Lq); a = L1 - p if p < Lq else L0 + (p - Lq)
@@ -373,7 +399,7 @@ def render_frame(t):
     if t >= END_IN + 0.35: return end_card(t)
     tt = min(t, EDIT_END - 1e-3); s = seg_at(tt)
     if s is None:                                               # final com a batida
-        img = me_fin_frame(tt).copy(); frame = Image.fromarray(img).convert("RGBA"); vai_dar_pt(frame, t)
+        img = me_fin_frame(tt).copy(); frame = Image.fromarray(img).convert("RGBA"); lyrics(frame, t)
     elif s["src"] == "me":
         src = src_frame(s, tt); img = big_words(src.copy(), src, tt, s, "atras")
         # entrada depois do cartão: leve desfoque
@@ -433,8 +459,8 @@ def main():
         t0 = int(s["t0"] * SR); vt[t0:t0 + len(p)] += p * env[:, None]
     writew(f"{V}/voice.wav", vt)
     # batida própria: entra baixinho no "dia 25" e a virada cai no fim da fala
-    MUS_IN = out_t("me", 13.05); lead = FIN_IN - MUS_IN; BAR = 60 / 130 * 4
-    song = readw(f"{S}/musica/batidao_pt.wav")[max(0, int((2 * BAR - lead) * SR)):]
+    lead = FIN_IN - MUS_IN
+    song = readw(f"{S}/v15/song_vox.wav")
     L = min(len(song), n - int(MUS_IN * SR)); tl = np.arange(L) / SR
     gain = np.where(tl < lead, 10 ** ((-22 + 22 * tl / lead) / 20), 1.0) * np.clip(1 - (tl - (TOTAL - MUS_IN - 1.6)) / 1.5, 0, 1)
     st = np.zeros((n, 2), np.float32); st[int(MUS_IN * SR):int(MUS_IN * SR) + L] = song[:L] * gain[:, None]; writew(f"{V}/song.wav", st)
