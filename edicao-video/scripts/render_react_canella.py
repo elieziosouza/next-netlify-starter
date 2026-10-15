@@ -18,13 +18,15 @@ HOT = set()
 OPEN = (0.15, 10.95)                  # trecho dele na abertura
 TR_IN = 9.40                          # quando ele aponta para baixo: começa a subir para a janela
 REEL_IN = OPEN[1] - OPEN[0]           # o clipe começa logo depois da fala ("...nisso aqui")
-REEL_LEN = 39.05
+CUT_A, CUT_B = 27.45, 36.00          # corte: elogios repetidos e evento (versão < 60 s para o YouTube)
+REEL_LEN = 39.05 - (CUT_B - CUT_A)
+def clip_src(rt): return rt if rt < CUT_A else rt + (CUT_B - CUT_A)
 REEL_OUT = REEL_IN + REEL_LEN
 CLOSE = (17.00, 24.95)                # "eu não sei aonde isso vai dar... dia 25 vai ser histórico" + L
 CLOSE_IN = REEL_OUT
 MUS_IN = CLOSE_IN + (19.50 - CLOSE[0])   # música entra baixinho no "dia 25"
 FIN_IN = CLOSE_IN + (22.70 - CLOSE[0])   # fim da fala: música cheia + letra
-FIN_LEN = 9.45 - (FIN_IN - MUS_IN)       # até o segundo "VAI DAR PT"
+FIN_LEN = 9.45 - (FIN_IN - MUS_IN)       # música original até o segundo "VAI DAR PT"
 EDIT_END = FIN_IN + FIN_LEN; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
 WATCH = (11.10, 16.90)                # ele em silêncio olhando: vai e volta na janela
 segs = [dict(src="me", a=OPEN[0], b=OPEN[1], t0=0.0, t1=REEL_IN), dict(src="me", a=CLOSE[0], b=CLOSE[1], t0=CLOSE_IN, t1=EDIT_END)]
@@ -306,8 +308,8 @@ def watch_t(t):
 CLIP = None
 def clip_frame(rt):
     global CLIP
-    if CLIP is None: CLIP = decode(CL, 0, REEL_LEN, 576, 1024)
-    return CLIP[int(clamp(rt * FPS, 0, len(CLIP) - 1))]
+    if CLIP is None: CLIP = decode(CL, 0, 39.05, 576, 1024)
+    return CLIP[int(clamp(clip_src(rt) * FPS, 0, len(CLIP) - 1))]
 
 def card_3d(img, tilt):
     """cartão com a base recuando, virado para cima (para ele, que está no topo)"""
@@ -449,7 +451,10 @@ def main():
         env = np.ones(len(p)); env[:f] = np.linspace(0, 1, f); env[-f:] = np.linspace(1, 0, f)
         t0 = int(s["t0"] * SR); vt[t0:t0 + len(p)] += p * env[:, None]
     writew(f"{V}/voice.wav", vt)
-    cl = readw(f"{V}/cl.wav")[:int(REEL_LEN * SR)]; ct = np.zeros((n, 2), np.float32)
+    cl0 = readw(f"{V}/cl.wav"); xf = int(0.08 * SR); A_, B_ = int(CUT_A * SR), int(CUT_B * SR)
+    p1, p2 = cl0[:A_].copy(), cl0[B_:int(39.05 * SR)].copy()
+    p1[-xf:] *= np.linspace(1, 0, xf)[:, None]; p2[:xf] *= np.linspace(0, 1, xf)[:, None]
+    cl = np.concatenate([p1[:-xf], p1[-xf:] + p2[:xf], p2[xf:]])[:int(REEL_LEN * SR)]; ct = np.zeros((n, 2), np.float32)
     f = int(0.4 * SR); env = np.ones(len(cl)); env[-f:] = np.linspace(1, 0, f); env[:int(0.05 * SR)] = np.linspace(0, 1, int(0.05 * SR))
     t0 = int(REEL_IN * SR); ct[t0:t0 + len(cl)] = cl * env[:, None]; writew(f"{V}/clip.wav", ct)
     song = readw(f"{S}/v15/song_vox.wav"); mt0 = int(MUS_IN * SR); L = min(len(song), n - mt0)
