@@ -201,6 +201,12 @@ Em vídeo de campanha, lembrar que o eleitor não pode pagar impulsionamento.
 
 ## 8. Como fazer o próximo vídeo
 
+**Começo de sessão nova (16/10/2026):**
+1. O "Setup script" do ambiente roda `bash edicao-video/setup.sh` (instala dependências e baixa os modelos de transcrição e de recorte em `~/.cache/edicao-video`). Se não estiver configurado, rode à mão.
+2. `bash edicao-video/scripts/prepara_area.sh "$S"` monta a área de trabalho (scripts em `$S/work`, fontes, modelos e a batida própria).
+3. Música original "vai dar PT": o repositório é **público**, então ela não fica aqui. Baixar `kit/vai-dar-pt.mp3` da página de entregas (privada) com a ferramenta Artifact e converter para `$S/v15/song_vox.wav` (48 kHz, estéreo).
+4. Vídeos do Eliezio: pedir o arquivo original (CapCut ou Google Drive). O WhatsApp reduz para 478×850.
+
 1. O Eliezio exporta do CapCut em 1080p, de preferência **sem** legenda.
    - Para transcrever, use `transcrever.py` (Whisper small + VAD via sherpa-onnx). O Hugging Face é bloqueado na rede da sessão, mas o modelo baixa pelo GitHub:
      - `pip install sherpa-onnx`
