@@ -1,4 +1,4 @@
-"""Esquete 'momento André Janones': ele acorda, abre a live e pede mais gente. Contador AO VIVO sobe a cada número."""
+"""Esquete meme 'momento André Janones': o grupo Exército do Lula precisa crescer. Contador de participantes sobe a cada número."""
 
 import sys, math, subprocess, wave
 import numpy as np, cv2
@@ -268,14 +268,14 @@ def big_behind(img, st):
     for a, b, word in BIG:
         if not (a <= st < b): continue
         u = st - a; k = back_out(u / 0.35, 1.6); al = clamp(u / 0.12) * clamp((b - st) / 0.25 if b < EDIT_END else 1)
-        size = 330; f = BIGF(size); d0 = ImageDraw.Draw(Image.new("L", (4, 4)))
+        size = 250; f = BIGF(size); d0 = ImageDraw.Draw(Image.new("L", (4, 4)))
         while d0.textlength(word, font=f) > W - 150: size -= 6; f = BIGF(size)
         lay = Image.new("RGBA", (W, int(size * 1.4)), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
         d.text((W / 2 + 5, lay.height / 2 + 10), word, font=f, fill=(0, 0, 0, 70), anchor="mm"); d.text((W / 2, lay.height / 2), word, font=f, fill=NAVY + (255,), anchor="mm")
         L = np.asarray(lay, np.float32) / 255; sc = 0.78 + 0.22 * k
         L = cv2.resize(L, (int(L.shape[1] * sc), int(L.shape[0] * sc)), interpolation=cv2.INTER_LINEAR)
         m = np.clip((cv2.resize(SEG(cv2.resize(img, (478, 850), interpolation=cv2.INTER_AREA)), (W, H)) - 0.35) / 0.3, 0, 1)
-        y0 = int(375 - L.shape[0] / 2); x0 = int(W / 2 - L.shape[1] / 2); ya, yb = max(0, y0), min(H, y0 + L.shape[0]); xa, xb = max(0, x0), min(W, x0 + L.shape[1])
+        y0 = int(425 - L.shape[0] / 2); x0 = int(W / 2 - L.shape[1] / 2); ya, yb = max(0, y0), min(H, y0 + L.shape[0]); xa, xb = max(0, x0), min(W, x0 + L.shape[1])
         Lc = L[ya - y0:yb - y0, xa - x0:xb - x0]; A = Lc[..., 3:4] * al * (1 - m[ya:yb, xa:xb, None])
         img[ya:yb, xa:xb] = np.clip(img[ya:yb, xa:xb].astype(np.float32) * (1 - A) + Lc[..., :3] * 255 * A, 0, 255).astype(np.uint8)
     return img
@@ -287,41 +287,45 @@ def viewers(t):
     return [n for a, n in STEPS if t >= a][-1]
 def fmt(n): return f"{n:,}".replace(",", ".")
 
+def group_icon(d, cx, cy, col):
+    d.ellipse((cx - 34, cy - 34, cx + 34, cy + 34), fill=GD)
+    for dx, r, yy in ((-13, 9, -6), (13, 9, -6), (0, 11, -10)):
+        d.ellipse((cx + dx - r, cy + yy - r, cx + dx + r, cy + yy + r), fill=col)
+    d.pieslice((cx - 28, cy + 4, cx + 28, cy + 52), 180, 360, fill=col)
+
 def live_badge(frame, t):
+    """cartão do grupo 'Exército do Lula' com o número de participantes subindo"""
     if t < 0.25: return
     kin = back_out((t - 0.25) / 0.45, 1.4); n = viewers(t)
     last = max([a for a, _ in STEPS if a <= t] + ([ROLL1] if t >= ROLL1 else []))
-    pop = 1 + 0.25 * math.exp(-max(0, t - last) / 0.12) if last > 0.5 else 1.0
+    pop = 1 + 0.3 * math.exp(-max(0, t - last) / 0.12) if last > 0.5 else 1.0
     gold = t >= ROLL1
-    f1 = MF("ExtraBold", 34); f2 = MF("ExtraBold", 40 if not gold else 44)
-    lay = Image.new("RGBA", (W, 90), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
-    # pílula AO VIVO
-    w1 = int(d.textlength("AO VIVO", font=f1)) + 80
-    d.rounded_rectangle((0, 12, w1, 78), 33, fill=RED + (255,))
-    on = (int(t * 2.2) % 2 == 0)
-    d.ellipse((24, 35, 44, 55), fill=(255, 255, 255, 255 if on else 110))
-    d.text((56, 45), "AO VIVO", font=f1, fill=WH, anchor="lm")
-    # contador de espectadores
-    txt = fmt(n); w2 = int(d.textlength(txt, font=f2)) + 106; x2 = w1 + 14
-    d.rounded_rectangle((x2, 12, x2 + w2, 78), 33, fill=(4, 14, 26, 215), outline=(GD if gold else (255, 255, 255, 90)), width=3)
-    ex, ey = x2 + 44, 45                                                   # olho desenhado
-    d.ellipse((ex - 20, ey - 12, ex + 20, ey + 12), outline=WH, width=4); d.ellipse((ex - 7, ey - 7, ex + 7, ey + 7), fill=WH)
-    d.text((x2 + 76, 46), txt, font=f2, fill=(GD if gold else WH), anchor="lm")
-    lay = lay.crop((0, 0, x2 + w2 + 4, 90))
-    if pop > 1.001:
-        cnt = lay.crop((x2 - 4, 0, lay.width, 90)); cw, ch = cnt.size
-        cnt = cnt.resize((int(cw * pop), int(ch * pop)), Image.BICUBIC)
-        base = lay.copy(); ImageDraw.Draw(base).rectangle((x2 - 4, 0, lay.width, 90), fill=(0, 0, 0, 0))
-        big = Image.new("RGBA", (x2 - 4 + cnt.width, max(90, cnt.height)), (0, 0, 0, 0)); big.alpha_composite(base, (0, (big.height - 90) // 2))
-        big.alpha_composite(cnt, (x2 - 4, (big.height - cnt.height) // 2)); lay = big
-    lay = fade(lay, clamp((t - 0.25) / 0.2))
-    paste(frame, lay, 40, 178 - (lay.height - 90) // 2 - int(40 * (1 - kin)), 0.45, 14, (4, 10))
+    f1 = MF("ExtraBold", 34); f2 = MF("Bold", 30 if not gold else 32)
+    lay = Image.new("RGBA", (W, 104), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+    sub = f"{fmt(n)} participantes"; tw = max(d.textlength("EXÉRCITO DO LULA", font=f1), d.textlength(sub, font=f2) * pop)
+    w = int(tw) + 140
+    d.rounded_rectangle((0, 0, w, 103), 26, fill=(4, 14, 26, 220), outline=(GD if gold else (255, 255, 255, 80)), width=3)
+    group_icon(d, 54, 52, NAVY + (255,))
+    d.text((104, 34), "EXÉRCITO DO LULA", font=f1, fill=WH, anchor="lm")
+    fs = MF("Bold", int((30 if not gold else 32) * pop)); d.text((104, 74), sub, font=fs, fill=(GD if gold else (205, 215, 228, 255)), anchor="lm")
+    lay = fade(lay.crop((0, 0, w + 4, 104)), clamp((t - 0.25) / 0.2))
+    paste(frame, lay, 40, 172 - int(40 * (1 - kin)), 0.45, 14, (4, 10))
+
+def cta(frame, t, a=7.45, b=8.05):
+    if not (a <= t < b): return
+    k = back_out((t - a) / 0.25, 1.6); al = clamp((b - t) / 0.1)
+    f = MF("ExtraBold", 54); txt = "ENTRA NO GRUPO!"
+    d0 = ImageDraw.Draw(Image.new("RGBA", (4, 4))); tw = d0.textlength(txt, font=f)
+    lay = Image.new("RGBA", (int(tw + 70), 96), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+    d.rounded_rectangle((0, 0, lay.width - 1, 95), 26, fill=RED + (255,)); d.text((35, 50), txt, font=f, fill=WH, anchor="lm")
+    sc = 0.8 + 0.2 * k; lay = fade(lay.resize((int(lay.width * sc), int(96 * sc)), Image.BICUBIC), al)
+    paste(frame, lay, W / 2 - lay.width / 2, 1450 - lay.height / 2, 0.5, 14, (4, 12))
 
 def hook(frame, t):
     a, b = 0.15, 1.0
     if not (a <= t < b): return
     k = back_out((t - a) / 0.3, 1.5) ; al = clamp((b - t) / 0.12)
-    f = MF("ExtraBold", 56); txt = "QUANDO A LIVE TÁ VAZIA..."
+    f = MF("ExtraBold", 56); txt = "QUANDO O GRUPO TÁ VAZIO..."
     d0 = ImageDraw.Draw(Image.new("RGBA", (4, 4))); tw = d0.textlength(txt, font=f)
     lay = Image.new("RGBA", (int(tw + 70), 100), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
     d.rounded_rectangle((0, 0, lay.width - 1, 99), 26, fill=GD); d.text((35, 52), txt, font=f, fill=NAVY + (255,), anchor="lm")
@@ -340,8 +344,9 @@ def render_frame(t):
     z = zoom_suave.nivel(tt, ZOOMS) + (0.02 * ease_io((tt - SRC_END + 0.04) / FREEZE) if tt > SRC_END - 0.04 else 0)
     img = me_frame(st).copy(); img = big_behind(img, tt); img = zoom_suave.aplica(img, z, 0.33)
     frame = Image.fromarray(img).convert("RGBA")
-    hook(frame, t); draw_caption(frame, t, 1450, 58, ("me", "au"))
+    hook(frame, t); cta(frame, t); draw_caption(frame, t, 1450, 58, ("me", "au"))
     draw_banners(frame, t); live_badge(frame, t)
+    if 1.0 <= t < END_IN: credit(frame, "MEME · áudio: live de André Janones", W - 40, 1640, clamp((t - 1.0) / 0.3))
     if t >= END_IN: frame.alpha_composite(fade(end_card(t), clamp((t - END_IN) / 0.35)))
     return frame
 
@@ -372,7 +377,7 @@ def main():
     bed = readw(f"{V}/bed.wav")[:n]; bed = np.pad(bed, ((0, max(0, n - len(bed))), (0, 0)))[:n]
     tl = np.arange(n) / SR; bed = bed * (np.clip(tl / 0.8, 0, 1) * np.clip((TOTAL - tl) / 1.2, 0, 1))[:, None]; writew(f"{V}/bed_g.wav", bed)
     ev = [(0.25, sfx.whoosh(0.4), 0.18)] + [(a, sfx.click(11 + i), 0.5) for i, (a, _) in enumerate(STEPS) if a > 0.5]
-    ev += [(ROLL0 - 0.1, sfx.whoosh(0.9), 0.3), (ROLL1, sfx.thud(), 0.34), (1.05, sfx.click(21), 0.35), (9.85, sfx.click(22), 0.35),
+    ev += [(ROLL0 - 0.1, sfx.whoosh(0.9), 0.3), (ROLL1, sfx.thud(), 0.34), (1.05, sfx.click(21), 0.35), (9.85, sfx.click(22), 0.35), (7.45, sfx.whoosh(0.35), 0.22),
            (SRC_END - 0.05, sfx.whoosh(0.5, False), 0.2), (END_IN - 0.3, sfx.whoosh(0.6), 0.25)]
     sfx.build([e for e in ev if 0 <= e[0] < TOTAL - 0.9], TOTAL, f"{V}/sfx.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/bed_g.wav", "-filter_complex",

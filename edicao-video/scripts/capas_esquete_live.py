@@ -21,17 +21,17 @@ def with_me(st, word, n_t, l1, l2):
     pill(img, l1, 1380, 66, R.GD, R.NAVY + (255,)); pill(img, l2, 1520, 66, R.RED + (255,), R.WH)
     return img
 A = with_me(4.4, "MAIS GENTE!", 7.0, "EU QUERO", "10 MILHÕES!")
-B = with_me(0.3, "AO VIVO", 0.9, "QUANDO A LIVE", "TÁ VAZIA...")
+B = with_me(0.3, "EXÉRCITO", 0.9, "QUANDO O GRUPO", "TÁ VAZIO...")
 A.convert("RGB").save(f"{V}/capa_A.jpg", quality=95); B.convert("RGB").save(f"{V}/capa_B.jpg", quality=95)
 # C sem rosto
 C = Image.fromarray(np.clip(R.NAVYBG * 1.1, 0, 255).astype(np.uint8)).convert("RGBA"); d = ImageDraw.Draw(C)
-pill(C, "•  AO VIVO", 430, 60, R.RED + (255,), R.WH)
-d.text((W / 2, 640), "ESPECTADORES", font=MF("Bold", 40), fill=(255, 255, 255, 170), anchor="mm")
+pill(C, "EXÉRCITO DO LULA", 430, 60, R.RED + (255,), R.WH)
+d.text((W / 2, 640), "PARTICIPANTES NO GRUPO", font=MF("Bold", 40), fill=(255, 255, 255, 170), anchor="mm")
 d.text((W / 2, 760), "2", font=R.BIGF(170), fill=(255, 255, 255, 200), anchor="mm")
 d.text((W / 2, 900), "↓", font=MF("ExtraBold", 90), fill=R.GD, anchor="mm")
 d.text((W / 2, 1060), "10.000.000", font=R.BIGF(210), fill=R.GD, anchor="mm")
 pill(C, "\"CHAMA MAIS GENTE!\"", 1300, 64, R.WH, R.NAVY + (255,))
-d.text((W / 2, 1430), "a live que todo mundo lembra", font=MF("SemiBold", 38), fill=(255, 255, 255, 200), anchor="mm")
+d.text((W / 2, 1430), "bora encher o grupo!", font=MF("SemiBold", 38), fill=(255, 255, 255, 200), anchor="mm")
 C.alpha_composite(R.top); C.convert("RGB").save(f"{V}/capa_C.jpg", quality=95)
 sheet = Image.new("RGB", (360 * 3, 640)); [sheet.paste(Image.open(f"{V}/capa_{k}.jpg").resize((360, 640), Image.LANCZOS), (i * 360, 0)) for i, k in enumerate("ABC")]
 sheet.save(f"{V}/capas_janones_ABC.jpg", quality=90); print("ok")
