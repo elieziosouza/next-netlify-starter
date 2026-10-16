@@ -8,6 +8,7 @@ sys.path.insert(0, f"{S}/work")
 import sfx
 from minitop import make_minitop, make_minifooter, handles_row
 from segment_person import PersonSeg
+import zoom_suave
 V = f"{S}/v19"; FD = f"{S}/fontdl"
 SRCS = {"me": f"{V}/me.mp4", "cl": f"{V}/cl.mp4"}; DIMS = {"me": (1080, 1920), "cl": (576, 1024)}
 W, H, FPS = 1080, 1920, 30
@@ -39,6 +40,8 @@ CL_CAPS = [("FLÁVIO ERA USUÁRIO MASTER DE UMA CONTA DE OFFSHORE", 0.18, 3.53),
            ("E O BANCO SANTANDER, ONDE FICAVA A CONTA DESSA EMPRESA", 23.06, 25.70), ("QUE É DONA DESSA FRAÇÃO DO AVIÃO", 25.75, 27.74),
            ("PELO QUE O JORNAL O GLOBO TÁ DIZENDO", 28.28, 30.20), ("O FLÁVIO BOLSONARO ERA DONO DAQUELE AVIÃO", 30.25, 32.51),
            ("E OUTRA COISA: QUEM É QUE ERA DONO DA OUTRA COTA DESSE AVIÃO?", 35.02, 37.60), ("DANIEL VORCARO", 37.65, 38.75)]
+# zoom in / zoom out suave nas falas fortes dele (segundos da fonte me.mp4)
+ZOOMS = [(2.80, 4.60, 0.035), (7.40, 9.30, 0.065), (10.10, 12.10, 0.05), (13.00, 14.60, 0.06), (15.55, 16.80, 0.04)]
 HOT = {"OFFSHORE", "CAINDO", "25", "HISTÓRICO", "MASTER", "VORCARO"}
 def MF(w, s): return ImageFont.truetype(f"{FD}/Montserrat-{w}.ttf", s)
 def clamp(x, a=0.0, b=1.0): return max(a, min(b, x))
@@ -399,9 +402,11 @@ def render_frame(t):
     if t >= END_IN + 0.35: return end_card(t)
     tt = min(t, EDIT_END - 1e-3); s = seg_at(tt)
     if s is None:                                               # final com a batida
-        img = me_fin_frame(tt).copy(); frame = Image.fromarray(img).convert("RGBA"); lyrics(frame, t)
+        img = zoom_suave.aplica(me_fin_frame(tt), 0.04 * (1 - zoom_suave._io((tt - FIN_IN) / 1.2)) + 0.02 * zoom_suave._io((tt - FIN_IN) / 1.2)).copy(); frame = Image.fromarray(img).convert("RGBA"); lyrics(frame, t)
     elif s["src"] == "me":
-        src = src_frame(s, tt); img = big_words(src.copy(), src, tt, s, "atras")
+        src = src_frame(s, tt); st = s["a"] + (tt - s["t0"])
+        src = zoom_suave.aplica(src, zoom_suave.nivel(st, ZOOMS))
+        img = big_words(src.copy(), src, tt, s, "atras")
         # entrada depois do cartão: leve desfoque
         q = tt - CL_OUT
         if 0 <= q < 0.18: img = cv2.GaussianBlur(img, (0, 0), 1 + 8 * (1 - q / 0.18))

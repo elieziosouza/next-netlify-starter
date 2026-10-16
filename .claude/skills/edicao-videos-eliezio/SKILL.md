@@ -11,7 +11,7 @@ Regras que nunca mudam sem ele pedir:
 - Não mudar cores nem luz do vídeo original dele (sem correção de cor, vinheta ou granulação na imagem dele).
 - Visual profissional de telejornal, nunca amador.
 - Não cortar o Eliezio: na tela dividida ele aparece inteiro, com folga acima da cabeça.
-- Zooms de no máximo 7%, sempre suaves.
+- Zooms de no máximo 7%, sempre suaves, e **obrigatórios** nas falas fortes dele em tela cheia (zoom in e zoom out com rampa de 0,6 s, `scripts/zoom_suave.py`).
 - Começar em tela cheia e editar conforme o vídeo avança.
 - Todo número em painel precisa de fonte conferida.
 - Nada de logotipo oficial de governo ou de jornal.
