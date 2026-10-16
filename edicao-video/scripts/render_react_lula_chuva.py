@@ -491,8 +491,8 @@ def main():
     ev.append((END_IN - 0.3, sfx.whoosh(0.6), 0.25))
     sfx.build([e for e in ev if 0 <= e[0] < TOTAL - 0.9], TOTAL, f"{V}/sfx.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/clip.wav", "-i", f"{V}/song.wav", "-filter_complex",
-                    "[1:a]highpass=f=70,asplit=3[vox][k1][k2];[2:a]volume=0.8[sf];[3:a]volume=0.55[cl];[4:a]volume=0.9[sg];"
-                    "[cl][k1]sidechaincompress=threshold=0.02:ratio=6:attack=20:release=400[cld];[sg][k2]sidechaincompress=threshold=0.03:ratio=5:attack=20:release=400[sgd];"
+                    "[1:a]highpass=f=70,asplit=3[vox][k1][k2];[2:a]volume=0.8[sf];[3:a]volume=1.25[cl];[4:a]volume=0.9[sg];"
+                    "[cl][k1]sidechaincompress=threshold=0.05:ratio=2.5:attack=30:release=500[cld];[sg][k2]sidechaincompress=threshold=0.03:ratio=5:attack=20:release=400[sgd];"
                     f"[vox][sf][cld][sgd]amix=inputs=4:normalize=0:duration=longest,atrim=0:{TOTAL:.2f},alimiter=limit=0.79:level=false:asc=1[a]",
                     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", OUTFILE], check=True)
     print("done")
