@@ -279,8 +279,8 @@ ZOOMS = [(2.20, 4.40, 0.07), (6.00, 7.50, 0.07), (13.34, 16.50, 0.07)]
 BIG = [(13.34, 14.65, "DIA 25"), (14.97, 16.55, "HISTÓRICO")]
 
 # --------------------------------------------------------------- imagens do Lula em tela cheia: roda, congela, destaca
-CLIPMAP = [("play", 0.0, 2.2, 0.3), ("freeze", 2.2, 3.9, 2.5), ("play", 3.9, 6.3, 2.5), ("freeze", 6.3, 8.0, 4.9), ("play", 8.0, 9.7, 4.9)]
-TARGETS = [((965, 1000), 125, "MALETA Nº 1", 2.2, 3.9), ((690, 905), 95, "MALETA Nº 2", 6.3, 8.0)]
+CLIPMAP = [("play", 0.0, 1.5, 0.3), ("freeze", 1.5, 3.2, 1.8), ("play", 3.2, 6.3, 1.8), ("freeze", 6.3, 8.0, 4.9), ("play", 8.0, 9.7, 4.9)]
+TARGETS = [((985, 1015), 100, "MALETA Nº 1", 1.5, 3.2), ((690, 905), 95, "MALETA Nº 2", 6.3, 8.0)]
 STAMP_IN = 8.1
 CL_FR = None
 def clip_frames():
@@ -326,9 +326,15 @@ def clip_full(u):
         (x, y), r, lab, a, b = tg
         if a - 0.15 <= u < b + 0.15:
             k = ease_io((u - (a - 0.15)) / 0.5) * (1 - ease_io((u - (b - 0.15)) / 0.3))
-            sc = 1 + 0.30 * k; M = np.float32([[sc, 0, x - x * sc], [0, sc, y - y * sc]])
-            out = cv2.warpAffine(fr, M, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
-            if frozen: out = draw_highlight(out, u, tg)
+            sc = 1 + 0.45 * k; nx = clamp(lerp(x, clamp(x, 320, W - 320), k), W + sc * (x - W), x * sc)   # anda para dentro sem sair do quadro
+            M = np.float32([[sc, 0, nx - x * sc], [0, sc, y - y * sc]])
+            out = cv2.warpAffine(fr, M, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+            if frozen:
+                rr = int(r * sc / 1.3); yy_, xx_ = np.ogrid[:H, :W]
+                cm = np.clip(1 - (np.sqrt((xx_ - nx) ** 2 + (yy_ - y) ** 2) - rr * 0.8) / (rr * 0.3), 0, 1)[..., None] * clamp((u - a) / 0.3)
+                lift = np.clip(out.astype(np.float32) * 1.4 + 8, 0, 255)          # clareia só a maleta
+                out = (out * (1 - cm) + lift * cm).astype(np.uint8)
+                out = draw_highlight(out, u, ((int(nx), y), rr, lab, a, b))
     return out
 
 def stamp(frame, u):

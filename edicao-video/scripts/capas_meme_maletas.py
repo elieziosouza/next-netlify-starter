@@ -19,7 +19,7 @@ def clip_hl(u):
 A = base(Image.fromarray(R.me_src(6.6).copy()).convert("RGBA"))
 pill(A, "ACABOU A ELEIÇÃO", 1330, 64, R.GD, R.NAVY + (255,)); pill(A, "PRO LULA?!", 1460, 76, R.RED + (255,), R.WH)
 pill(A, "DUAS MALETAS PRETAS", 1600, 52, (4, 14, 26, 230), R.WH)
-B = base(clip_hl(3.3))
+B = base(clip_hl(2.6))
 me = R.me_src(6.6); face = cv2.resize(me[300:1380, 0:1080], (380, 380), interpolation=cv2.INTER_AREA)
 m = Image.new("L", (380, 380), 0); ImageDraw.Draw(m).ellipse((0, 0, 379, 379), fill=255)
 fc = Image.fromarray(face).convert("RGBA"); fc.putalpha(m); ring = Image.new("RGBA", (396, 396), (0, 0, 0, 0)); ImageDraw.Draw(ring).ellipse((0, 0, 395, 395), fill=R.GD)
