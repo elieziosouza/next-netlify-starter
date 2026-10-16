@@ -18,6 +18,10 @@ ME_PARTS = [(0.25, 2.75, "full"), (4.00, 6.80, "split"), (7.25, 10.30, "split"),
 segs = []; acc = 0.0
 for a, b, m in ME_PARTS:
     segs.append(dict(src="me", a=a, b=b, mode=m, t0=acc, t1=acc + (b - a))); acc += b - a
+# o Lula correndo em tela cheia, com a música, entre o "olha só" e os comentários (pedido de 16/10/2026)
+GAP = 6.0; CF_A = 0.30
+for s_ in segs[1:]: s_["t0"] += GAP; s_["t1"] += GAP
+acc += GAP; CF_IN = segs[0]["t1"]
 SPLIT_IN, SPLIT_OUT = segs[1]["t0"], segs[-1]["t0"]
 def out_t(x):
     for s in segs:
@@ -376,6 +380,7 @@ def seg_at(t):
         if s["t0"] <= t < s["t1"]: return s
     return None
 def me_at(tt):
+    if CF_IN <= tt < SPLIT_IN: return segs[0]["b"] - 0.04
     s = seg_at(tt)
     if s is not None: return s["a"] + (tt - s["t0"])
     u = (tt - FIN_IN); a = 30.25 + u
@@ -428,13 +433,20 @@ def render_frame(t):
     tt = min(t, EDIT_END - 1e-3); st = me_at(tt)
     me = zoom_suave.aplica(me_src(st), zoom_suave.nivel(st, ZOOMS))
     k = ease_io((tt - (SPLIT_IN - 0.2)) / 0.4) * (1 - ease_io((tt - (SPLIT_OUT - 0.2)) / 0.4))
-    if k <= 0.001:
+    if CF_IN <= tt < SPLIT_IN and k <= 0.001:              # Lula correndo em tela cheia
+        clip_img(0); fr = CL_FR[int(clamp((CF_A + tt - CF_IN) * FPS, 0, len(CL_FR) - 1))]
+        q = tt - CF_IN; img = fr if q > 0.16 else cv2.GaussianBlur(fr, (0, 0), 1 + 8 * (1 - q / 0.16))
+        frame = Image.fromarray(img).convert("RGBA")
+        credit(frame, "Reprodução: Instagram", W - 30, H - 232, clamp(q / 0.4))
+    elif k <= 0.001:
         img = big_behind(me.copy(), st); frame = Image.fromarray(img).convert("RGBA")
         if tt < FIN_IN: draw_caption(frame, t, 1450, 56, ("me", "au"))
         else: lyrics(frame, t)
     else:
         u = clamp(tt - B0, 0, 15.76); top = clip_panel(u); bot, px, pw = me_panel(me)
-        canvas = me.copy()
+        if tt < SPLIT_IN + 0.2:
+            clip_img(0); canvas = CL_FR[int(clamp((CF_A + tt - CF_IN) * FPS, 0, len(CL_FR) - 1))].copy()
+        else: canvas = me.copy()
         ty = int(-SEAM * (1 - k)); by = int(SEAM + PH * (1 - k))
         if ty + SEAM > 0: canvas[max(0, ty):ty + SEAM] = top[max(0, -ty):]
         if by < H: canvas[by:] = bot[:H - by]
@@ -442,6 +454,11 @@ def render_frame(t):
         y = ty + SEAM; d.rectangle((0, y - 2, W, y + 1), fill=GOLD + (int(230 * k),))
         credit(frame, "Reprodução: Instagram", W - 30, SEAM - 120, k)
         questions(frame, tt)
+        rq = tt - SPLIT_IN                                  # avisa que é o replay com os destaques
+        if -0.1 < rq < 1.0:
+            al = clamp((rq + 0.1) / 0.25) * clamp((1.0 - rq) / 0.25); lay = Image.new("RGBA", (300, 70), (0, 0, 0, 0)); dd = ImageDraw.Draw(lay)
+            dd.rounded_rectangle((0, 0, 299, 69), 35, fill=RED + (235,)); dd.polygon([(30, 20), (30, 50), (56, 35)], fill=WH)
+            dd.text((72, 35), "REPLAY", font=MF("ExtraBold", 36), fill=WH, anchor="lm"); frame.alpha_composite(fade(lay, al), (40, 190))
         draw_caption(frame, t, SEAM, 50, ("me", "au"))
     draw_banners(frame, t)
     if t >= END_IN: frame.alpha_composite(fade(end_card(t), clamp((t - END_IN) / 0.35)))
@@ -478,13 +495,13 @@ def main():
     # final: segue o áudio dele depois da fala (o L), baixinho
     tail = voice[int(30.25 * SR):int(34.4 * SR)] * 0.6; t0 = int(FIN_IN * SR); vt[t0:t0 + len(tail)] += tail[:max(0, n - t0)]
     writew(f"{V}/voice.wav", vt)
-    cl = readw(f"{V}/cl48.wav"); ct = np.zeros((n, 2), np.float32); a0 = int(1.5 * SR); L = int((SPLIT_OUT - B0) * SR)
+    cl = readw(f"{V}/cl48.wav"); ct = np.zeros((n, 2), np.float32); a0 = int(CF_A * SR); L = int((SPLIT_OUT - CF_IN) * SR)
     seg_ = cl[a0:a0 + L].copy(); fo = int(0.5 * SR); seg_[-fo:] *= np.linspace(1, 0, fo)[:, None]; seg_[:int(0.2 * SR)] *= np.linspace(0, 1, int(0.2 * SR))[:, None]
-    ct[int(B0 * SR):int(B0 * SR) + len(seg_)] = seg_; writew(f"{V}/clip.wav", ct)
+    ct[int(CF_IN * SR):int(CF_IN * SR) + len(seg_)] = seg_; writew(f"{V}/clip.wav", ct)
     song = readw(f"{S}/v15/song_vox.wav"); lead = FIN_IN - MUS_IN; Ls = min(len(song), n - int(MUS_IN * SR)); tl = np.arange(Ls) / SR
     gain = np.where(tl < lead, 10 ** ((-22 + 22 * tl / lead) / 20), 1.0) * np.clip(1 - (tl - (TOTAL - MUS_IN - 1.6)) / 1.5, 0, 1)
     sg = np.zeros((n, 2), np.float32); sg[int(MUS_IN * SR):int(MUS_IN * SR) + Ls] = song[:Ls] * gain[:, None]; writew(f"{V}/song.wav", sg)
-    ev = [(0.3, sfx.whoosh(0.6), 0.2), (SPLIT_IN - 0.25, sfx.whoosh(0.5), 0.26), (SPLIT_OUT - 0.25, sfx.whoosh(0.5, False), 0.22)]
+    ev = [(0.3, sfx.whoosh(0.6), 0.2), (CF_IN - 0.12, sfx.whoosh(0.5), 0.26), (SPLIT_IN - 0.25, sfx.whoosh(0.5), 0.26), (SPLIT_OUT - 0.25, sfx.whoosh(0.5, False), 0.22)]
     for (_, _, _, a, b) in TARGETS: ev += [(B0 + a, sfx.thud(), 0.26), (B0 + a + 0.05, sfx.click(), 0.4)]
     for t0, _ in QUEST: ev.append((t0, sfx.click(seed=4), 0.45))
     for a, b, w in BIG: ev.append((out_t(a), sfx.click(), 0.5))
