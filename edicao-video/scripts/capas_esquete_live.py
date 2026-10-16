@@ -21,13 +21,14 @@ def with_me(st, word, n_t, l1, l2):
     pill(img, l1, 1380, 66, R.GD, R.NAVY + (255,)); pill(img, l2, 1520, 66, R.RED + (255,), R.WH)
     return img
 A = with_me(4.4, "MAIS GENTE!", 7.0, "EU QUERO", "10 MILHÕES!")
-B = with_me(0.3, "EXÉRCITO", 0.9, "QUANDO O GRUPO", "TÁ VAZIO...")
+B = with_me(0.3, "EXÉRCITO", 0.9, "QUANDO 3 MILHÕES", "É POUCO...")
 A.convert("RGB").save(f"{V}/capa_A.jpg", quality=95); B.convert("RGB").save(f"{V}/capa_B.jpg", quality=95)
 # C sem rosto
 C = Image.fromarray(np.clip(R.NAVYBG * 1.1, 0, 255).astype(np.uint8)).convert("RGBA"); d = ImageDraw.Draw(C)
-pill(C, "EXÉRCITO DO LULA", 430, 60, R.RED + (255,), R.WH)
-d.text((W / 2, 640), "PARTICIPANTES NO GRUPO", font=MF("Bold", 40), fill=(255, 255, 255, 170), anchor="mm")
-d.text((W / 2, 760), "2", font=R.BIGF(170), fill=(255, 255, 255, 200), anchor="mm")
+pill(C, "•  AO VIVO", 370, 54, R.RED + (255,), R.WH)
+d.text((W / 2, 500), "EXÉRCITO DO LULA", font=MF("ExtraBold", 70), fill=R.WH, anchor="mm")
+d.text((W / 2, 640), "PARTICIPANTES NO GRUPO DE WHATSAPP", font=MF("Bold", 40), fill=(255, 255, 255, 170), anchor="mm")
+d.text((W / 2, 760), "3.000.000", font=R.BIGF(150), fill=(255, 255, 255, 200), anchor="mm")
 d.text((W / 2, 900), "↓", font=MF("ExtraBold", 90), fill=R.GD, anchor="mm")
 d.text((W / 2, 1060), "10.000.000", font=R.BIGF(210), fill=R.GD, anchor="mm")
 pill(C, "\"CHAMA MAIS GENTE!\"", 1300, 64, R.WH, R.NAVY + (255,))

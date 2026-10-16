@@ -1,4 +1,4 @@
-"""Esquete meme 'momento André Janones': o grupo Exército do Lula precisa crescer. Contador de participantes sobe a cada número."""
+"""Esquete meme 'momento André Janones': a live do grupo de WhatsApp Exército do Lula, que começa com 3 milhões. Contador de participantes sobe a cada número."""
 
 import sys, math, subprocess, wave
 import numpy as np, cv2
@@ -261,7 +261,7 @@ SEG = PersonSeg(f"{S}/seg/u2net_human_seg.onnx")
 def BIGF(s): return ImageFont.truetype(f"{FD}/Anton-Regular.ttf", s)
 BIG = [(1.05, 2.25, "MAIS GENTE!"), (9.85, EDIT_END, "DEMOCRACIA")]       # parede clara: letra navy
 ZOOMS = [(3.62, 4.55, 0.07), (5.05, 7.2, 0.07), (9.8, 12.0, 0.07)]
-STEPS = [(0.0, 2), (1.55, 3), (3.10, 4), (4.30, 5)]                       # espectadores na live
+STEPS = [(0.0, 3_000_000), (3.10, 4_000_000), (4.30, 5_000_000)]                       # espectadores na live
 ROLL0, ROLL1 = 5.45, 6.35                                                 # "10 milhões": contador dispara
 
 def big_behind(img, st):
@@ -282,8 +282,8 @@ def big_behind(img, st):
 
 def viewers(t):
     if t >= ROLL0:
-        k = ease_in(clamp((t - ROLL0) / (ROLL1 - ROLL0)))
-        return int(round(10 ** (math.log10(5) + (7 - math.log10(5)) * k)))
+        k = ease_io(clamp((t - ROLL0) / (ROLL1 - ROLL0)))
+        return int(round((5_000_000 + 5_000_000 * k) / 137)) * 137 if k < 1 else 10_000_000
     return [n for a, n in STEPS if t >= a][-1]
 def fmt(n): return f"{n:,}".replace(",", ".")
 
@@ -294,7 +294,7 @@ def group_icon(d, cx, cy, col):
     d.pieslice((cx - 28, cy + 4, cx + 28, cy + 52), 180, 360, fill=col)
 
 def live_badge(frame, t):
-    """cartão do grupo 'Exército do Lula' com o número de participantes subindo"""
+    """live do grupo de WhatsApp 'Exército do Lula': participantes sobem de 3 mi para 10 mi"""
     if t < 0.25: return
     kin = back_out((t - 0.25) / 0.45, 1.4); n = viewers(t)
     last = max([a for a, _ in STEPS if a <= t] + ([ROLL1] if t >= ROLL1 else []))
@@ -302,11 +302,16 @@ def live_badge(frame, t):
     gold = t >= ROLL1
     f1 = MF("ExtraBold", 34); f2 = MF("Bold", 30 if not gold else 32)
     lay = Image.new("RGBA", (W, 104), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
-    sub = f"{fmt(n)} participantes"; tw = max(d.textlength("EXÉRCITO DO LULA", font=f1), d.textlength(sub, font=f2) * pop)
+    sub = f"{fmt(n)} participantes"; fl = MF("ExtraBold", 24)
+    wl = int(d.textlength("AO VIVO", font=fl)) + 50
+    tw = max(d.textlength("EXÉRCITO DO LULA", font=f1) + 18 + wl, d.textlength(sub, font=f2) * pop)
     w = int(tw) + 140
     d.rounded_rectangle((0, 0, w, 103), 26, fill=(4, 14, 26, 220), outline=(GD if gold else (255, 255, 255, 80)), width=3)
     group_icon(d, 54, 52, NAVY + (255,))
     d.text((104, 34), "EXÉRCITO DO LULA", font=f1, fill=WH, anchor="lm")
+    xl = 104 + int(d.textlength("EXÉRCITO DO LULA", font=f1)) + 18
+    d.rounded_rectangle((xl, 16, xl + wl, 52), 18, fill=RED + (255,)); on = (int(t * 2.2) % 2 == 0)
+    d.ellipse((xl + 12, 28, xl + 24, 40), fill=(255, 255, 255, 255 if on else 110)); d.text((xl + 32, 35), "AO VIVO", font=fl, fill=WH, anchor="lm")
     fs = MF("Bold", int((30 if not gold else 32) * pop)); d.text((104, 74), sub, font=fs, fill=(GD if gold else (205, 215, 228, 255)), anchor="lm")
     lay = fade(lay.crop((0, 0, w + 4, 104)), clamp((t - 0.25) / 0.2))
     paste(frame, lay, 40, 172 - int(40 * (1 - kin)), 0.45, 14, (4, 10))
@@ -325,7 +330,7 @@ def hook(frame, t):
     a, b = 0.15, 1.0
     if not (a <= t < b): return
     k = back_out((t - a) / 0.3, 1.5) ; al = clamp((b - t) / 0.12)
-    f = MF("ExtraBold", 56); txt = "QUANDO O GRUPO TÁ VAZIO..."
+    f = MF("ExtraBold", 56); txt = "QUANDO 3 MILHÕES É POUCO..."
     d0 = ImageDraw.Draw(Image.new("RGBA", (4, 4))); tw = d0.textlength(txt, font=f)
     lay = Image.new("RGBA", (int(tw + 70), 100), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
     d.rounded_rectangle((0, 0, lay.width - 1, 99), 26, fill=GD); d.text((35, 52), txt, font=f, fill=NAVY + (255,), anchor="lm")
