@@ -7,19 +7,20 @@ S = sys.argv[1]; OUTFILE = sys.argv[2]; MODE = sys.argv[3] if len(sys.argv) > 3 
 sys.path.insert(0, f"{S}/work")
 import sfx, zoom_suave
 from minitop import make_minitop, make_minifooter, handles_row
-V = f"{S}/v21"; FD = f"{S}/fontdl"; ME = f"{V}/me.mp4"
+V = f"{S}/v21"; FD = f"{S}/fontdl"; ME = f"{V}/me2.mp4"
 W, H, FPS = 1080, 1920, 30
 WHITE = (255, 255, 255); GOLD = (214, 182, 116); GOLD_L = (245, 226, 176); NAVY = (6, 34, 58); RED = (210, 30, 36); STEEL = (150, 172, 196)
 WH = (255, 255, 255, 255); GD = GOLD + (255,)
-A0, A1 = 1.30, 7.49                         # fala dele (fonte)
+A0, A1 = 0.85, 6.50                         # fala dele (fonte)
 SPEECH = A1 - A0; HOLD = 1.0
 FIN_IN = SPEECH + HOLD
-MUS_IN = 5.37 - A0                          # música entra no "a virada tá chegando, hein?"
+MUS_IN = 2.81 - A0                          # música entra no "a virada tá chegando, hein?"
 LYR = [(0.0, 1.43, "ESSE ANO"), (1.43, 2.87, "O LULA BOTA"), (2.87, 3.87, "O BOLSONARO"), (3.87, 4.87, "PRA MAMAR"),
        (4.87, 5.73, "VAI DAR PT"), (5.73, 6.73, "VAI DAR"), (6.73, 8.23, "VAI DAR PT"), (8.23, 9.43, "VAI DAR PT")]
 FIN_LEN = 9.45 - (FIN_IN - MUS_IN); EDIT_END = FIN_IN + FIN_LEN; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
+SRC_END = 11.0
 segs = [dict(src="me", a=A0, b=A1, t0=0.0, t1=SPEECH)]
-ME_CAPS = [("OLHA A VIRADA!", 1.59, 2.76), ("A VIRADA TÁ CHEGANDO AÍ", 3.26, 4.97), ("A VIRADA TÁ CHEGANDO, HEIN?", 5.37, 7.49)]
+ME_CAPS = [("OLHA A VIRADA, HEIN!", 0.98, 2.06), ("A VIRADA TÁ CHEGANDO,", 2.81, 5.0), ("HEIN?", 5.0, 6.43)]
 HOT = {"VIRADA"}
 def MF(w, s): return ImageFont.truetype(f"{FD}/Montserrat-{w}.ttf", s)
 def clamp(x, a=0.0, b=1.0): return max(a, min(b, x))
@@ -262,19 +263,19 @@ def finish(frame, t):
 
 CAPS = build_caps(ME_CAPS, "me", 5, "me")
 for c in CAPS: c["src"] = "au" if any(w.strip(",.?!") in HOT for w in c["words"]) else "me"
-TR = 1.59 - A0 - 0.05                        # "olha a virada": ele encolhe e o painel sobe
+TR = 0.98 - A0 + 0.10                        # "olha a virada": ele encolhe e o painel sobe
 SC1 = 0.62; FY0 = 150                         # quadro dele: 62% do tamanho, topo em y 150 (queixo fica acima do painel)
 CX, CY, CW, CH = 50, 1105, 980, 640           # painel da pesquisa
 
 _fr = None
 def me_frame(st):
     global _fr
-    if _fr is None: _fr = decode(ME, 0, 7.5, 1080, 1920)
+    if _fr is None: _fr = decode(ME, 0, 11.1, 1080, 1920)
     return _fr[int(clamp(st * FPS, 0, len(_fr) - 1))]
 def me_at(t):
     if t < SPEECH: return A0 + t
-    u = (t - SPEECH) * 0.8; L0, L1 = 0.25, 1.50; Lq = L1 - L0; p = u % (2 * Lq)   # sorriso em silêncio, vai e volta
-    return L1 - p if p < Lq else L0 + (p - Lq)
+    if t < FIN_IN: return A0 + t                 # silêncio real depois da fala, sem loop
+    s0 = A0 + FIN_IN; return s0 + (t - FIN_IN) * (SRC_END - s0) / FIN_LEN   # final: imagem real em leve câmera lenta
 
 def k_frame(t):
     return ease_io((t - TR) / 0.5) * (1 - ease_io((t - FIN_IN) / 0.5))

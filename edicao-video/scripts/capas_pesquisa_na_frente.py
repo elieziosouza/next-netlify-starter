@@ -64,7 +64,7 @@ def circle(img, x, y, r, lab):
     f = MF("ExtraBold", 44); tw = d.textlength(lab, font=f); lx = max(30, min(W - tw - 80, x - tw / 2 - 26)); ly = y + r + 30
     d.rounded_rectangle((lx, ly, lx + tw + 52, ly + 76), 20, fill=RED + (255,), outline=(255, 255, 255, 255), width=3); d.text((lx + 26, ly + 38), lab, font=f, fill=WHITE, anchor="lm")
 
-me = grab(f"{V}/me.mp4", 1.0, 1080, 1920).copy(); me_s = cv2.resize(me, (478, 850), interpolation=cv2.INTER_AREA)
+me = grab(f"{V}/me2.mp4", 8.0, 1080, 1920).copy(); me_s = cv2.resize(me, (478, 850), interpolation=cv2.INTER_AREA)
 def stamp(img, txt, cx, cy, size, rot=-5):
     f = MF("ExtraBold", size); tw = ImageDraw.Draw(Image.new("RGBA", (4, 4))).textlength(txt, font=f)
     st = Image.new("RGBA", (int(tw + 80), int(size * 1.55)), (0, 0, 0, 0)); d = ImageDraw.Draw(st)
