@@ -14,7 +14,7 @@ WHITE = (255, 255, 255); GOLD = (214, 182, 116); GOLD_L = (245, 226, 176); NAVY 
 WH = (255, 255, 255, 255); GD = GOLD + (255,)
 # trechos dele (fonte in.mp4): isca (tela cheia), imagens do Lula, revelação e fechamento
 ME_PARTS = [(0.25, 9.95, "full"), (11.12, 16.55, "full")]
-CLIP_LEN = 9.4
+CLIP_LEN = 9.7
 segs = [dict(src="me", a=0.25, b=9.95, mode="full", t0=0.0, t1=9.70)]
 CL_IN = 9.70; CL_OUT = CL_IN + CLIP_LEN
 segs.append(dict(src="me", a=11.12, b=16.55, mode="full", t0=CL_OUT, t1=CL_OUT + 5.43))
@@ -279,9 +279,9 @@ ZOOMS = [(2.20, 4.40, 0.07), (6.00, 7.50, 0.07), (13.34, 16.50, 0.07)]
 BIG = [(13.34, 14.65, "DIA 25"), (14.97, 16.55, "HISTÓRICO")]
 
 # --------------------------------------------------------------- imagens do Lula em tela cheia: roda, congela, destaca
-CLIPMAP = [("play", 0.0, 2.2, 0.3), ("freeze", 2.2, 3.9, 2.5), ("play", 3.9, 6.0, 2.5), ("freeze", 6.0, 7.7, 4.6), ("play", 7.7, 9.4, 4.6)]
-TARGETS = [((965, 1000), 125, "MALETA Nº 1", 2.2, 3.9), ((712, 735), 92, "MALETA Nº 2", 6.0, 7.7)]
-STAMP_IN = 7.8
+CLIPMAP = [("play", 0.0, 2.2, 0.3), ("freeze", 2.2, 3.9, 2.5), ("play", 3.9, 6.3, 2.5), ("freeze", 6.3, 8.0, 4.9), ("play", 8.0, 9.7, 4.9)]
+TARGETS = [((965, 1000), 125, "MALETA Nº 1", 2.2, 3.9), ((690, 905), 95, "MALETA Nº 2", 6.3, 8.0)]
+STAMP_IN = 8.1
 CL_FR = None
 def clip_frames():
     global CL_FR
@@ -293,7 +293,7 @@ def clip_img(u):
         if a <= u < b:
             ct = ca if kind == "freeze" else ca + (u - a)
             return fr[int(clamp(ct * FPS, 0, len(fr) - 1))], kind == "freeze"
-    return fr[int(clamp((4.6 + u - 7.7) * FPS, 0, len(fr) - 1))], False
+    return fr[int(clamp((4.9 + u - 8.0) * FPS, 0, len(fr) - 1))], False
 
 def draw_highlight(img_np, u, tg):
     (x, y), r, lab, a, b = tg; q = u - a
@@ -448,10 +448,10 @@ def readw(p):
 def writew(p, a):
     with wave.open(p, "wb") as w:
         w.setnchannels(2); w.setsampwidth(2); w.setframerate(48000); w.writeframes((np.clip(a, -1, 1) * 32000).astype(np.int16).tobytes())
-def siren(dur=1.1, SR=48000):
+def siren(dur=3.0, SR=48000):
     t = np.arange(int(dur * SR)) / SR; f = np.where((t // 0.22) % 2 == 0, 960, 760)
     ph = 2 * np.pi * np.cumsum(f) / SR; s = 0.6 * np.sin(ph) + 0.25 * np.sin(2 * ph)
-    env = np.clip(t / 0.03, 0, 1) * np.clip((dur - t) / 0.25, 0, 1); s = s * env
+    env = np.clip(t / 0.03, 0, 1) * np.clip((dur - t) / 0.6, 0, 1); s = s * env
     return np.stack([s, s], 1)
 
 def main():

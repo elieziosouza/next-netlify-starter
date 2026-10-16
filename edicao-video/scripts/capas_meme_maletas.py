@@ -25,7 +25,7 @@ m = Image.new("L", (380, 380), 0); ImageDraw.Draw(m).ellipse((0, 0, 379, 379), f
 fc = Image.fromarray(face).convert("RGBA"); fc.putalpha(m); ring = Image.new("RGBA", (396, 396), (0, 0, 0, 0)); ImageDraw.Draw(ring).ellipse((0, 0, 395, 395), fill=R.GD)
 R.paste(B, ring, 52, 1230, 0.5, 16, (5, 12)); B.alpha_composite(fc, (60, 1238))
 pill(B, "ENCONTRADO COM LULA?!", 1690, 56, R.RED + (255,), R.WH)
-C = base(clip_hl(7.3))
+C = base(clip_hl(7.6))
 pill(C, "DUAS MALETAS", 1380, 70, R.GD, R.NAVY + (255,)); pill(C, "PRETAS?!", 1520, 80, R.RED + (255,), R.WH)
 for k, im in zip("ABC", (A, B, C)): im.convert("RGB").save(f"{V}/capa_{k}.jpg", quality=95)
 sheet = Image.new("RGB", (360 * 3, 640)); [sheet.paste(Image.open(f"{V}/capa_{k}.jpg").resize((360, 640), Image.LANCZOS), (i * 360, 0)) for i, k in enumerate("ABC")]
