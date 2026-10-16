@@ -26,7 +26,7 @@ def _icon(kind, size, col):
 # redes do canal (TikTok e Kwai usam o mesmo @)
 ITEMS = [(["ig"], "@ezvideos_cortes"), (["tt", "kw"], "@elieziosouza78"), (["yt"], "@eliezio.souza78")]
 
-def make_minitop(W, font_path, gold=(214, 182, 116), height=200):
+def make_minitop(W, font_path, gold=(214, 182, 116), height=150, cy=70):
     """minimal top: soft navy fade with one line of social handles and a thin gold hairline"""
     top = Image.new("RGBA", (W, height), (0, 0, 0, 0))
     a = (np.clip(1 - np.linspace(0, 1, height) ** 1.6, 0, 1) * 215).astype(np.uint8)
@@ -37,7 +37,7 @@ def make_minitop(W, font_path, gold=(214, 182, 116), height=200):
     d = ImageDraw.Draw(top); isz = 30; gap_i = 10; gap = 36
     widths = [len(k) * (isz + 6) - 6 + gap_i + d.textlength(t, font=f) for k, t in items]
     total = sum(widths) + gap * (len(items) - 1)
-    x = (W - total) / 2; cy = 112
+    x = (W - total) / 2                        # cy 70: barra mais alta (pedido de 16/10/2026)
     for (ks, t), wdt in zip(items, widths):
         for j, k in enumerate(ks): top.alpha_composite(_icon(k, isz, gold), (int(x + j * (isz + 6)), int(cy - isz / 2)))
         d.text((x + len(ks) * (isz + 6) - 6 + gap_i, cy), t, font=f, fill=(255, 255, 255, 240), anchor="lm")
