@@ -285,7 +285,10 @@ def me_src(a):
     key = int(a // 6)
     if key not in _me:
         if len(_me) > 3: _me.clear()
-        _me[key] = decode(ME, key * 6, key * 6 + 6.2, 1080, 1920, "scale=1080:1920:flags=lanczos")
+        # corte exato: busca depois de abrir o arquivo (a busca rápida adiantava a imagem em ~4 quadros)
+        p = subprocess.run(["ffmpeg", "-v", "error", "-i", ME, "-ss", f"{key * 6:.3f}", "-t", "6.2", "-vf", "fps=30,scale=1080:1920:flags=lanczos",
+                            "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True).stdout
+        n = len(p) // (1080 * 1920 * 3); _me[key] = np.frombuffer(p[:n * 1080 * 1920 * 3], np.uint8).reshape(n, 1920, 1080, 3)
     fr = _me[key]; return fr[min(len(fr) - 1, int((a - key * 6) * FPS))]
 def me_at(tt):
     for s in segs:
