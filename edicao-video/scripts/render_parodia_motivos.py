@@ -12,7 +12,7 @@ W, H, FPS = 1080, 1920, 30
 WHITE = (255, 255, 255); GOLD = (214, 182, 116); GOLD_L = (245, 226, 176); NAVY = (6, 34, 58); RED = (210, 30, 36)
 WH = (255, 255, 255, 255); GD = GOLD + (255,)
 # trechos dele (me.mp4): abertura e a cara de paisagem no final; áudio do amigo (au.mp4) no cartão 3D
-P1 = (0.10, 4.55); P2 = (4.60, 6.15)
+P1 = (0.00, 4.55); P2 = (4.60, 5.38)               # P2 termina antes de ele olhar para baixo
 AU_LEN = 15.0; PAPER = 2.6
 segs = [dict(src="me", a=P1[0], b=P1[1], t0=0.0, t1=P1[1] - P1[0])]
 AU_IN = segs[0]["t1"]; AU_OUT = AU_IN + AU_LEN; PAPER_IN = AU_OUT; PAPER_OUT = PAPER_IN + PAPER
