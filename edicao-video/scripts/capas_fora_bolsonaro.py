@@ -17,7 +17,7 @@ def pill(img, txt, cy, size, fill, col, pt=False):
     R.paste(img, lay, W / 2 - lay.width / 2, cy - h / 2, 0.55, 16, (5, 14))
 def base(st):
     img = Image.fromarray(R.src_frame(st)).convert("RGBA"); img.alpha_composite(R.top); return img
-A = base(10.5); A.alpha_composite(R.FORA, (0, 860 - 410)); pill(A, "O GRITO DAS JANELAS", 1420, 54, R.GD, R.NAVY + (255,))
+A = base(10.5); A.alpha_composite(R.FORA, (0, 860 - 410)); pill(A, "PANELAÇO NAS JANELAS", 1420, 54, R.GD, R.NAVY + (255,))
 B = base(4.6); lay = R.FORA.resize((int(W * 0.9), int(820 * 0.9))); B.alpha_composite(lay, (int(W * 0.05), 380)); pill(B, "VAI DAR PT", 1400, 90, (4, 14, 26, 235), R.WH, pt=True)
 for k, im in zip("AB", (A, B)): im.convert("RGB").save(f"{V}/capa_{k}.jpg", quality=95)
 sheet = Image.new("RGB", (720, 640)); [sheet.paste(Image.open(f"{V}/capa_{k}.jpg").resize((360, 640)), (i * 360, 0)) for i, k in enumerate("AB")]
