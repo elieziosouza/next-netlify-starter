@@ -13,7 +13,7 @@ WHITE = (255, 255, 255); GOLD = (214, 182, 116); GOLD_L = (245, 226, 176); NAVY 
 WH = (255, 255, 255, 255); GD = GOLD + (255,)
 # trechos dele (me.mp4): abertura e a cara de paisagem no final; áudio do amigo (au.mp4) no cartão 3D
 P1 = (0.00, 4.55); P2 = (4.60, 5.38)               # P2 termina antes de ele olhar para baixo
-AU_LEN = 15.0; PAPER = 2.6
+AU_LEN = 11.25; PAPER = 2.6                      # corta antes de ele repetir o "Porque? Porque o..."
 segs = [dict(src="me", a=P1[0], b=P1[1], t0=0.0, t1=P1[1] - P1[0])]
 AU_IN = segs[0]["t1"]; AU_OUT = AU_IN + AU_LEN; PAPER_IN = AU_OUT; PAPER_OUT = PAPER_IN + PAPER
 segs.append(dict(src="me", a=P2[0], b=P2[1], t0=PAPER_OUT, t1=PAPER_OUT + P2[1] - P2[0]))
@@ -21,16 +21,16 @@ def out_t(x):
     for s in segs:
         if s["a"] <= x <= s["b"]: return s["t0"] + x - s["a"]
     raise ValueError(x)
-FIN_IN = PAPER_OUT                                # cara de paisagem + refrão "vai dar PT"
-MUS_IN = FIN_IN - 4.87
+FIN_IN = PAPER_OUT                                # cara de paisagem + "vai dar PT"
+MUS_IN = PAPER_IN                                 # a música começa no respiro de papel e enche no final
 LYR = [(0.0, 1.43, "ESSE ANO"), (1.43, 2.87, "O LULA BOTA"), (2.87, 3.87, "O BOLSONARO"), (3.87, 4.87, "PRA MAMAR"),
        (4.87, 5.73, "VAI DAR PT"), (5.73, 6.73, "VAI DAR"), (6.73, 8.23, "VAI DAR PT"), (8.23, 9.43, "VAI DAR PT")]
 FIN_LEN = 9.45 - (FIN_IN - MUS_IN); EDIT_END = FIN_IN + FIN_LEN; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
 ME_CAPS = [("MEU AMIGO BOLSONARISTA", 0.15, 1.40), ("TÁ TENTANDO ME EXPLICAR", 1.45, 2.55),
            ("POR QUE ELE VAI VOTAR", 2.60, 3.45), ("NO FLÁVIO BOLSONARO", 3.45, 4.50)]
 HOT = {"BOLSONARISTA", "EXPLICAR", "FLÁVIO", "BOLSONARO"}
-AU_LINES = [(0.15, 1.65, "PORQUE? PORQUE O..."), (1.65, 11.20, "( ENROLANDO... )"), (11.40, 13.10, "PORQUE? PORQUE O..."), (13.10, 14.90, "EU NÃO SEI SE VOCÊ...")]
-MOTIVOS = [2.2, 6.4, 10.4]                        # quando cada "MOTIVO ?: ???" entra na lista
+AU_LINES = [(0.15, 1.65, "PORQUE? PORQUE O..."), (1.65, 11.10, "( ENROLANDO... )")]
+MOTIVOS = [2.2, 5.4, 8.6]                        # quando cada "MOTIVO ?: ???" entra na lista
 def MF(w, s): return ImageFont.truetype(f"{FD}/Montserrat-{w}.ttf", s)
 def clamp(x, a=0.0, b=1.0): return max(a, min(b, x))
 def smooth(x): x = clamp(x); return x * x * (3 - 2 * x)
@@ -495,7 +495,7 @@ def main():
     au = readw(f"{V}/au48.wav")[:int(AU_LEN * SR)]; at = np.zeros((n, 2), np.float32); f = int(0.05 * SR)
     au[:f] *= np.linspace(0, 1, f)[:, None]; au[-int(0.3 * SR):] *= np.linspace(1, 0, int(0.3 * SR))[:, None]; at[int(AU_IN * SR):int(AU_IN * SR) + len(au)] = au; writew(f"{V}/au_t.wav", at)
     song = readw(f"{S}/v15/song_vox.wav"); Ls = min(len(song), n - int(MUS_IN * SR)); ts_ = np.arange(Ls) / SR; lead = FIN_IN - MUS_IN
-    gain = np.clip((ts_ - lead + 0.12) / 0.12, 0, 1) * np.clip(1 - (ts_ - (TOTAL - MUS_IN - 1.6)) / 1.5, 0, 1)
+    gain = np.where(ts_ < lead, 0.55 + 0.45 * np.clip((ts_ - lead + 0.5) / 0.5, 0, 1), 1.0) * np.clip(ts_ / 0.08, 0, 1) * np.clip(1 - (ts_ - (TOTAL - MUS_IN - 1.6)) / 1.5, 0, 1)
     sg = np.zeros((n, 2), np.float32); sg[int(MUS_IN * SR):int(MUS_IN * SR) + Ls] = song[:Ls] * gain[:, None]; writew(f"{V}/song.wav", sg)
     ev = [(0.3, sfx.whoosh(0.5), 0.2), (AU_IN - 0.12, sfx.whoosh(0.6), 0.26), (AU_IN + 1.0, sfx.whoosh(0.5), 0.22)]
     ev += [(AU_IN + x, sfx.whoosh(0.35), 0.24) for x in MOTIVOS] + [(AU_IN + x + 0.05, sfx.click(13), 0.45) for x in MOTIVOS]
@@ -505,7 +505,7 @@ def main():
     for a, b, w in BIG: ev.append((out_t(a), sfx.click(), 0.5))
     sfx.build([e for e in ev if 0 <= e[0] < TOTAL - 0.9], TOTAL, f"{V}/sfx.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/au_t.wav", "-i", f"{V}/song.wav", "-filter_complex",
-                    "[1:a]highpass=f=70[vox];[2:a]volume=0.8[sf];[3:a]highpass=f=80,volume=1.25[au];[4:a]volume=0.95[sg];"
+                    "[1:a]highpass=f=70[vox];[2:a]volume=0.8[sf];[3:a]highpass=f=80,volume=1.25[au];[4:a]volume=1.1[sg];"
                     f"[vox][sf][au][sg]amix=inputs=4:normalize=0:duration=longest,atrim=0:{TOTAL:.2f},alimiter=limit=0.79:level=false:asc=1[a]",
                     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", OUTFILE], check=True)
     print("done")
