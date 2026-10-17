@@ -298,42 +298,83 @@ def mission_row(i, t):
     t0, tdone, txt = ROWS[i]; q = t - t0
     w, h = 980, 118; im = Image.new("RGBA", (w, h), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     done = t >= tdone; third = i == 2
-    d.rounded_rectangle((0, 0, w - 1, h - 1), 28, fill=(4, 14, 26, 232), outline=(GREEN if done and not third else GOLD) + (255,), width=3)
-    d.ellipse((22, 22, 96, 96), fill=GD); d.text((59, 61), str(i + 1), font=BIGF(56), fill=NAVY + (255,), anchor="mm")
-    d.text((120, 36), f"MISSÃO {i + 1}", font=MF("Bold", 24), fill=GD, anchor="lm")
+    d.rounded_rectangle((0, 0, w - 1, h - 1), 28, fill=(0, 46, 26, 238), outline=(YEL if (done or not third) else (255, 255, 255)) + (255,), width=3)
+    d.ellipse((22, 22, 96, 96), fill=YEL + (255,)); d.text((59, 61), str(i + 1), font=BIGF(56), fill=(0, 70, 35, 255), anchor="mm")
+    d.text((120, 36), f"MISSÃO {i + 1}", font=MF("Bold", 24), fill=YEL + (255,), anchor="lm")
     if third and not done: d.text((120, 80), "???", font=BIGF(54), fill=(255, 255, 255, 200), anchor="lm")
     else:
         k = ease_out((t - tdone) / 0.35) if third else 1.0
         d.text((120, 80), txt, font=MF("ExtraBold", 44), fill=(YEL if third else WHITE) + (int(255 * k),), anchor="lm")
-    if done and not third:                                         # carimbo RETOMAMOS
+    if done and not third:                                         # check se desenhando + carimbo RETOMAMOS
+        kc = ease_out((t - tdone) / 0.35); cx, cy = w - 64, h // 2
+        d.ellipse((cx - 36, cy - 36, cx + 36, cy + 36), fill=(0, 150, 70, 255))
+        p1, p2, p3 = (cx - 18, cy + 2), (cx - 5, cy + 16), (cx + 20, cy - 14)
+        if kc > 0: d.line([p1, (lerp(p1[0], p2[0], clamp(kc * 2)), lerp(p1[1], p2[1], clamp(kc * 2)))], fill=WH, width=9)
+        if kc > 0.5: d.line([p2, (lerp(p2[0], p3[0], clamp(kc * 2 - 1)), lerp(p2[1], p3[1], clamp(kc * 2 - 1)))], fill=WH, width=9)
         kk = back_out((t - tdone) / 0.3, 2.2); st = Image.new("RGBA", (300, 90), (0, 0, 0, 0)); ds = ImageDraw.Draw(st)
-        ds.rounded_rectangle((4, 4, 296, 86), 14, outline=GREEN + (255,), width=6); ds.text((150, 46), "RETOMAMOS ✓" if False else "RETOMAMOS", font=MF("ExtraBold", 38), fill=GREEN + (255,), anchor="mm")
-        st = st.rotate(-6, resample=Image.BICUBIC, expand=True); s = 1.8 - 0.8 * kk
-        st = st.resize((max(1, int(st.width * s)), max(1, int(st.height * s))), Image.BICUBIC)
-        im.alpha_composite(fade(st, clamp((t - tdone) / 0.06)), (int(w - 170 - st.width / 2), int(h / 2 - st.height / 2)))
+        ds.rounded_rectangle((4, 4, 296, 86), 14, outline=YEL + (255,), width=6); ds.text((150, 46), "RETOMAMOS", font=MF("ExtraBold", 38), fill=YEL + (255,), anchor="mm")
+        st = st.rotate(-6, resample=Image.BICUBIC, expand=True); s_ = (1.8 - 0.8 * kk) * 0.72
+        st = st.resize((max(1, int(st.width * s_)), max(1, int(st.height * s_))), Image.BICUBIC)
+        im.alpha_composite(fade(st, clamp((t - tdone) / 0.06)), (int(w - 225 - st.width / 2), int(h / 2 - st.height / 2)))
     if third and done:
         pulse = 0.5 + 0.5 * math.sin((t - tdone) * 6)
-        d.rounded_rectangle((w - 300, 30, w - 24, 88), 18, fill=GREEN + (int(160 + 95 * pulse),)); d.text((w - 162, 59), "AGORA É NOSSA", font=MF("ExtraBold", 26), fill=WH, anchor="mm")
+        d.rounded_rectangle((w - 300, 30, w - 24, 88), 18, fill=(0, 150, 70, int(170 + 85 * pulse))); d.text((w - 162, 59), "AGORA É NOSSA", font=MF("ExtraBold", 26), fill=WH, anchor="mm")
     return im, q
+
+yy_, xx_ = np.mgrid[0:H, 0:W]
+_r = np.sqrt(((xx_ - W / 2) / W) ** 2 + ((yy_ - 760) / H) ** 2)
+FLAGBG = (np.array([0, 58, 32], np.float32) + np.array([0, 70, 30], np.float32) * np.clip(1 - _r * 2.2, 0, 1)[..., None])
+_dia = (np.abs(xx_ - W / 2) / 620 + np.abs(yy_ - 760) / 700)                       # losango amarelo suave (inspirado na bandeira)
+FLAGBG = FLAGBG * (1 - 0.0) + np.array([254, 221, 0], np.float32) * (np.clip(1.05 - _dia, 0, 1) ** 1.5 * 0.35)[..., None]
+FLAGBG = np.clip(FLAGBG, 0, 255).astype(np.float32)
+ANG = np.arctan2(yy_ - 330, xx_ - W / 2)
+def rays(t, al):
+    """raios verde e amarelo girando atrás dele (só na parede, nunca no rosto)"""
+    if al <= 0: return None
+    band = (np.sin(ANG * 12 + t * 0.6) > 0)
+    lay = np.zeros((H, W, 4), np.float32); lay[band, :3] = (254, 221, 0); lay[~band, :3] = (0, 150, 70)
+    fall = np.clip(1.2 - np.sqrt(((xx_ - W / 2) / W) ** 2 + ((yy_ - 330) / H) ** 2) * 1.6, 0, 1)
+    lay[..., 3] = 0.30 * al * fall * (1 - MASK)
+    return lay
 
 def window_scene(t):
     k = ease_io((t - FULL_IN) / 0.6)                               # 0 = janela, 1 = tela cheia
     full = photo_full(t)
-    bg = cv2.resize(cv2.GaussianBlur(cv2.resize(PHOTO, (W // 8, H // 8)), (0, 0), 3), (W, H)).astype(np.float32) * 0.35 + np.array([3, 9, 18], np.float32) * 0.65
-    if k >= 0.999: return Image.fromarray(full).convert("RGBA")
-    s = lerp(0.56, 1.0, k); fw, fh = int(W * s), int(H * s); fx = (W - fw) // 2; fy = int(lerp(150, 0, k))
-    out = bg * (1 - k) + full.astype(np.float32) * k
-    small = cv2.resize(full, (fw, fh), interpolation=cv2.INTER_AREA).astype(np.float32)
-    m = Image.new("L", (fw, fh), 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, fw - 1, fh - 1), int(34 * (1 - k)), fill=255); m = np.asarray(m, np.float32)[..., None] / 255
-    yb = min(H, fy + fh); out[fy:yb, fx:fx + fw] = out[fy:yb, fx:fx + fw] * (1 - m[:yb - fy]) + small[:yb - fy] * m[:yb - fy]
-    frame = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).convert("RGBA")
-    ImageDraw.Draw(frame).rounded_rectangle((fx, fy, fx + fw, fy + fh), int(34 * (1 - k)), outline=GOLD + (int(220 * (1 - k)),), width=3)
-    for i in range(3):
-        im, q = mission_row(i, t)
-        if q < 0: continue
-        kin = ease_out(q / 0.4); al = clamp(q / 0.15) * (1 - k)
-        paste(frame, fade(im, al), (W - im.width) / 2 - 500 * (1 - kin), 1250 + i * 140 + 400 * k, 0.5, 14, (4, 10))
+    if k > 0:
+        ry = rays(t, k * (1 - ease_in((t - 44.6) / 1.6)))
+        if ry is not None: full = np.clip(full.astype(np.float32) * (1 - ry[..., 3:4]) + ry[..., :3] * ry[..., 3:4], 0, 255).astype(np.uint8)
+    if k >= 0.999:
+        frame = Image.fromarray(full).convert("RGBA")
+    else:
+        bg = FLAGBG
+        s = lerp(0.50, 1.0, k); fw, fh = int(W * s), int(H * s); fx = (W - fw) // 2; fy = int(lerp(140, 0, k))
+        out = bg * (1 - k) + full.astype(np.float32) * k
+        small = cv2.resize(full, (fw, fh), interpolation=cv2.INTER_AREA).astype(np.float32)
+        m = Image.new("L", (fw, fh), 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, fw - 1, fh - 1), int(34 * (1 - k)), fill=255); m = np.asarray(m, np.float32)[..., None] / 255
+        sh = np.zeros((H, W), np.float32); cv2.rectangle(sh, (fx + 10, fy + 24), (fx + fw + 10, fy + fh + 24), 1.0, -1); sh = cv2.GaussianBlur(sh, (0, 0), 22)[..., None] * 0.5 * (1 - k)
+        out = out * (1 - sh)
+        yb = min(H, fy + fh); out[fy:yb, fx:fx + fw] = out[fy:yb, fx:fx + fw] * (1 - m[:yb - fy]) + small[:yb - fy] * m[:yb - fy]
+        frame = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).convert("RGBA")
+        ImageDraw.Draw(frame).rounded_rectangle((fx, fy, fx + fw, fy + fh), int(34 * (1 - k)), outline=YEL + (int(230 * (1 - k)),), width=4)
+        for i in range(3):
+            im, q = mission_row(i, t)
+            if q < 0: continue
+            kin = ease_out(q / 0.4); al = clamp(q / 0.15) * (1 - k)
+            paste(frame, fade(im, al), (W - im.width) / 2 - 500 * (1 - kin), 1235 + i * 140 + 400 * k, 0.5, 14, (4, 10))
+    q = t - FULL_IN                                                # flash na entrada da tela cheia
+    if -0.05 < q < 0.35: frame.alpha_composite(Image.new("RGBA", (W, H), (255, 255, 240, int(200 * clamp(1 - abs(q - 0.05) / 0.3)))))
     return frame
+
+def audio_credit(frame, t):
+    for a, b in ((0.4, 6.5), (15.4, 20.5)):
+        if not (a <= t < b): continue
+        k = ease_out((t - a) / 0.4) * (1 - ease_in((t - (b - 0.4)) / 0.4))
+        f = MF("ExtraBold", 30); txt = "ÁUDIO: ANDRÉ JANONES"; tw = ImageDraw.Draw(frame).textlength(txt, font=f)
+        lay = Image.new("RGBA", (int(tw + 110), 64), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+        d.rounded_rectangle((0, 0, lay.width - 1, 63), 30, fill=(0, 58, 32, 235), outline=YEL + (255,), width=3)
+        cx = 34; d.rounded_rectangle((cx - 9, 16, cx + 9, 40), 9, fill=YEL + (255,)); d.arc((cx - 15, 22, cx + 15, 48), 0, 180, fill=YEL + (255,), width=4); d.line((cx, 48, cx, 54), fill=YEL + (255,), width=4)
+        d.text((64, 33), txt, font=f, fill=WH, anchor="lm")
+        paste(frame, fade(lay, k), (W - lay.width) / 2, 1700 + 30 * (1 - k), 0.4, 10, (3, 8))
 
 rng = np.random.default_rng(13)
 CONF = [dict(x=rng.uniform(0, W), y0=rng.uniform(-900, -40), v=rng.uniform(260, 520), w=rng.uniform(14, 26), ph=rng.uniform(0, 6.28),
@@ -354,8 +395,8 @@ def render_frame(t):
     if t >= END_IN + 0.35: return end_card(t)
     tt = min(t, EDIT_END - 1e-3)
     frame = window_scene(tt)
-    draw_caption(frame, t, 1160 if tt < FULL_IN else 1450, 52 if tt < FULL_IN else 56, ("me", "au"))
-    confetti(frame, tt)
+    draw_caption(frame, t, 1150 if tt < FULL_IN else 1450, 52 if tt < FULL_IN else 56, ("me", "au"))
+    confetti(frame, tt); audio_credit(frame, tt)
     draw_banners(frame, t)
     if t >= END_IN: frame.alpha_composite(fade(end_card(t), clamp((t - END_IN) / 0.35)))
     return frame
