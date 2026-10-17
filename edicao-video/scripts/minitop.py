@@ -26,8 +26,8 @@ def _icon(kind, size, col):
         pass
     return im
 
-# redes do canal (TikTok, Kwai e X usam o mesmo @)
-ITEMS = [(["ig"], "@ezvideos_cortes"), (["tt", "kw", "x"], "@elieziosouza78"), (["yt"], "@eliezio.souza78")]
+# redes do canal: TikTok, Kwai e X usam @elieziosouza78; Instagram e YouTube usam @eliezio.souza78 (Instagram mudou em 17/10/2026)
+ITEMS = [(["tt", "kw", "x"], "@elieziosouza78"), (["ig", "yt"], "@eliezio.souza78")]
 
 def make_minitop(W, font_path, gold=(214, 182, 116), height=150, cy=70):
     """minimal top: soft navy fade with one line of social handles and a thin gold hairline"""
