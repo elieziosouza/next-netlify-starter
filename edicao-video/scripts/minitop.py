@@ -18,13 +18,16 @@ def _icon(kind, size, col):
         d.rounded_rectangle((w, s * 0.26, s * 0.70, s * 0.80), int(s * 0.14), outline=c, width=w)
         d.polygon([(s * 0.74, s * 0.42), (s * 0.97, s * 0.30), (s * 0.97, s * 0.76), (s * 0.74, s * 0.64)], fill=c)
         r = s * 0.10; d.ellipse((s * 0.37 - r, s * 0.53 - r, s * 0.37 + r, s * 0.53 + r), fill=c)
+    elif kind == "x":    # X: dois traços cruzados simples (sem logo oficial)
+        ww = int(s * 0.11); d.line((s * 0.14, s * 0.12, s * 0.86, s * 0.88), fill=c, width=ww)
+        d.line((s * 0.86, s * 0.12, s * 0.14, s * 0.88), fill=c, width=max(2, ww // 2))
     im = im.resize((size, size), Image.LANCZOS)
     if kind == "yt":   # punch the play triangle through
         pass
     return im
 
-# redes do canal (TikTok e Kwai usam o mesmo @)
-ITEMS = [(["ig"], "@ezvideos_cortes"), (["tt", "kw"], "@elieziosouza78"), (["yt"], "@eliezio.souza78")]
+# redes do canal (TikTok, Kwai e X usam o mesmo @)
+ITEMS = [(["ig"], "@ezvideos_cortes"), (["tt", "kw", "x"], "@elieziosouza78"), (["yt"], "@eliezio.souza78")]
 
 def make_minitop(W, font_path, gold=(214, 182, 116), height=150, cy=70):
     """minimal top: soft navy fade with one line of social handles and a thin gold hairline"""

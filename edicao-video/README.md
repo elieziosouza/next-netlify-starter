@@ -8,7 +8,7 @@ Cada vídeo novo deve seguir este guia e, quando algo for melhorado, o guia é a
 
 ## 1. Preferências do Eliezio (prioridade máxima)
 
-- **Redes do canal (15/10/2026):** Instagram @ezvideos_cortes · TikTok e **Kwai** @elieziosouza78 · YouTube @eliezio.souza78. No topo e na tela final, TikTok e Kwai dividem o mesmo @ (dois ícones lado a lado), em `scripts/minitop.py` (`ITEMS`). Incluir o Kwai também nas legendas dos posts.
+- **Redes do canal (15/10/2026):** Instagram @ezvideos_cortes · TikTok, **Kwai** e **X** @elieziosouza78 · YouTube @eliezio.souza78. No topo e na tela final, TikTok, Kwai e X dividem o mesmo @ (três ícones lado a lado; X incluído em 17/10/2026), em `scripts/minitop.py` (`ITEMS`). Incluir o Kwai e o X também nas legendas dos posts.
 
 - **Ele aponta para baixo = ele em cima (15/10/2026):** quando ele aponta o dedo para baixo ao chamar o vídeo, ele sobe para uma janela no topo (400×536, cabeça inteira com folga) e o vídeo de terceiros entra embaixo num cartão 3D inclinado para ele, sobre o fundo escuro desfocado (estilo do react da folga, que passou de 20 mil visualizações). Ver `scripts/render_react_canella.py`.
 - **Música "vai dar PT" no final (15/10/2026):** entra baixinha no "dia 25" (com ducking sob a voz), fica cheia quando ele termina de falar, e a letra aparece grande abaixo do rosto com o **"PT" em pílula vermelha**. **Sem a estrela amarela** (ele não gostou). Se ele faz o L no final, a letra fica abaixo da mão.
