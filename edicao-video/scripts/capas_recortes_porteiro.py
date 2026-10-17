@@ -9,7 +9,7 @@ def pill(img, txt, cy, size, fill, col):
     lay = Image.new("RGBA", (int(tw + 72), h), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
     d.rounded_rectangle((0, 0, lay.width - 1, h - 1), h // 3, fill=fill); d.text((36, h / 2 + 2), txt, font=f, fill=col, anchor="lm")
     R.paste(img, lay, W / 2 - lay.width / 2, cy - h / 2, 0.55, 16, (5, 14))
-fr = R.me_src(5.6).copy(); fr = R.big_behind(fr, 5.4)
+fr = R.me_src(23.5).copy(); fr = R.big_behind(fr, 5.4)                  # olhando para a câmera, fazendo o L
 A = Image.fromarray(fr).convert("RGBA"); A.alpha_composite(R.top)
 pill(A, "PORTEIRO PRESO", 1330, 64, R.GD, R.NAVY + (255,)); pill(A, "POR BATER PANELA?!", 1465, 70, R.RED + (255,), R.WH)
 s = R.segs[1]; B = R.split_scene(s["t0"] + 1.6, s, 0.0); B.alpha_composite(R.top)
