@@ -11,10 +11,10 @@ V = f"{S}/v24"; FD = f"{S}/fontdl"; ME = f"{V}/in.mp4"
 W, H, FPS = 1080, 1920, 30
 WHITE = (255, 255, 255); GOLD = (214, 182, 116); GOLD_L = (245, 226, 176); NAVY = (6, 34, 58); RED = (210, 30, 36); STEEL = (150, 172, 196)
 WH = (255, 255, 255, 255); GD = GOLD + (255,)
-SRC_END = 13.35; FREEZE = 0.5
-EDIT_END = SRC_END + FREEZE; END_IN = EDIT_END; TOTAL = END_IN + 3.0
-MUS_IN = SRC_END + FREEZE - 9.45                 # a letra termina junto com a imagem
-FIN_IN = 8.9                                     # música cheia depois do pico do grito
+SRC_END = 13.35
+FIN_IN = SRC_END                                 # panelaço inteiro; o "vai dar PT" só entra depois
+MUS_IN = FIN_IN - 4.87                           # música começa direto no refrão "VAI DAR PT"
+EDIT_END = MUS_IN + 9.45; FREEZE = EDIT_END - SRC_END; END_IN = EDIT_END; TOTAL = END_IN + 3.0
 LYR = [(0.0, 1.43, "ESSE ANO"), (1.43, 2.87, "O LULA BOTA"), (2.87, 3.87, "O BOLSONARO"), (3.87, 4.87, "PRA MAMAR"),
        (4.87, 5.73, "VAI DAR PT"), (5.73, 6.73, "VAI DAR"), (6.73, 8.23, "VAI DAR PT"), (8.23, 9.43, "VAI DAR PT")]
 segs = []; ME_CAPS = []; HOT = set()
@@ -316,7 +316,7 @@ def lyrics(frame, t):
 def render_frame(t):
     if t >= END_IN + 0.35: return end_card(t)
     tt = min(t, EDIT_END - 1e-3); st = min(tt, SRC_END - 0.04)
-    z = 0.03 * ease_io((tt - SRC_END + 0.04) / FREEZE) if tt > SRC_END - 0.04 else 0
+    z = 0.07 * ease_io((tt - SRC_END + 0.04) / FREEZE) if tt > SRC_END - 0.04 else 0
     img = zoom_suave.aplica(src_frame(st), z, 0.5)
     frame = Image.fromarray(img).convert("RGBA")
     flash(frame, t); fora(frame, tt); lyrics(frame, tt)
@@ -347,12 +347,12 @@ def main():
     SR = 48000; n = int(TOTAL * SR)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", ME, "-ar", "48000", "-ac", "2", f"{V}/me48.wav"], check=True)
     v = readw(f"{V}/me48.wav")[:int(SRC_END * SR)]; tl = np.arange(len(v)) / SR
-    g = np.clip(1 - (tl - FIN_IN) / 1.2 * 0.6, 0.4, 1.0) * np.clip((SRC_END - tl) / 0.5, 0, 1)    # grito abaixa quando a música enche
+    g = np.clip((SRC_END - tl) / 0.35, 0, 1)                                                      # panelas no volume original até o fim
     vt = np.zeros((n, 2), np.float32); vt[:len(v)] = v * g[:, None]; writew(f"{V}/voice.wav", vt)
     song = readw(f"{S}/v15/song_vox.wav"); Ls = min(len(song), n - int(MUS_IN * SR)); ts_ = np.arange(Ls) / SR; lead = FIN_IN - MUS_IN
-    gain = np.where(ts_ < lead, 10 ** ((-22 + 22 * ts_ / lead) / 20), 1.0) * np.clip(1 - (ts_ - (TOTAL - MUS_IN - 1.6)) / 1.5, 0, 1)
+    gain = np.clip((ts_ - lead + 0.12) / 0.12, 0, 1) * np.clip(1 - (ts_ - (TOTAL - MUS_IN - 1.6)) / 1.5, 0, 1)
     sg = np.zeros((n, 2), np.float32); sg[int(MUS_IN * SR):int(MUS_IN * SR) + Ls] = song[:Ls] * gain[:, None]; writew(f"{V}/song.wav", sg)
-    ev = [(0.25, sfx.thud(), 0.45), (0.27, sfx.whoosh(0.4), 0.25), (FIN_IN - 0.6, sfx.whoosh(0.6), 0.22), (END_IN - 0.3, sfx.whoosh(0.6), 0.25)]
+    ev = [(0.25, sfx.thud(), 0.45), (0.27, sfx.whoosh(0.4), 0.25), (FIN_IN - 0.3, sfx.whoosh(0.5), 0.22), (END_IN - 0.3, sfx.whoosh(0.6), 0.25)]
     sfx.build(ev, TOTAL, f"{V}/sfx.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/song.wav", "-filter_complex",
                     "[1:a]highpass=f=60,volume=1.6[vox];[2:a]volume=0.8[sf];[3:a]volume=0.95[sg];"
