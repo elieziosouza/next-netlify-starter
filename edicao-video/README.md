@@ -199,6 +199,7 @@ O Eliezio pediu em 11/10/2026: **todo vídeo sai com capa impactante**, de prefe
 ## 7.1 Título, legenda e hashtags (obrigatório na entrega)
 
 Toda entrega de vídeo termina com, no chat (título + hashtags num bloco de código pronto para copiar e colar, pedido de 15/10/2026):
+- **Primeiro bloco, sempre (pedido de 17/10/2026):** o título já com **4 hashtags** no fim, numa linha só, num bloco de código para copiar e colar de uma vez;
 - 3 a 4 opções de **título**, indicando a preferida;
 - **legenda do post** para Instagram e TikTok, com fatos com fonte e uma chamada para comentar;
 - **hashtags**: uma lista completa e uma versão enxuta com 5 a 6;

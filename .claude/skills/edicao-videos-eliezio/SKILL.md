@@ -27,6 +27,6 @@ Todo vídeo começa com a capa escolhida e a assinatura glitch, numa etapa só: 
 
 Nunca cortar o rosto nem o topo da cabeça do Eliezio (vídeo, janelinha, capa, transições). Conferir em quadros soltos antes do render.
 
-Ao entregar cada vídeo, termine sempre com título (opções), legenda do post, hashtags e título para Shorts (seção 7.1 do README).
+Ao entregar cada vídeo, termine sempre com título (opções), legenda do post, hashtags e título para Shorts (seção 7.1 do README). O primeiro bloco é sempre o título com 4 hashtags na mesma linha, pronto para copiar e colar.
 
 Quando o Eliezio aprovar uma melhoria, atualize o README (seções 1 a 6 e o histórico) e faça commit.
