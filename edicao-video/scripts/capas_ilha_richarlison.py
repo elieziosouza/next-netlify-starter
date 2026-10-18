@@ -44,10 +44,10 @@ def duo(img, bottom, wmax=430):
 def credit(img, y): ImageDraw.Draw(img).text((CX, y), "Fotos: reprodução", font=MF("SemiBold", 22), fill=(220, 220, 228, 230), anchor="mm")   # crédito em área livre, sem encostar em nada
 
 # C: sem rosto — ilha em cima, os dois embaixo, título no meio
-C = island_bg(1000)
-duo(C, H + 30, 400)
-big(C, "RICHARLISON", 760, 190); big(C, "ACUSA FLÁVIO", 930, 130, band=R.NAVY, tcol=R.WHITE); big(C, "“NA MÃO GRANDE”", 1090, 104, band=R.GOLD, tcol=R.NAVY, rot=-2)
-BAR.draw_bar(C, 0.0, "canal"); C.alpha_composite(R.top, (R.HDX, 0)); credit(C, 1215)
+C = island_bg(1240)                                                # ilha maior: o título desce (pedido dele)
+duo(C, H + 30, 340)
+big(C, "RICHARLISON", 1060, 175); big(C, "ACUSA FLÁVIO", 1225, 122, band=R.NAVY, tcol=R.WHITE); big(C, "“NA MÃO GRANDE”", 1372, 98, band=R.GOLD, tcol=R.NAVY, rot=-2)
+BAR.draw_bar(C, 0.0, "canal"); C.alpha_composite(R.top, (R.HDX, 0)); credit(C, 1475)
 
 # A: ele embaixo fazendo o L, os dois em círculos sobre a ilha
 me = np.ascontiguousarray(R.me_src(41.2)[:, ::-1])  # espelhado: L do lado certo
