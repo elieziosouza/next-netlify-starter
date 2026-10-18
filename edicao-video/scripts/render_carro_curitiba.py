@@ -509,7 +509,7 @@ def main():
             put("c1" if kind.startswith("c1") else "c2", ca, sg_["t0"] + a, dur, 1.0)
     writew(f"{V}/clipaud.wav", ct)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/bed_g.wav", "-i", f"{V}/song.wav", "-i", f"{V}/clipaud.wav", "-filter_complex",
-                    "[1:a]highpass=f=70,asplit=4[vox][k1][k2][k3];[2:a]volume=0.8[sf];[3:a]volume=0.22[bed];[4:a]volume=0.95[sg];[5:a]volume=1.25[cl];"
+                    "[1:a]highpass=f=70,asplit=4[vox][k1][k2][k3];[2:a]volume=0.8[sf];[3:a]volume=0.22[bed];[4:a]volume=0.95[sg];[5:a]volume=0.8[cl];"
                     "[cl][k3]sidechaincompress=threshold=0.025:ratio=4:attack=15:release=350[cld];"
                     "[bed][k1]sidechaincompress=threshold=0.02:ratio=6:attack=30:release=500[bedd];[sg][k2]sidechaincompress=threshold=0.03:ratio=5:attack=20:release=400[sgd];"
                     f"[vox][sf][bedd][sgd][cld]amix=inputs=5:normalize=0:duration=longest,atrim=0:{TOTAL:.2f},alimiter=limit=0.79:level=false:asc=1[a]",
