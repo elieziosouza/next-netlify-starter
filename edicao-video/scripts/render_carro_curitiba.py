@@ -13,7 +13,7 @@ W, H, FPS = 1080, 1920, 30
 WHITE = (255, 255, 255); GOLD = (214, 182, 116); GOLD_L = (245, 226, 176); NAVY = (6, 34, 58); RED = (210, 30, 36)
 WH = (255, 255, 255, 255); GD = GOLD + (255,)
 # trechos dele (me.mp4 720x1280): duas telas divididas com o ataque e dois trechos em tela cheia
-PARTS = [("split", 1.20, 6.62), ("split", 8.00, 15.85), ("full", 16.38, 20.15), ("full", 21.50, 26.22)]
+PARTS = [("split", 1.20, 6.62), ("split", 8.00, 13.80), ("full", 14.30, 15.85), ("full", 16.38, 20.15), ("full", 21.50, 26.22)]
 segs = []; acc = 0.0
 for p in PARTS:
     segs.append(dict(src="me", mode=p[0], a=p[1], b=p[2], t0=acc, t1=acc + p[2] - p[1])); acc += p[2] - p[1]
@@ -275,8 +275,8 @@ for c in CAPS: c["src"] = "au" if any(w.strip(",.?!") in {h.strip(",.?!") for h 
 SEG = PersonSeg(f"{S}/seg/u2net_human_seg.onnx")
 def BIGF(s): return ImageFont.truetype(f"{FD}/Anton-Regular.ttf", s)
 def SERIF(s): return ImageFont.truetype(f"{FD}/DMSerifDisplay-Regular.ttf", s)
-ZOOMS = [(17.75, 20.00, 0.07), (24.92, 26.20, 0.07)]
-BIG = [(17.75, 20.10, "BOLSONARISTAS"), (22.45, 23.45, "DIA 25"), (24.92, 26.22, "INEVITÁVEL")]
+ZOOMS = [(14.55, 15.85, 0.07), (17.75, 20.00, 0.07), (24.92, 26.20, 0.07)]
+BIG = [(14.45, 15.90, "DIFERENTE", GOLD_L), (16.50, 17.72, "APENAS", WHITE), (17.75, 20.15, "BOLSONARISTAS", (235, 50, 50)), (22.45, 23.45, "DIA 25", GOLD_L), (24.92, 26.25, "INEVITÁVEL", WHITE)]
 SEAM = 1060; PH = H - SEAM
 
 _me = {}
@@ -298,12 +298,13 @@ def me_at(tt):
     return min(TAIL[1], TAIL[0] + (tt - FIN_IN) * 0.6)             # final: o L em câmera lenta leve e depois congela
 
 # imagens do ataque: c1 (576x1024, letreiro em y 700-830) e c2 (540x968, logo no canto e letreiro em y 615-850) recortados acima das letras
-C1_FR = decode(C1, 4.0, 14.0, 576, 1024)
+C1_FR = decode(C1, 4.0, 13.0, 576, 1024)
 C2_FR = decode(C2, 12.5, 14.6, 540, 968)
 C1_T0, C2_T0 = 4.0, 12.5
 PLATE = [(13.3, (138, 350, 232, 402)), (14.2, (172, 358, 272, 410))]     # placa do carro no recorte do c2: borrada
 FREEZE_CT = 14.2
-CLIPMAP = {0: [("c1", 0.0, 99, 4.6)], 1: [("c1", 0.0, 3.2, 10.0), ("c2", 3.2, 4.5, 12.9), ("c2f", 4.5, 99, FREEZE_CT)]}
+CLIPMAP = {0: [("c1", 0.0, 2.2, 4.5), ("c1f", 2.2, 4.4, 6.7), ("c1", 4.4, 99, 6.7)], 1: [("c1", 0.0, 1.8, 10.2), ("c2", 1.8, 3.1, 12.9), ("c2f", 3.1, 99, FREEZE_CT)]}
+ATK = (600, 500, 250)                                           # quem está batendo no carro (c1 6.7 s), no painel
 WIN = (380, 600, 270, 160)                                        # vidro traseiro no painel: centro e raios da elipse
 def plate_box(ct):
     (ta, ba), (tb, bb) = PLATE; k = clamp((ct - ta) / (tb - ta))
@@ -316,14 +317,14 @@ def c2_crop(ct):
 def clip_panel(si, u):
     for kind, a, b, ca in CLIPMAP[si]:
         if a <= u < b: break
-    if kind == "c1":
-        fr = C1_FR[int(clamp((ca + u - a - C1_T0) * FPS, 0, len(C1_FR) - 1))][120:685]
+    if kind in ("c1", "c1f"):
+        fr = C1_FR[int(clamp(((ca if kind == "c1f" else ca + u - a) - C1_T0) * FPS, 0, len(C1_FR) - 1))][120:685]
     else:
         fr = c2_crop(ca if kind == "c2f" else ca + u - a)
     big = cv2.resize(fr, (W, SEAM), interpolation=cv2.INTER_LANCZOS4)
     q = u - a
-    if kind == "c2f":                                             # congela e aproxima devagar do vidro
-        sc = 1 + 0.22 * ease_io(q / 2.6); cx, cy = WIN[0], WIN[1]
+    if kind in ("c1f", "c2f"):                                    # congela e aproxima devagar do vidro
+        sc = 1 + 0.22 * ease_io(q / 2.6); cx, cy = (WIN if kind == "c2f" else ATK)[:2]
         big = cv2.warpAffine(big, np.float32([[sc, 0, cx - cx * sc], [0, sc, cy - cy * sc]]), (W, SEAM), flags=cv2.INTER_LINEAR)
     if a > 0 and q < 0.18:                                        # troca de cena com flash
         big = np.clip(big.astype(np.float32) + 160 * (1 - q / 0.18), 0, 255).astype(np.uint8)
@@ -336,21 +337,23 @@ def me_panel(img):
     out = (bg.astype(np.float32) * 0.6).astype(np.uint8); x = (W - fg.shape[1]) // 2; out[:, x:x + fg.shape[1]] = fg
     return out
 
-def big_above(img, st):
-    """fundo escuro: a máscara falha, então a palavra fica acima da cabeça, sem cobrir nada dele"""
-    for a, b, word in BIG:
+def big_behind(img, st):
+    """palavra grande atrás dele: a máscara de pessoa recorta a cabeça na frente das letras"""
+    for a, b, word, col in BIG:
         if not (a <= st < b): continue
         u = st - a; k = back_out(u / 0.35, 1.6); al = clamp(u / 0.12) * clamp((b - st) / 0.25)
-        size = 170; f = BIGF(size); d0 = ImageDraw.Draw(Image.new("L", (4, 4)))
-        while d0.textlength(word, font=f) > W - 140: size -= 4; f = BIGF(size)
+        size = 330; f = BIGF(size); d0 = ImageDraw.Draw(Image.new("L", (4, 4)))
+        while d0.textlength(word, font=f) > W - 70: size -= 6; f = BIGF(size)
         lay = Image.new("RGBA", (W, int(size * 1.4)), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
-        d.text((W / 2 + 5, lay.height / 2 + 8), word, font=f, fill=(0, 0, 0, 150), anchor="mm")
-        d.text((W / 2, lay.height / 2), word, font=f, fill=GOLD_L + (255,) if word != "BOLSONARISTAS" else (235, 60, 60, 255), anchor="mm")
-        sc = 0.78 + 0.22 * k; lay = fade(lay.resize((int(W * sc), int(lay.height * sc)), Image.BICUBIC), al)
-        fr = Image.fromarray(img).convert("RGBA"); fr.alpha_composite(lay, (int(W / 2 - lay.width / 2), int(BIG_Y - lay.height / 2)))
-        img = np.asarray(fr.convert("RGB")).copy()
+        d.text((W / 2 + 6, lay.height / 2 + 10), word, font=f, fill=(0, 0, 0, 160), anchor="mm"); d.text((W / 2, lay.height / 2), word, font=f, fill=col + (255,), anchor="mm")
+        L = np.asarray(lay, np.float32) / 255; sc = 0.78 + 0.22 * k
+        L = cv2.resize(L, (int(L.shape[1] * sc), int(L.shape[0] * sc)), interpolation=cv2.INTER_LINEAR)
+        m = np.clip((cv2.resize(SEG(cv2.resize(img, (478, 850), interpolation=cv2.INTER_AREA)), (W, H)) - 0.35) / 0.3, 0, 1)
+        y0 = int(BIG_Y - L.shape[0] / 2); x0 = int(W / 2 - L.shape[1] / 2); ya, yb = max(0, y0), min(H, y0 + L.shape[0]); xa, xb = max(0, x0), min(W, x0 + L.shape[1])
+        Lc = L[ya - y0:yb - y0, xa - x0:xb - x0]; A = Lc[..., 3:4] * al * (1 - m[ya:yb, xa:xb, None])
+        img[ya:yb, xa:xb] = np.clip(img[ya:yb, xa:xb].astype(np.float32) * (1 - A) + Lc[..., :3] * 255 * A, 0, 255).astype(np.uint8)
     return img
-BIG_Y = 238
+BIG_Y = 330
 CAP_Y = 1690
 
 def pill(frame, txt, cx, y, k, fill=RED, tcol=WH, size=40):
@@ -362,9 +365,9 @@ def pill(frame, txt, cx, y, k, fill=RED, tcol=WH, size=40):
     s = 0.6 + 0.4 * back_out(k, 2.0); lay = fade(lay.resize((int(lay.width * s), int(lay.height * s)), Image.BICUBIC), clamp(k * 3))
     paste(frame, lay, cx - lay.width / 2, y - lay.height / 2, 0.5, 12, (4, 10))
 
-TAGS = {0: [("CURITIBA (PR) · ATO BOLSONARISTA", 0.5, 5.2)], 1: [("JOGARAM OBJETOS DENTRO DO CARRO", 0.35, 3.1)]}
-def highlight(frame, q):
-    x, y, rx, ry = WIN; d = ImageDraw.Draw(frame)
+TAGS = {0: [("CURITIBA (PR) · ATO BOLSONARISTA", 0.4, 2.1)], 1: [("JOGARAM OBJETOS DENTRO DO CARRO", 0.25, 1.75)]}
+def highlight(frame, q, target=None, label="VIDRO TRASEIRO QUEBRADO"):
+    x, y, rx, ry = target or WIN; d = ImageDraw.Draw(frame)
     m = Image.new("L", (W, SEAM), 140); ImageDraw.Draw(m).ellipse((x - rx, y - ry, x + rx, y + ry), fill=0)
     m = m.filter(ImageFilter.GaussianBlur(30)).point(lambda v: int(v * clamp(q / 0.25)))
     dark = Image.new("RGBA", (W, SEAM), (0, 0, 0, 255)); dark.putalpha(m); frame.alpha_composite(dark, (0, 0))
@@ -376,7 +379,7 @@ def highlight(frame, q):
         shaft = [(sx - 20, ay + 56), (sx + 20, ay + 56), (sx + 20, ay + L), (sx - 20, ay + L)]
         head = [(sx, ay), (sx - 56, ay + 60), (sx + 56, ay + 60)]
         for poly in (shaft, head): d.polygon(poly, fill=RED + (255,), outline=WHITE + (255,))
-    pill(frame, "VIDRO TRASEIRO QUEBRADO", W / 2, y - ry - 70, (q - 0.3) / 0.3, size=46)
+    pill(frame, label, W / 2, max(250, y - ry - 70), (q - 0.3) / 0.3, size=50)
 
 def split_scene(tt, s, t):
     si = segs.index(s); u = tt - s["t0"]; me = me_src(me_at(tt))
@@ -387,6 +390,7 @@ def split_scene(tt, s, t):
     if by < H: canvas[by:] = bot[:H - by]
     frame = Image.fromarray(canvas).convert("RGBA"); d = ImageDraw.Draw(frame)
     if kind == "c2f": highlight(frame, q)
+    if kind == "c1f": highlight(frame, q, (ATK[0], ATK[1], ATK[2], ATK[2] + 30), "ATACANDO O CARRO")
     for txt, a, b in TAGS.get(si, []):
         if a <= u < b: pill(frame, txt, W / 2, 200, (u - a) / 0.3 * (1 if u < b - 0.25 else 0) + (0 if u < b - 0.25 else 1 - (u - (b - 0.25)) / 0.25), size=36)
     d.rectangle((0, ty + SEAM - 2, W, ty + SEAM + 1), fill=GOLD + (int(230 * k),))
@@ -418,7 +422,7 @@ def render_frame(t):
     if s is not None and s.get("mode") == "split": frame = split_scene(tt, s, t)
     else:
         st = me_at(tt); z = zoom_suave.nivel(st, ZOOMS) + (0.04 * ease_io((tt - FIN_IN) / FIN_LEN) if tt >= FIN_IN else 0)
-        img = big_above(me_src(st).copy(), st); img = zoom_suave.aplica(img, z, 0.42)
+        img = big_behind(me_src(st).copy(), st); img = zoom_suave.aplica(img, z, 0.42)
         frame = Image.fromarray(img).convert("RGBA")
         if tt < FIN_IN: draw_caption(frame, t, CAP_Y, 56, ("me", "au"))
         else: lyrics(frame, t)
@@ -461,14 +465,14 @@ def main():
     subprocess.run([sys.executable, f"{S}/work/music.py", f"{V}/bed.wav", f"{TOTAL + 0.5:.2f}"], check=True)
     bed = readw(f"{V}/bed.wav")[:n]; bed = np.pad(bed, ((0, max(0, n - len(bed))), (0, 0)))[:n]
     gate = np.ones(n, np.float32); gate[int((MUS_IN - 0.3) * SR):] = 0; gate = np.convolve(gate, np.ones(int(0.5 * SR)) / int(0.5 * SR), "same"); writew(f"{V}/bed_g.wav", bed * gate[:, None])
-    ev = [(0.3, sfx.whoosh(0.5), 0.2), (segs[2]["t0"] - 0.12, sfx.whoosh(0.5), 0.24), (segs[3]["t0"] - 0.1, sfx.whoosh(0.5, False), 0.22)]
+    ev = [(0.3, sfx.whoosh(0.5), 0.2), (segs[2]["t0"] - 0.12, sfx.whoosh(0.5), 0.24), (segs[3]["t0"] - 0.1, sfx.whoosh(0.5), 0.22), (segs[4]["t0"] - 0.1, sfx.whoosh(0.5, False), 0.22)]
     for si, lst in CLIPMAP.items():
         for kind, a, b, ca in lst:
             if a > 0: ev.append((segs[si]["t0"] + a - 0.1, sfx.whoosh(0.4), 0.24))
-            if kind == "c2f": ev += [(segs[si]["t0"] + a, sfx.thud(), 0.35), (segs[si]["t0"] + a + 0.35, sfx.marker(), 0.4)]
+            if kind in ("c1f", "c2f"): ev += [(segs[si]["t0"] + a, sfx.thud(), 0.35), (segs[si]["t0"] + a + 0.35, sfx.marker(), 0.4)]
     for si, lst in TAGS.items():
         for txt, a, b in lst: ev.append((segs[si]["t0"] + a, sfx.click(), 0.4))
-    for a, b, w in BIG: ev.append((out_t(a), sfx.click(), 0.5))
+    for a, b, w, _ in BIG: ev.append((out_t(a), sfx.click(), 0.5))
     ev.append((END_IN - 0.3, sfx.whoosh(0.6), 0.25))
     sfx.build([e for e in ev if 0 <= e[0] < TOTAL - 0.9], TOTAL, f"{V}/sfx.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/bed_g.wav", "-i", f"{V}/song.wav", "-filter_complex",
