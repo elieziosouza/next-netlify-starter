@@ -17,6 +17,8 @@ PARTS = [("split", 1.20, 6.62), ("split", 8.00, 13.80), ("full", 14.30, 15.85), 
 segs = []; acc = 0.0
 for p in PARTS:
     segs.append(dict(src="me", mode=p[0], a=p[1], b=p[2], t0=acc, t1=acc + p[2] - p[1])); acc += p[2] - p[1]
+OPEN, OPEN_CA = 2.2, 4.5                                          # abertura: o ataque com o som original dos vândalos, antes da fala
+for d in segs: d["t0"] += OPEN; d["t1"] += OPEN
 def out_t(x):
     for s in segs:
         if s["src"] == "me" and s["a"] <= x <= s["b"]: return s["t0"] + x - s["a"]
@@ -303,7 +305,7 @@ C2_FR = decode(C2, 12.5, 14.6, 540, 968)
 C1_T0, C2_T0 = 4.0, 12.5
 PLATE = [(13.3, (138, 350, 232, 402)), (14.2, (172, 358, 272, 410))]     # placa do carro no recorte do c2: borrada
 FREEZE_CT = 14.2
-CLIPMAP = {0: [("c1", 0.0, 2.2, 4.5), ("c1f", 2.2, 4.4, 6.7), ("c1", 4.4, 99, 6.7)], 1: [("c1", 0.0, 1.8, 10.2), ("c2", 1.8, 3.1, 12.9), ("c2f", 3.1, 99, FREEZE_CT)]}
+CLIPMAP = {0: [("c1f", 0.0, 2.2, 6.7), ("c1", 2.2, 99, 6.7)], 1: [("c1", 0.0, 1.8, 10.2), ("c2", 1.8, 3.1, 12.9), ("c2f", 3.1, 99, FREEZE_CT)]}
 ATK = (600, 500, 250)                                           # quem está batendo no carro (c1 6.7 s), no painel
 WIN = (380, 600, 270, 160)                                        # vidro traseiro no painel: centro e raios da elipse
 def plate_box(ct):
@@ -365,7 +367,7 @@ def pill(frame, txt, cx, y, k, fill=RED, tcol=WH, size=40):
     s = 0.6 + 0.4 * back_out(k, 2.0); lay = fade(lay.resize((int(lay.width * s), int(lay.height * s)), Image.BICUBIC), clamp(k * 3))
     paste(frame, lay, cx - lay.width / 2, y - lay.height / 2, 0.5, 12, (4, 10))
 
-TAGS = {0: [("CURITIBA (PR) · ATO BOLSONARISTA", 0.4, 2.1)], 1: [("JOGARAM OBJETOS DENTRO DO CARRO", 0.25, 1.75)]}
+TAGS = {1: [("JOGARAM OBJETOS DENTRO DO CARRO", 0.25, 1.75)]}
 def highlight(frame, q, target=None, label="VIDRO TRASEIRO QUEBRADO"):
     x, y, rx, ry = target or WIN; d = ImageDraw.Draw(frame)
     m = Image.new("L", (W, SEAM), 140); ImageDraw.Draw(m).ellipse((x - rx, y - ry, x + rx, y + ry), fill=0)
@@ -384,12 +386,13 @@ def highlight(frame, q, target=None, label="VIDRO TRASEIRO QUEBRADO"):
 def split_scene(tt, s, t):
     si = segs.index(s); u = tt - s["t0"]; me = me_src(me_at(tt))
     top, kind, q = clip_panel(si, u); bot = me_panel(me)
-    k = ease_io(u / 0.4) if si == 0 else 1.0
+    k = 1.0
     canvas = me.copy(); ty = int(-SEAM * (1 - k)); by = int(SEAM + PH * (1 - k))
     if ty + SEAM > 0: canvas[max(0, ty):ty + SEAM] = top[max(0, -ty):]
     if by < H: canvas[by:] = bot[:H - by]
     frame = Image.fromarray(canvas).convert("RGBA"); d = ImageDraw.Draw(frame)
     if kind == "c2f": highlight(frame, q)
+    if si == 0 and u < 0.18: frame.alpha_composite(Image.new("RGBA", (W, H), (255, 255, 255, int(200 * (1 - u / 0.18)))))
     if kind == "c1f": highlight(frame, q, (ATK[0], ATK[1], ATK[2], ATK[2] + 30), "ATACANDO O CARRO")
     for txt, a, b in TAGS.get(si, []):
         if a <= u < b: pill(frame, txt, W / 2, 200, (u - a) / 0.3 * (1 if u < b - 0.25 else 0) + (0 if u < b - 0.25 else 1 - (u - (b - 0.25)) / 0.25), size=36)
@@ -416,7 +419,21 @@ def lyrics(frame, t):
         frame.alpha_composite(blk.filter(ImageFilter.GaussianBlur(10)), (int(W / 2 - lay.width / 2) + 4, 1630 - lay.height // 2 + 8))
         frame.alpha_composite(lay, (int(W / 2 - lay.width / 2), 1630 - lay.height // 2))
 
+def cold_open(t):
+    fr = C1_FR[int(clamp((OPEN_CA + t - C1_T0) * FPS, 0, len(C1_FR) - 1))][0:690]
+    fg = cv2.resize(fr, (W, int(690 * W / 576)), interpolation=cv2.INTER_LANCZOS4)
+    bg = blur_bg(fr, 0.45).astype(np.uint8); y0 = (H - fg.shape[0]) // 2 + 30
+    sc = 1 + 0.05 * t / OPEN; img = bg.copy(); img[y0:y0 + fg.shape[0]] = fg
+    img = cv2.warpAffine(img, np.float32([[sc, 0, W / 2 * (1 - sc)], [0, sc, H / 2 * (1 - sc)]]), (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+    frame = Image.fromarray(img).convert("RGBA")
+    pill(frame, "CURITIBA (PR) · ATO BOLSONARISTA", W / 2, 230, (t - 0.15) / 0.3, size=40)
+    pill(frame, "SOM ORIGINAL", W / 2, 1640, (t - 0.45) / 0.3, fill=GOLD, tcol=NAVY + (255,), size=34)
+    credit(frame, "Imagens: reprodução TikTok", W - 30, 1500, 1.0)
+    return frame
+
 def render_frame(t):
+    if t < OPEN:
+        frame = cold_open(t); draw_banners(frame, t); return frame
     if t >= END_IN + 0.35: return end_card(t)
     tt = min(t, EDIT_END - 1e-3); s = seg_at(tt)
     if s is not None and s.get("mode") == "split": frame = split_scene(tt, s, t)
@@ -464,21 +481,38 @@ def main():
     sg = np.zeros((n, 2), np.float32); sg[int(MUS_IN * SR):int(MUS_IN * SR) + Ls] = song[:Ls] * gain[:, None]; writew(f"{V}/song.wav", sg)
     subprocess.run([sys.executable, f"{S}/work/music.py", f"{V}/bed.wav", f"{TOTAL + 0.5:.2f}"], check=True)
     bed = readw(f"{V}/bed.wav")[:n]; bed = np.pad(bed, ((0, max(0, n - len(bed))), (0, 0)))[:n]
-    gate = np.ones(n, np.float32); gate[int((MUS_IN - 0.3) * SR):] = 0; gate = np.convolve(gate, np.ones(int(0.5 * SR)) / int(0.5 * SR), "same"); writew(f"{V}/bed_g.wav", bed * gate[:, None])
-    ev = [(0.3, sfx.whoosh(0.5), 0.2), (segs[2]["t0"] - 0.12, sfx.whoosh(0.5), 0.24), (segs[3]["t0"] - 0.1, sfx.whoosh(0.5), 0.22), (segs[4]["t0"] - 0.1, sfx.whoosh(0.5, False), 0.22)]
+    gate = np.ones(n, np.float32); gate[int((MUS_IN - 0.3) * SR):] = 0; gate[:int(OPEN * SR)] = 0; gate = np.convolve(gate, np.ones(int(0.5 * SR)) / int(0.5 * SR), "same"); writew(f"{V}/bed_g.wav", bed * gate[:, None])
+    ev = [(OPEN - 0.15, sfx.whoosh(0.5), 0.26), (0.15, sfx.click(), 0.4), (segs[2]["t0"] - 0.12, sfx.whoosh(0.5), 0.24), (segs[3]["t0"] - 0.1, sfx.whoosh(0.5), 0.22), (segs[4]["t0"] - 0.1, sfx.whoosh(0.5, False), 0.22)]
     for si, lst in CLIPMAP.items():
         for kind, a, b, ca in lst:
             if a > 0: ev.append((segs[si]["t0"] + a - 0.1, sfx.whoosh(0.4), 0.24))
-            if kind in ("c1f", "c2f"): ev += [(segs[si]["t0"] + a, sfx.thud(), 0.35), (segs[si]["t0"] + a + 0.35, sfx.marker(), 0.4)]
+            if kind in ("c1f", "c2f"): ev.append((segs[si]["t0"] + a + 0.02, sfx.circulo(), 0.22))
     for si, lst in TAGS.items():
         for txt, a, b in lst: ev.append((segs[si]["t0"] + a, sfx.click(), 0.4))
     for a, b, w, _ in BIG: ev.append((out_t(a), sfx.click(), 0.5))
     ev.append((END_IN - 0.3, sfx.whoosh(0.6), 0.25))
     sfx.build([e for e in ev if 0 <= e[0] < TOTAL - 0.9], TOTAL, f"{V}/sfx.wav")
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/bed_g.wav", "-i", f"{V}/song.wav", "-filter_complex",
-                    "[1:a]highpass=f=70,asplit=3[vox][k1][k2];[2:a]volume=0.8[sf];[3:a]volume=0.22[bed];[4:a]volume=0.95[sg];"
+    src = {}
+    for nm, path in (("c1", C1), ("c2", C2)):
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", path, "-ar", "48000", "-ac", "2", f"{V}/{nm}_48.wav"], check=True); src[nm] = readw(f"{V}/{nm}_48.wav")
+    ct = np.zeros((n, 2), np.float32); fl = int(0.04 * SR)
+    def put(nm, ca, t0, dur, g):
+        p = src[nm][int(ca * SR):int((ca + dur) * SR)].copy()
+        if len(p) < 2 * fl: return
+        env = np.ones(len(p)); env[:fl] = np.linspace(0, 1, fl); env[-fl:] = np.linspace(1, 0, fl)
+        i0 = int(t0 * SR); m = min(len(p), n - i0); ct[i0:i0 + m] += p[:m] * (env[:m, None] * g)
+    put("c1", OPEN_CA, 0.0, OPEN + 0.15, 1.6)                       # abertura: som dos vândalos em primeiro plano
+    for si, lst in CLIPMAP.items():
+        sg_ = segs[si]
+        for kind, a, b, ca in lst:
+            dur = min(b, sg_["t1"] - sg_["t0"]) - a                  # no congelado o som segue correndo
+            put("c1" if kind.startswith("c1") else "c2", ca, sg_["t0"] + a, dur, 1.0)
+    writew(f"{V}/clipaud.wav", ct)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/bed_g.wav", "-i", f"{V}/song.wav", "-i", f"{V}/clipaud.wav", "-filter_complex",
+                    "[1:a]highpass=f=70,asplit=4[vox][k1][k2][k3];[2:a]volume=0.8[sf];[3:a]volume=0.22[bed];[4:a]volume=0.95[sg];[5:a]volume=1.25[cl];"
+                    "[cl][k3]sidechaincompress=threshold=0.025:ratio=4:attack=15:release=350[cld];"
                     "[bed][k1]sidechaincompress=threshold=0.02:ratio=6:attack=30:release=500[bedd];[sg][k2]sidechaincompress=threshold=0.03:ratio=5:attack=20:release=400[sgd];"
-                    f"[vox][sf][bedd][sgd]amix=inputs=4:normalize=0:duration=longest,atrim=0:{TOTAL:.2f},alimiter=limit=0.79:level=false:asc=1[a]",
+                    f"[vox][sf][bedd][sgd][cld]amix=inputs=5:normalize=0:duration=longest,atrim=0:{TOTAL:.2f},alimiter=limit=0.79:level=false:asc=1[a]",
                     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", OUTFILE], check=True)
     print("done")
 main()

@@ -85,3 +85,14 @@ def hope(dur=3.6, seed=5):
         k = int(d * SR); out[k:] += dream[:-k] * g
     out /= np.abs(out).max() + 1e-9
     return np.stack([out, np.roll(out, 240)], 1)
+
+def circulo(dur=0.5, seed=3):
+    """destaque suave: toque de madeira curto + pincelada de ar acompanhando o círculo sendo desenhado"""
+    r = np.random.default_rng(seed); n = int(dur * SR); t = np.arange(n) / SR
+    tok = (np.sin(2 * np.pi * 520 * t) + 0.4 * np.sin(2 * np.pi * 1310 * t)) * np.exp(-t / 0.025) * (1 - np.exp(-t * 2000))
+    x = r.normal(0, 1, n); bp = onepole_lp(x, np.full(n, 2600.0)); bp = bp - onepole_lp(bp, np.full(n, 700.0))
+    p = t / 0.45; brush = bp * np.clip(np.sin(np.pi * np.clip(p, 0, 1)), 0, 1) ** 2 * 0.5
+    brush /= np.abs(brush).max() + 1e-9
+    out = 0.8 * tok + 0.35 * brush; out /= np.abs(out).max() + 1e-9
+    pan = np.clip(p, 0, 1)
+    return np.stack([out * (1 - 0.3 * pan), out * (0.7 + 0.3 * pan)], 1)
