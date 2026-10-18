@@ -31,6 +31,7 @@ def make_bar(style="canal", bw=84):
     return _cache[key]
 # o YouTube Shorts corta as laterais em celulares compridos (cerca de 50 a 100 px de cada lado): a barra fica recuada da borda
 INSET = 108
+CARD_X = (296, 976)                                               # caixa centrada no espaço depois da barra (centro x 636)
 _cta = {}
 def cta_layer(bw, txt="SIGA  ·  COMPARTILHE"):
     if (bw, txt) in _cta: return _cta[(bw, txt)]
@@ -61,7 +62,7 @@ def draw_bar(frame, prog, style="canal", intro=1.0, cta=0.0, pulse=0.0):
 def lower_card(frame, kicker, lines, y, k=1.0, accent=GOLD, fs=54):
     """cartão de vidro fosco azul-marinho com aba dourada em cima (como o letreiro da BandNews, nas cores do canal)"""
     if k <= 0: return
-    x0, x1 = 232, W - 112; f = MF("ExtraBold", fs); lh = int(fs * 1.22); h = int(fs * 0.9) + lh * len(lines)
+    x0, x1 = CARD_X; f = MF("ExtraBold", fs); lh = int(fs * 1.22); h = int(fs * 0.9) + lh * len(lines)
     region = frame.crop((x0, y, x1, y + h)).filter(ImageFilter.GaussianBlur(18))
     glass = Image.new("RGBA", region.size, (0, 0, 0, 0)); glass.alpha_composite(region)
     glass.alpha_composite(Image.new("RGBA", region.size, NAVY + (215,)))

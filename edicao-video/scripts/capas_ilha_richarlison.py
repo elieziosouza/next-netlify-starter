@@ -5,7 +5,7 @@ import numpy as np, cv2
 S = sys.argv[1]; sys.argv = [sys.argv[0], S, "/dev/null", "lib"]
 spec = importlib.util.spec_from_file_location("ri", f"{S}/work/render_ilha.py"); R = importlib.util.module_from_spec(spec); spec.loader.exec_module(R)
 from PIL import Image, ImageDraw, ImageFilter
-W, H = R.W, R.H; MF = R.MF; V = R.V; BAR = R.BAR; CX = 581
+W, H = R.W, R.H; MF = R.MF; V = R.V; BAR = R.BAR; CX = 636
 def cutout(path, h):
     """pessoa recortada pela máscara, com contorno suave"""
     im = Image.open(path).convert("RGB"); a = np.asarray(im)
@@ -20,7 +20,7 @@ def glow(im, col=(214, 182, 116), r=10):
     g = g.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(4)); g.alpha_composite(im, (2 * r, 2 * r)); return g
 def big(img, txt, cy, size, col=R.GOLD_L, band=None, tcol=None, rot=0, stroke=R.NAVY):
     f = R.BIGF(size); d0 = ImageDraw.Draw(Image.new("L", (4, 4)))
-    while d0.textlength(txt, font=f) > W - 330: size -= 4; f = R.BIGF(size)
+    while d0.textlength(txt, font=f) > 680: size -= 4; f = R.BIGF(size)
     tw = d0.textlength(txt, font=f); h = int(size * 1.3)
     lay = Image.new("RGBA", (int(tw + 80), h), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
     if band: d.rounded_rectangle((0, 0, lay.width - 1, h - 1), 18, fill=band + (255,), outline=R.GOLD + (255,), width=5)
@@ -40,17 +40,18 @@ def duo(img, bottom, wmax=430):
     out = []
     for c in (RICH, FLAV):
         sc = min(wmax / c.width, 1.0); out.append(c.resize((int(c.width * sc), int(c.height * sc)), Image.LANCZOS))
-    r, f = out; img.alpha_composite(r, (int(390 - r.width / 2), int(bottom - r.height))); img.alpha_composite(f, (int(775 - f.width / 2), int(bottom - f.height)))
-def credit(img): ImageDraw.Draw(img).text((W - 120, H - 70), "Fotos: reprodução", font=MF("SemiBold", 20), fill=(220, 220, 228, 230), anchor="rs")
+    r, f = out; img.alpha_composite(r, (int(CX - 200 - r.width / 2), int(bottom - r.height))); img.alpha_composite(f, (int(CX + 190 - f.width / 2), int(bottom - f.height)))
+def credit(img, y): ImageDraw.Draw(img).text((CX, y), "Fotos: reprodução", font=MF("SemiBold", 22), fill=(220, 220, 228, 230), anchor="mm")   # crédito em área livre, sem encostar em nada
 
 # C: sem rosto — ilha em cima, os dois embaixo, título no meio
 C = island_bg(1000)
-duo(C, H + 30, 450)
+duo(C, H + 30, 400)
 big(C, "RICHARLISON", 760, 190); big(C, "ACUSA FLÁVIO", 930, 130, band=R.NAVY, tcol=R.WHITE); big(C, "“NA MÃO GRANDE”", 1090, 104, band=R.GOLD, tcol=R.NAVY, rot=-2)
-BAR.draw_bar(C, 0.0, "canal"); C.alpha_composite(R.top); credit(C)
+BAR.draw_bar(C, 0.0, "canal"); C.alpha_composite(R.top, (R.HDX, 0)); credit(C, 1215)
 
 # A: ele embaixo fazendo o L, os dois em círculos sobre a ilha
-me = R.me_src(41.2).copy()                                          # olhando para a câmera, boca fechada, fazendo o L
+me = np.ascontiguousarray(R.me_src(41.2)[:, ::-1])  # espelhado: L do lado certo
+#                                        # olhando para a câmera, boca fechada, fazendo o L
 A = island_bg(900)
 A.alpha_composite(Image.fromarray(R.me_panel(me)).convert("RGBA"), (0, R.SEAM)); ImageDraw.Draw(A).rectangle((0, R.SEAM - 3, W, R.SEAM + 2), fill=R.GD)
 def circ(path, d, focus):
@@ -59,18 +60,18 @@ def circ(path, d, focus):
     m = Image.new("L", (d, d), 0); ImageDraw.Draw(m).ellipse((0, 0, d - 1, d - 1), fill=255); c.putalpha(m)
     ImageDraw.Draw(c).ellipse((2, 2, d - 3, d - 3), outline=R.GOLD + (255,), width=10); return c
 cr = circ(f"{R.IMG}/rich_user.jpg", 320, 0.05); cf = circ(f"{R.IMG}/flavio_user.jpg", 320, 0.05)
-R.paste(A, cr, 230, 180, 0.6, 18, (6, 14)); R.paste(A, cf, 600, 180, 0.6, 18, (6, 14))
+R.paste(A, cr, CX - 340, 180, 0.6, 18, (6, 14)); R.paste(A, cf, CX + 20, 180, 0.6, 18, (6, 14))
 big(A, "RICHARLISON x FLÁVIO", 680, 120); big(A, "“NA MÃO GRANDE”", 850, 96, band=R.GOLD, tcol=R.NAVY, rot=-2)
-BAR.draw_bar(A, 0.0, "canal"); A.alpha_composite(R.top); credit(A)
+BAR.draw_bar(A, 0.0, "canal"); A.alpha_composite(R.top, (R.HDX, 0)); credit(A, 945)
 
 # B: ilha em tela cheia com os dois recortados e ele num círculo
 B = island_bg(1350)
-duo(B, 1500, 420)
+duo(B, 1500, 380)
 mf = me[300:1500, 90:990]; mc = Image.fromarray(cv2.resize(mf, (300, 400))).convert("RGBA")
 mc = Image.fromarray(cv2.resize(mf, (390, 520))).convert("RGBA"); d_ = 390; mc = mc.crop((0, 20, 390, 410)); m = Image.new("L", (d_, d_), 0); ImageDraw.Draw(m).ellipse((0, 0, d_ - 1, d_ - 1), fill=255); mc.putalpha(m); ImageDraw.Draw(mc).ellipse((2, 2, d_ - 3, d_ - 3), outline=R.GOLD + (255,), width=9)
 big(B, "TOMARAM A ILHA?", 330, 150); big(B, "RICHARLISON ACUSA FLÁVIO", 520, 100, band=R.NAVY, tcol=R.WHITE)
 R.paste(B, mc, CX - d_ / 2, 1430, 0.6, 18, (6, 14))
-BAR.draw_bar(B, 0.0, "canal"); B.alpha_composite(R.top); credit(B)
+BAR.draw_bar(B, 0.0, "canal"); B.alpha_composite(R.top, (R.HDX, 0)); credit(B, 610)
 
 for k, im in zip("ABC", (A, B, C)): im.convert("RGB").save(f"{V}/capa_{k}.jpg", quality=95)
 sheet = Image.new("RGB", (1080, 640)); [sheet.paste(Image.open(f"{V}/capa_{k}.jpg").resize((360, 640)), (i * 360, 0)) for i, k in enumerate("ABC")]

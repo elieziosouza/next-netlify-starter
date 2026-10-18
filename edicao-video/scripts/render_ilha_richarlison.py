@@ -39,6 +39,7 @@ ME_CAPS = [("O RICHARLISON, JOGADOR", 0.50, 1.60), ("DA SELEÇÃO BRASILEIRA,", 
            ("IMAGINA O QUE PODE ACONTECER", 32.75, 34.00), ("COM UM CIDADÃO COMUM.", 34.00, 35.10),
            ("POR ISSO, DIA 25,", 35.85, 37.35), ("A GENTE ESCOLHE QUEM RESPEITA O POVO.", 37.80, 39.35)]
 HOT = {"RICHARLISON", "SOCORRO", "MILHÕES", "ILHA", "FLÁVIO", "MÃO", "GRANDE", "NADA", "DRONE", "INSTAGRAM", "NEGA", "CIDADÃO", "COMUM", "25", "POVO"}
+CX = 636                                                          # centro do espaço depois da barra lateral (pedido dele): tudo se alinha por aqui
 def MF(w, s): return ImageFont.truetype(f"{FD}/Montserrat-{w}.ttf", s)
 def clamp(x, a=0.0, b=1.0): return max(a, min(b, x))
 def smooth(x): x = clamp(x); return x * x * (3 - 2 * x)
@@ -84,7 +85,7 @@ def layout(words, font, lh, maxw):
         best = min(range(1, len(words)), key=lambda k: max(width(0, k), width(k, len(words)))); lines = [(0, best), (best, len(words))]
     boxes = [None] * len(words); y0 = 230 - lh * len(lines) / 2
     for li, (a, b) in enumerate(lines):
-        x = (W - width(a, b)) / 2; y = y0 + li * lh
+        x = CX - width(a, b) / 2; y = y0 + li * lh
         for k in range(a, b): boxes[k] = (x, y, x + wl[k], y + lh); x += wl[k] + sp
     return boxes
 
@@ -92,7 +93,7 @@ def draw_caption(frame, t, ccy, font_size, tracks):
     f = MF("ExtraBold", font_size); lh = int(font_size * 1.39)
     for ci, c in enumerate(CAPS):
         if c["src"] not in tracks or not (c["start"] <= t < c["end"]): continue
-        boxes = c.setdefault(("b", font_size), layout(c["words"], f, lh, 880))
+        boxes = c.setdefault(("b", font_size), layout(c["words"], f, lh, 700))
         act = max([k for k, ts in enumerate(c["ts"]) if ts <= t] or [0])
         hot = c["src"] == "au" and c["words"][act] in HOT
         key = (ci, act, font_size)
@@ -247,11 +248,12 @@ def react_tag(frame, t, txt, t0, t1, y=196):
     frame.alpha_composite(fade(lay, k), (int(W / 2 - lay.width / 2), int(y + 20 * (1 - k))))
 
 
+HDX = 96                                                          # cabeçalho e rodapé deslocados para o centro do espaço útil, sem passar do corte do YouTube
 def draw_banners(frame, t):
     k = back_out((t - 0.4) / 0.55, 1.2)
     if t < 0.4: return
-    frame.alpha_composite(top, (0, int(-TOPH * (1 - k)))); by = int(H - bot.height + bot.height * (1 - k))
-    frame.alpha_composite(bot, (0, by))
+    frame.alpha_composite(top, (HDX, int(-TOPH * (1 - k)))); by = int(H - bot.height + bot.height * (1 - k))
+    frame.alpha_composite(bot, (HDX, by))
 
 def end_card(t):
     u = t - END_IN
@@ -305,7 +307,7 @@ def me_panel(img):
     band = img[380:1820]; sc = PH / band.shape[0]                  # rosto inteiro: do alto da cabeça ao peito
     fg = cv2.resize(band, (int(W * sc), PH), interpolation=cv2.INTER_AREA)
     bg = cv2.resize(cv2.GaussianBlur(cv2.resize(img, (W // 8, H // 8)), (0, 0), 3), (W, H))[int((H - PH) * 0.45):int((H - PH) * 0.45) + PH]
-    out = (bg.astype(np.float32) * 0.6).astype(np.uint8); x = (W - fg.shape[1]) // 2; out[:, x:x + fg.shape[1]] = fg
+    out = (bg.astype(np.float32) * 0.6).astype(np.uint8); x = int(CX - fg.shape[1] / 2); out[:, x:x + fg.shape[1]] = fg[:, :W - x]   # painel dele centrado no espaço depois da barra
     return out
 
 FIT = 1.0                                                         # ele um pouco menor em tela cheia: abre espaço acima da cabeça para as palavras
@@ -325,7 +327,7 @@ def big_behind(img, st):
         if not (a <= st < b): continue
         u = st - a; k = ease_out(u / SLIDE); out = ease_in((st - (b - 0.22)) / 0.22)
         size = 300; f = BIGF(size); d0 = ImageDraw.Draw(Image.new("L", (4, 4)))
-        while d0.textlength(word, font=f) > W - 380: size -= 6; f = BIGF(size)
+        while d0.textlength(word, font=f) > 680: size -= 6; f = BIGF(size)
         lay = Image.new("RGBA", (W, int(size * 1.3)), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
         d.text((W / 2 + 3, lay.height / 2 + 4), word, font=f, fill=(0, 0, 0, 90), anchor="mm")          # sombra curta e discreta
         d.text((W / 2, lay.height / 2), word, font=f, fill=col + (255,), anchor="mm")
@@ -335,7 +337,7 @@ def big_behind(img, st):
             if L > 2: lay = Image.fromarray(cv2.filter2D(np.asarray(lay), -1, np.ones((1, L), np.float32) / L))
         lay = fade(lay, 1 - out)
         fr = Image.fromarray(img).convert("RGBA")
-        fr.alpha_composite(lay, (int(42 + dx), int(BIG_Y - lay.height / 2 - 40 * out)))
+        fr.alpha_composite(lay, (int(CX - W / 2 + dx), int(BIG_Y - lay.height / 2 - 40 * out)))
         img = np.asarray(fr.convert("RGB")).copy()
     return img
 SLIDE = 0.28
@@ -356,7 +358,7 @@ RECS = {i: Image.open(f"{RECDIR}/recorte_{i}.png").convert("RGBA") for i in rang
 yy_, xx_ = np.mgrid[0:SEAM, 0:W]
 MAT = (np.array([10, 40, 66], np.float32) + 10 * np.sin(xx_ / 900.0)[..., None]).astype(np.float32)
 MAT[((xx_ % 60 < 2) | (yy_ % 60 < 2))] += 26; MAT[((xx_ % 300 < 3) | (yy_ % 300 < 3))] += 30; MAT = np.clip(MAT, 0, 255).astype(np.uint8)
-PAPER = {0: [(1, 2.0, 520, -1.2, 0.78)], 4: [(2, 0.2, 330, 1.2, 0.80)]}   # (recorte, entrada, y, giro, escala) — à direita da barra, na área segura
+PAPER = {0: [(1, 2.0, 520, -1.2, 0.74)], 4: [(2, 0.2, 330, 1.2, 0.74)]}   # (recorte, entrada, y, giro, escala) — à direita da barra, na área segura
 def polaroid(path, w, h, caption, focus=0.35):
     src = Image.open(path).convert("RGB"); sc = max(w / src.width, h / src.height)
     src = src.resize((int(src.width * sc) + 1, int(src.height * sc) + 1), Image.LANCZOS)
@@ -367,7 +369,7 @@ def polaroid(path, w, h, caption, focus=0.35):
     return card
 P_RICH = polaroid(f"{IMG}/rich_user.jpg", 430, 470, "RICHARLISON", 0.15)
 P_FLAV = polaroid(f"{IMG}/flavio_user.jpg", 430, 470, "FLÁVIO BOLSONARO", 0.1)
-P_FLAV_S = P_FLAV.resize((P_FLAV.width * 3 // 4, P_FLAV.height * 3 // 4), Image.LANCZOS)
+P_FLAV_S = P_FLAV.resize((int(P_FLAV.width * 0.62), int(P_FLAV.height * 0.62)), Image.LANCZOS)
 _isl = Image.open(f"{IMG}/ilha_user.jpg").convert("RGB")
 def island_panel(u):
     """a ilha ocupando o painel de cima, aproximando devagar"""
@@ -386,7 +388,7 @@ def counter(frame, u, t0, cy):
     d.rounded_rectangle((0, 0, lay.width - 1, 169), 26, fill=NAVY + (225,), outline=GOLD + (255,), width=5)
     d.text((lay.width / 2, 88), txt, font=f, fill=GOLD_L + (255,), anchor="mm")
     s_ = 0.7 + 0.3 * back_out(q / 0.3, 1.8); lay = lay.resize((int(lay.width * s_), int(lay.height * s_)), Image.BICUBIC)
-    paste(frame, fade(lay, clamp(q / 0.15)), 581 - lay.width / 2, cy - lay.height / 2, 0.5, 14, (4, 12))
+    paste(frame, fade(lay, clamp(q / 0.15)), CX - lay.width / 2, cy - lay.height / 2, 0.5, 14, (4, 12))
 def quote(frame, u, t0, cy):
     """a frase do jogador entre aspas, atribuída a ele"""
     q = u - t0
@@ -398,23 +400,25 @@ def quote(frame, u, t0, cy):
     d.text((lay.width / 2, 165), "— Richarlison, sobre a ilha", font=fs, fill=NAVY + (255,), anchor="mm")
     s_ = 0.75 + 0.25 * back_out(q / 0.3, 1.8); lay = lay.rotate(-2, resample=Image.BICUBIC, expand=True)
     lay = lay.resize((int(lay.width * s_), int(lay.height * s_)), Image.BICUBIC)
-    paste(frame, fade(lay, clamp(q / 0.12)), 581 - lay.width / 2, cy - lay.height / 2, 0.55, 16, (5, 14))
+    paste(frame, fade(lay, clamp(q / 0.12)), CX - lay.width / 2, cy - lay.height / 2, 0.55, 16, (5, 14))
 def top_panel(frame, si, u):
     if si == 0:
-        slap(frame, P_RICH, 470, 470, u - 0.3, -3.0)
-        if u < 2.0: pill(frame, "PEDIU SOCORRO À PF", 700, 250, (u - 1.0) / 0.3, size=34)
+        if u < 2.15:
+            pr = fade(P_RICH, 1 - clamp((u - 1.9) / 0.25)); slap(frame, pr, CX - 90, 470, u - 0.3, -3.0)
+        if u < 2.0: pill(frame, "PEDIU SOCORRO À PF", CX + 120, 250, (u - 1.0) / 0.3, size=34)
     elif si == 1:
         frame.paste(Image.fromarray(np.asarray(island_panel(u))), (0, 0))
-        pill(frame, "ILHA EM ANGRA DOS REIS", 581, 250, (u - 0.3) / 0.3, fill=NAVY, size=38)
+        pill(frame, "ILHA EM ANGRA DOS REIS", CX, 250, (u - 0.3) / 0.3, fill=NAVY, size=38)
         counter(frame, u, 1.2, 720)
     elif si == 2:
-        slap(frame, P_FLAV, 430, 470, u - 0.2, 2.5)
-        slap(frame, P_RICH.resize((P_RICH.width * 3 // 5, P_RICH.height * 3 // 5), Image.LANCZOS), 820, 360, u - 0.5, -4.0)
-        quote(frame, u, 2.7, 780)
+        slap(frame, P_FLAV, CX - 120, 370, u - 0.2, 2.5, 0.8)
+        slap(frame, P_RICH, CX + 210, 340, u - 0.5, -4.0, 0.5)
+        quote(frame, u, 2.7, 760)
     elif si == 4:
-        slap(frame, P_FLAV_S, 760, 640, u - 0.9, 3.0)
+        slap(frame, P_FLAV_S, CX + 150, 690, u - 0.9, 3.0)
 
 # caixa de manchete fixa: entra no começo e fica até a música; na tela dividida sobe para a emenda, em tela cheia fica abaixo da legenda
+MIRROR_FROM = segs[6]["t0"]                                      # do corte do "por isso, dia 25" até o fim
 CARD_TXT = ("ANGRA DOS REIS", ["RICHARLISON ACUSA FLÁVIO", "E PEDE AJUDA À PF"]); CARD_IN = 0.9
 CARD_Y = {"full": 1655, "split": SEAM - 105}
 SPLIT_CAP_Y = {0: 1715, 1: 1715, 2: 1715, 4: 1715}                  # na tela dividida a legenda fica embaixo, sobre a camisa dele (a caixa ocupa a emenda)
@@ -447,12 +451,12 @@ def split_scene(tt, s, t):
     k_in = ease_out(u / 0.25) if si == 1 else 1.0
     if si == 1 and u < 0.18: frame.alpha_composite(Image.new("RGBA", (W, H), (255, 255, 255, int(170 * (1 - u / 0.18)))))
     top_panel(frame, si, u)
-    for rid, t0, cy, rot, sc in PAPER.get(si, []): slap(frame, RECS[rid], 581, cy, u - t0, rot, sc)
+    for rid, t0, cy, rot, sc in PAPER.get(si, []): slap(frame, RECS[rid], CX, cy, u - t0, rot, sc)
     d.rectangle((0, SEAM - 2, W, SEAM + 1), fill=GOLD + (int(230 * k_in),))
     draw_caption(frame, t, SPLIT_CAP_Y.get(si, SEAM), 44, ("me", "au"))
     return frame
 
-LYR_CX = 581                                                      # letra centrada na área segura, à direita da barra lateral
+LYR_CX = CX                                                       # letra centrada na área segura, à direita da barra lateral
 def lyrics(frame, t):
     mt = t - MUS_IN; k_all = clamp((t - FIN_IN) / 0.4)
     g = Image.new("RGBA", (W, 760), (0, 0, 0, 0)); ImageDraw.Draw(g).rectangle((0, 0, W, 760), fill=(4, 10, 20, 255))
@@ -477,7 +481,9 @@ def render_frame(t):
     if s is not None and s.get("mode") == "split": frame = split_scene(tt, s, t)
     else:
         st = me_at(tt); z = zoom_suave.nivel(st, ZOOMS) + (0.04 * ease_io((tt - FIN_IN) / FIN_LEN) if tt >= FIN_IN else 0)
-        img = big_behind(fit_frame(me_src(st)), st); img = zoom_suave.aplica(img, z, 0.42)
+        src = me_src(st)
+        if tt >= MIRROR_FROM: src = np.ascontiguousarray(src[:, ::-1])          # espelhado no trecho final para o L ficar do lado certo (pedido dele)
+        img = big_behind(fit_frame(src), st); img = zoom_suave.aplica(img, z, 0.42)
         frame = Image.fromarray(img).convert("RGBA")
         if tt < FIN_IN: draw_caption(frame, t, CAP_Y, 48, ("me", "au"))
         else: lyrics(frame, t)
