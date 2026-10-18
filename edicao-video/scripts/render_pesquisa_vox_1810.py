@@ -393,6 +393,7 @@ def split_scene(tt, s, t):
     draw_caption(frame, t, SPLIT_CAP_Y.get(si, SEAM), 44, ("me", "au"))
     return frame
 
+LYR_CX = 581                                                      # letra centrada na área segura, à direita da barra lateral
 def lyrics(frame, t):
     mt = t - MUS_IN; k_all = clamp((t - FIN_IN) / 0.4)
     g = Image.new("RGBA", (W, 760), (0, 0, 0, 0)); ImageDraw.Draw(g).rectangle((0, 0, W, 760), fill=(4, 10, 20, 255))
@@ -408,8 +409,8 @@ def lyrics(frame, t):
         else: d.text((W / 2, 100), txt, font=f, fill=WH, anchor="mm")
         sc = 0.7 + 0.3 * k; lay = fade(lay.resize((int(W * sc), int(200 * sc)), Image.BICUBIC), k_all)
         blk = Image.new("RGBA", lay.size, (0, 0, 0, 255)); blk.putalpha(lay.getchannel("A").point(lambda v: int(v * 0.6)))
-        frame.alpha_composite(blk.filter(ImageFilter.GaussianBlur(10)), (int(W / 2 - lay.width / 2) + 4, 1630 - lay.height // 2 + 8))
-        frame.alpha_composite(lay, (int(W / 2 - lay.width / 2), 1630 - lay.height // 2))
+        frame.alpha_composite(blk.filter(ImageFilter.GaussianBlur(10)), (int(LYR_CX - lay.width / 2) + 4, 1630 - lay.height // 2 + 8))
+        frame.alpha_composite(lay, (int(LYR_CX - lay.width / 2), 1630 - lay.height // 2))
 
 def render_frame(t):
     if t >= END_IN + 0.35: return end_card(t)
