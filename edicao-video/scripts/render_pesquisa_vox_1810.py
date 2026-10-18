@@ -308,24 +308,37 @@ def me_panel(img):
     out = (bg.astype(np.float32) * 0.6).astype(np.uint8); x = (W - fg.shape[1]) // 2; out[:, x:x + fg.shape[1]] = fg
     return out
 
+FIT = 0.88                                                        # ele um pouco menor em tela cheia: abre espaço acima da cabeça para as palavras
+_fw, _fh = int(W * FIT), int(H * FIT); _fx = (W - _fw) // 2; _fy = H - _fh
+_fm = np.ones((_fh, _fw), np.float32); _fm[:, :24] = np.linspace(0, 1, 24)[None, :]; _fm[:, -24:] = np.linspace(1, 0, 24)[None, :]; _fm[:24] *= np.linspace(0, 1, 24)[:, None]
+_fm = _fm[..., None]
+def fit_frame(img):
+    bg = cv2.resize(cv2.GaussianBlur(cv2.resize(img, (W // 10, H // 10)), (0, 0), 2.5), (W, H)).astype(np.float32) * 0.8
+    fg = cv2.resize(img, (_fw, _fh), interpolation=cv2.INTER_AREA).astype(np.float32)
+    bg[_fy:, _fx:_fx + _fw] = bg[_fy:, _fx:_fx + _fw] * (1 - _fm) + fg * _fm
+    return bg.astype(np.uint8)
+
 def big_behind(img, st):
     """palavra grande atrás dele: a máscara de pessoa recorta a cabeça na frente das letras"""
     for a, b, word, col in BIG:
         if not (a <= st < b): continue
         u = st - a; k = back_out(u / 0.35, 1.6); al = clamp(u / 0.12) * clamp((b - st) / 0.25)
-        size = 330; f = BIGF(size); d0 = ImageDraw.Draw(Image.new("L", (4, 4)))
+        size = 300; f = BIGF(size); d0 = ImageDraw.Draw(Image.new("L", (4, 4)))
         while d0.textlength(word, font=f) > W - 190: size -= 6; f = BIGF(size)
         lay = Image.new("RGBA", (W, int(size * 1.4)), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
         d.text((W / 2 + 6, lay.height / 2 + 10), word, font=f, fill=(0, 0, 0, 160), anchor="mm"); d.text((W / 2, lay.height / 2), word, font=f, fill=col + (255,), anchor="mm")
         L = np.asarray(lay, np.float32) / 255; sc = 0.78 + 0.22 * k
         L = cv2.resize(L, (int(L.shape[1] * sc), int(L.shape[0] * sc)), interpolation=cv2.INTER_LINEAR)
         m = cv2.resize(SEG(cv2.resize(img, (478, 850), interpolation=cv2.INTER_AREA)), (W, H))
-        m = cv2.GaussianBlur(cv2.dilate(np.clip((m - 0.3) / 0.25, 0, 1).astype(np.float32), np.ones((9, 9), np.uint8)), (0, 0), 2.5)   # contorno limpo: nenhuma letra invade a cabeça
+        m = np.clip((m - 0.18) / 0.2, 0, 1).astype(np.float32)
+        m = cv2.dilate(m, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25)))
+        up = np.zeros_like(m); up[:-34] = m[34:]; m = np.maximum(m, up)           # margem acima do contorno: o cabelo grisalho nunca fica embaixo das letras
+        m = cv2.GaussianBlur(m, (0, 0), 3)
         y0 = int(BIG_Y - L.shape[0] / 2); x0 = int(W / 2 + 40 - L.shape[1] / 2); ya, yb = max(0, y0), min(H, y0 + L.shape[0]); xa, xb = max(0, x0), min(W, x0 + L.shape[1])
         Lc = L[ya - y0:yb - y0, xa - x0:xb - x0]; A = Lc[..., 3:4] * al * (1 - m[ya:yb, xa:xb, None])
         img[ya:yb, xa:xb] = np.clip(img[ya:yb, xa:xb].astype(np.float32) * (1 - A) + Lc[..., :3] * 255 * A, 0, 255).astype(np.uint8)
     return img
-BIG_Y = 330                                                      # atrás dele: a cabeça passa na frente das letras; topo das letras abaixo do cabeçalho
+BIG_Y = 362                                                      # como nos exemplos: a cabeça entra só na base das letras; topo abaixo do cabeçalho
 CAP_Y = 1495                                                     # legenda logo abaixo do queixo; a caixa fixa fica embaixo dela
 
 def pill(frame, txt, cx, y, k, fill=RED, tcol=WH, size=40):
@@ -402,7 +415,7 @@ def render_frame(t):
     if s is not None and s.get("mode") == "split": frame = split_scene(tt, s, t)
     else:
         st = me_at(tt); z = zoom_suave.nivel(st, ZOOMS) + (0.04 * ease_io((tt - FIN_IN) / FIN_LEN) if tt >= FIN_IN else 0)
-        img = big_behind(me_src(st).copy(), st); img = zoom_suave.aplica(img, z, 0.42)
+        img = big_behind(fit_frame(me_src(st)), st); img = zoom_suave.aplica(img, z, 0.42)
         frame = Image.fromarray(img).convert("RGBA")
         if tt < FIN_IN: draw_caption(frame, t, CAP_Y, 48, ("me", "au"))
         else: lyrics(frame, t)
