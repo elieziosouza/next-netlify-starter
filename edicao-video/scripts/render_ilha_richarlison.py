@@ -16,11 +16,13 @@ WHITE = (255, 255, 255); GOLD = (214, 182, 116); GOLD_L = (245, 226, 176); NAVY 
 WH = (255, 255, 255, 255); GD = GOLD + (255,)
 # trechos dele (me.mp4 720x1280, parede azul escura: palavras grandes em branco e dourado): abertura, duas telas divididas com os recortes e os trechos em tela cheia
 # trechos dele (me.mp4 1080x1920, parede clara, cabeça baixa no quadro): telas divididas com fotos e recortes, trechos em tela cheia
-PARTS = [("split", 0.40, 4.95), ("split", 5.55, 9.35), ("split", 9.50, 15.55), ("full", 15.80, 23.55), ("split", 24.00, 26.75),
-         ("full", 26.95, 35.20), ("full", 35.75, 39.40)]
+# trechos dele e falas do próprio Richarlison (rich.mp4, vídeo nas redes, 17/10): sem os trechos em que ele xinga terceiros
+PARTS = [("split", 0.40, 4.95), ("rc", 86.25, 89.25), ("rc", 72.35, 76.40), ("split", 9.50, 15.55), ("rc", 22.40, 33.30),
+         ("split", 24.00, 26.75), ("full", 26.95, 35.20), ("full", 35.75, 39.40)]
+RC = f"{S}/v34/rich.mp4"
 segs = []; acc = 0.0
 for p in PARTS:
-    segs.append(dict(src="me", mode=p[0], a=p[1], b=p[2], t0=acc, t1=acc + p[2] - p[1])); acc += p[2] - p[1]
+    segs.append(dict(src="rc" if p[0] == "rc" else "me", mode=p[0], a=p[1], b=p[2], t0=acc, t1=acc + p[2] - p[1])); acc += p[2] - p[1]
 def out_t(x):
     for s in segs:
         if s["src"] == "me" and s["a"] <= x <= s["b"]: return s["t0"] + x - s["a"]
@@ -38,6 +40,10 @@ ME_CAPS = [("O RICHARLISON, JOGADOR", 0.50, 1.60), ("DA SELEÇÃO BRASILEIRA,", 
            ("AGORA ME FALA:", 27.05, 27.90), ("SE UM JOGADOR DA SELEÇÃO BRASILEIRA,", 27.90, 29.60), ("COM DINHEIRO E ADVOGADO,", 29.60, 30.70), ("DIZ QUE PERDEU UMA ILHA ASSIM,", 30.70, 32.40),
            ("IMAGINA O QUE PODE ACONTECER", 32.75, 34.00), ("COM UM CIDADÃO COMUM.", 34.00, 35.10),
            ("POR ISSO, DIA 25,", 35.85, 37.35), ("A GENTE ESCOLHE QUEM RESPEITA O POVO.", 37.80, 39.35)]
+RC_CAPS = [("PEÇO AJUDA AÍ À POLÍCIA FEDERAL", 86.25, 87.80), ("PARA ESTAR INVESTIGANDO.", 87.80, 89.25),
+           ("EU NÃO RECEBI NADA,", 72.35, 73.70), ("GASTEI EM TORNO DE 10 MILHÕES LÁ", 73.70, 75.30), ("E NÃO RECEBI NADA.", 75.30, 76.40),
+           ("QUISERAM COMPRAR A ILHA DE MIM", 22.40, 24.20), ("E EU NÃO QUIS VENDER.", 24.20, 25.40), ("ENTRE ELES ESTAVA O FLÁVIO BOLSONARO.", 25.40, 27.60),
+           ("FOI ATÉ COM UM DRONE LÁ,", 28.25, 29.85), ("FILMOU A ILHA DE CIMA.", 30.20, 31.60), ("TEM UM VÍDEO NO INSTAGRAM DELE.", 31.60, 33.30)]
 HOT = {"RICHARLISON", "SOCORRO", "MILHÕES", "ILHA", "FLÁVIO", "MÃO", "GRANDE", "NADA", "DRONE", "INSTAGRAM", "NEGA", "CIDADÃO", "COMUM", "25", "POVO"}
 CX = 582                                                          # centro do espaço depois da barra lateral (barra no canto, 0 a 84): tudo se alinha por aqui
 def MF(w, s): return ImageFont.truetype(f"{FD}/Montserrat-{w}.ttf", s)
@@ -275,8 +281,9 @@ def finish(frame, t):
 
 
 
-CAPS = build_caps(ME_CAPS, "me", 4, "me")
-for c in CAPS: c["src"] = "au" if any(w.strip(",.?!") in HOT for w in c["words"]) else "me"
+CAPS = build_caps(ME_CAPS, "me", 4, "me") + build_caps(RC_CAPS, "rc", 4, "rc"); CAPS.sort(key=lambda c: c["start"])
+for c in CAPS:
+    if c["src"] == "me": c["src"] = "au" if any(w.strip(",.?!") in HOT for w in c["words"]) else "me"
 SEG = PersonSeg(f"{S}/seg/u2net_human_seg.onnx")
 def BIGF(s): return ImageFont.truetype(f"{FD}/Anton-Regular.ttf", s)
 def SERIF(s): return ImageFont.truetype(f"{FD}/DMSerifDisplay-Regular.ttf", s)
@@ -358,7 +365,7 @@ RECS = {i: Image.open(f"{RECDIR}/recorte_{i}.png").convert("RGBA") for i in rang
 yy_, xx_ = np.mgrid[0:SEAM, 0:W]
 MAT = (np.array([10, 40, 66], np.float32) + 10 * np.sin(xx_ / 900.0)[..., None]).astype(np.float32)
 MAT[((xx_ % 60 < 2) | (yy_ % 60 < 2))] += 26; MAT[((xx_ % 300 < 3) | (yy_ % 300 < 3))] += 30; MAT = np.clip(MAT, 0, 255).astype(np.uint8)
-PAPER = {0: [(1, 2.0, 520, -1.2, 0.74)], 4: [(2, 0.2, 330, 1.2, 0.74)]}   # (recorte, entrada, y, giro, escala) — à direita da barra, na área segura
+PAPER = {0: [(1, 2.0, 520, -1.2, 0.74)], 5: [(2, 0.2, 330, 1.2, 0.74)]}   # (recorte, entrada, y, giro, escala) — à direita da barra, na área segura
 def polaroid(path, w, h, caption, focus=0.35):
     src = Image.open(path).convert("RGB"); sc = max(w / src.width, h / src.height)
     src = src.resize((int(src.width * sc) + 1, int(src.height * sc) + 1), Image.LANCZOS)
@@ -406,24 +413,24 @@ def top_panel(frame, si, u):
         if u < 2.15:
             pr = fade(P_RICH, 1 - clamp((u - 1.9) / 0.25)); slap(frame, pr, CX - 90, 470, u - 0.3, -3.0)
         if u < 2.0: pill(frame, "PEDIU SOCORRO À PF", CX + 120, 250, (u - 1.0) / 0.3, size=34)
-    elif si == 1:
+    elif si == -1:
         frame.paste(Image.fromarray(np.asarray(island_panel(u))), (0, 0))
         pill(frame, "ILHA EM ANGRA DOS REIS", CX, 250, (u - 0.3) / 0.3, fill=NAVY, size=38)
         counter(frame, u, 1.2, 720)
-    elif si == 2:
+    elif si == 3:
         slap(frame, P_FLAV, CX - 120, 370, u - 0.2, 2.5, 0.8)
         slap(frame, P_RICH, CX + 210, 340, u - 0.5, -4.0, 0.5)
         quote(frame, u, 2.7, 760)
-    elif si == 4:
+    elif si == 5:
         slap(frame, P_FLAV_S, CX + 150, 690, u - 0.9, 3.0)
 
 # caixa de manchete fixa: entra no começo e fica até a música; na tela dividida sobe para a emenda, em tela cheia fica abaixo da legenda
-MIRROR_FROM = segs[6]["t0"]                                      # do corte do "por isso, dia 25" até o fim
+MIRROR_FROM = segs[7]["t0"]                                      # do corte do "por isso, dia 25" até o fim
 CARD_TXT = ("ANGRA DOS REIS", ["RICHARLISON ACUSA FLÁVIO", "E PEDE AJUDA À PF"]); CARD_IN = 0.9
-CARD_Y = {"full": 1655, "split": SEAM - 105}
-SPLIT_CAP_Y = {0: 1715, 1: 1715, 2: 1715, 4: 1715}                  # na tela dividida a legenda fica embaixo, sobre a camisa dele (a caixa ocupa a emenda)
+CARD_Y = {"full": 1655, "split": SEAM - 105, "rc": 1655}
+SPLIT_CAP_Y = {0: 1715, 3: 1715, 5: 1715}                  # na tela dividida a legenda fica embaixo, sobre a camisa dele (a caixa ocupa a emenda)
 # convite SIGA · COMPARTILHE na barra: um lembrete no meio e outro quando ele pede para seguir
-CTA = [(out_t(15.9), out_t(19.6)), (out_t(27.05), out_t(31.0))]
+CTA = [(out_t(9.6), out_t(13.6)), (out_t(27.05), out_t(31.0))]
 def cta_level(t):
     return max([clamp((t - a) / 0.4) * clamp((b - t) / 0.4) for a, b in CTA] + [0.0])
 def card_pos(tt):
@@ -457,6 +464,27 @@ def split_scene(tt, s, t):
     return frame
 
 LYR_CX = CX                                                       # letra centrada na área segura, à direita da barra lateral
+_rc = {}
+def rc_frame(s, u):
+    k = segs.index(s)
+    if k not in _rc: _rc[k] = decode(RC, s["a"], s["b"], 476, 848)
+    fr = _rc[k]; return fr[int(clamp(u * FPS, 0, len(fr) - 1))]
+RC_BOX = (900, 889, 250)                                          # largura, altura e topo do vídeo dele (recorte acima do letreiro do vídeo original)
+def rc_scene(tt, s, t):
+    u = tt - s["t0"]; si = segs.index(s); fr = rc_frame(s, u)
+    if si == 2: bg = np.asarray(island_panel(u).resize((W, H)), np.float32) * 0.45
+    else: bg = blur_bg(fr[0:470], 0.35)
+    frame = Image.fromarray(np.clip(bg, 0, 255).astype(np.uint8)).convert("RGBA")
+    bw, bh, by = RC_BOX; clip = cv2.resize(fr[0:470], (bw, bh), interpolation=cv2.INTER_LANCZOS4)
+    k = ease_out(u / 0.3); sc = 0.92 + 0.08 * k
+    box = Image.fromarray(rounded(clip, 30, 5)); box = box.resize((int(bw * sc), int(bh * sc)), Image.BICUBIC)
+    paste(frame, fade(box, clamp(u / 0.15)), CX - box.width / 2, by + (bh - box.height) / 2, 0.6, 22, (8, 20))
+    pill(frame, "RICHARLISON · VÍDEO NAS REDES", CX, by - 50, (u - 0.1) / 0.3, fill=NAVY, size=32)
+    credit(frame, "Vídeo: reprodução redes sociais", CX + bw / 2 - 10, by + bh - 50, 1.0)
+    if si == 2: counter(frame, u, 1.4, by + bh - 150)
+    draw_caption(frame, t, 1330, 46, ("rc",))
+    return frame
+
 def lyrics(frame, t):
     mt = t - MUS_IN; k_all = clamp((t - FIN_IN) / 0.4)
     g = Image.new("RGBA", (W, 760), (0, 0, 0, 0)); ImageDraw.Draw(g).rectangle((0, 0, W, 760), fill=(4, 10, 20, 255))
@@ -478,7 +506,8 @@ def lyrics(frame, t):
 def render_frame(t):
     if t >= END_IN + 0.35: return end_card(t)
     tt = min(t, EDIT_END - 1e-3); s = seg_at(tt)
-    if s is not None and s.get("mode") == "split": frame = split_scene(tt, s, t)
+    if s is not None and s.get("mode") == "rc": frame = rc_scene(tt, s, t)
+    elif s is not None and s.get("mode") == "split": frame = split_scene(tt, s, t)
     else:
         st = me_at(tt); z = zoom_suave.nivel(st, ZOOMS) + (0.04 * ease_io((tt - FIN_IN) / FIN_LEN) if tt >= FIN_IN else 0)
         src = me_src(st)
@@ -521,6 +550,13 @@ def main():
         p = voice[int(s["a"] * SR):int(s["b"] * SR)].copy(); f = int(0.03 * SR)
         env = np.ones(len(p)); env[:f] = np.linspace(0, 1, f); env[-f:] = np.linspace(1, 0, f)
         t0 = int(s["t0"] * SR); vt[t0:t0 + len(p)] += p * env[:, None]
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", RC, "-ar", "48000", "-ac", "2", "-af", "highpass=f=90", f"{V}/rc48.wav"], check=True)
+    rcv = readw(f"{V}/rc48.wav")
+    for s in segs:                                                # falas do Richarlison no mesmo trilho da voz (volume 1,25 como áudio de terceiros)
+        if s["src"] != "rc": continue
+        p = rcv[int(s["a"] * SR):int(s["b"] * SR)].copy(); f = int(0.03 * SR)
+        env = np.ones(len(p)); env[:f] = np.linspace(0, 1, f); env[-f:] = np.linspace(1, 0, f)
+        t0 = int(s["t0"] * SR); m = min(len(p), n - t0); vt[t0:t0 + m] += p[:m] * env[:m, None] * 1.25
     writew(f"{V}/voice.wav", vt)
     song = readw(f"{S}/v15/song_vox.wav"); lead = FIN_IN - MUS_IN; Ls = min(len(song), n - int(MUS_IN * SR)); tl = np.arange(Ls) / SR
     gain = np.where(tl < lead, 10 ** ((-22 + 22 * tl / lead) / 20), 1.0) * np.clip(1 - (tl - (TOTAL - MUS_IN - 1.6)) / 1.5, 0, 1)
@@ -531,8 +567,9 @@ def main():
     ev = [(0.3, sfx.whoosh(0.5), 0.2), (segs[1]["t0"] - 0.12, sfx.whoosh(0.5), 0.26), (segs[3]["t0"] - 0.1, sfx.whoosh(0.5, False), 0.22)]
     for si, lst in PAPER.items():
         for rid, t0, *_ in lst: ev += [(segs[si]["t0"] + t0, sfx.paper(), 0.55), (segs[si]["t0"] + t0, sfx.thud(), 0.18)]
-    ev += [(segs[0]["t0"] + 0.3, sfx.paper(), 0.5), (segs[2]["t0"] + 0.2, sfx.paper(), 0.5), (segs[2]["t0"] + 0.5, sfx.paper(), 0.4), (segs[4]["t0"] + 0.9, sfx.paper(), 0.4),
-           (segs[2]["t0"] + 2.7, sfx.thud(), 0.3), (segs[1]["t0"] + 1.2, sfx.whoosh(0.4), 0.2)] + [(segs[1]["t0"] + 1.2 + k * 0.1, sfx.click(), 0.25) for k in range(10)]
+    ev += [(segs[0]["t0"] + 0.3, sfx.paper(), 0.5), (segs[3]["t0"] + 0.2, sfx.paper(), 0.5), (segs[3]["t0"] + 0.5, sfx.paper(), 0.4), (segs[5]["t0"] + 0.9, sfx.paper(), 0.4),
+           (segs[3]["t0"] + 2.7, sfx.thud(), 0.3), (segs[2]["t0"] + 1.4, sfx.whoosh(0.4), 0.2)] + [(segs[2]["t0"] + 1.4 + k * 0.1, sfx.click(), 0.25) for k in range(10)]
+    ev += [(s_["t0"] - 0.1, sfx.whoosh(0.4), 0.22) for s_ in segs if s_["src"] == "rc"]
     ev += [(0.18, sfx.barra(), 0.2), (CARD_IN, sfx.whoosh(0.4), 0.16)] + [(a, sfx.barra(), 0.11) for a, b in CTA]
     for a, b, w, _ in BIG: ev += [(out_t(a), sfx.whoosh(0.3), 0.12), (out_t(a) + SLIDE - 0.02, sfx.click(), 0.6)]   # passa rápido e para com o clique                     # clique de mouse na entrada de cada palavra
     ev.append((END_IN - 0.3, sfx.whoosh(0.6), 0.25))
