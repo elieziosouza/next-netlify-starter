@@ -30,8 +30,8 @@ def make_bar(style="canal", bw=84):
     _cache[key] = (Image.fromarray(np.clip(glow, 0, 255).astype(np.uint8), "RGBA"), Image.fromarray(np.clip(bar, 0, 255).astype(np.uint8), "RGBA"), txt, bw)
     return _cache[key]
 # o YouTube Shorts corta as laterais em celulares compridos (cerca de 50 a 100 px de cada lado): a barra fica recuada da borda
-INSET = 108
-CARD_X = (296, 976)                                               # caixa centrada no espaço depois da barra (centro x 636)
+INSET = 0                                                         # barra colada no canto (pedido dele em 18/10)
+CARD_X = (242, 922)                                               # caixa centrada no espaço depois da barra (centro x 582)
 _cta = {}
 def cta_layer(bw, txt="SIGA  ·  COMPARTILHE"):
     if (bw, txt) in _cta: return _cta[(bw, txt)]

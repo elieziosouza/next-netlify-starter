@@ -39,7 +39,7 @@ ME_CAPS = [("O RICHARLISON, JOGADOR", 0.50, 1.60), ("DA SELEÇÃO BRASILEIRA,", 
            ("IMAGINA O QUE PODE ACONTECER", 32.75, 34.00), ("COM UM CIDADÃO COMUM.", 34.00, 35.10),
            ("POR ISSO, DIA 25,", 35.85, 37.35), ("A GENTE ESCOLHE QUEM RESPEITA O POVO.", 37.80, 39.35)]
 HOT = {"RICHARLISON", "SOCORRO", "MILHÕES", "ILHA", "FLÁVIO", "MÃO", "GRANDE", "NADA", "DRONE", "INSTAGRAM", "NEGA", "CIDADÃO", "COMUM", "25", "POVO"}
-CX = 636                                                          # centro do espaço depois da barra lateral (pedido dele): tudo se alinha por aqui
+CX = 582                                                          # centro do espaço depois da barra lateral (barra no canto, 0 a 84): tudo se alinha por aqui
 def MF(w, s): return ImageFont.truetype(f"{FD}/Montserrat-{w}.ttf", s)
 def clamp(x, a=0.0, b=1.0): return max(a, min(b, x))
 def smooth(x): x = clamp(x); return x * x * (3 - 2 * x)
@@ -248,7 +248,7 @@ def react_tag(frame, t, txt, t0, t1, y=196):
     frame.alpha_composite(fade(lay, k), (int(W / 2 - lay.width / 2), int(y + 20 * (1 - k))))
 
 
-HDX = 96                                                          # cabeçalho e rodapé deslocados para o centro do espaço útil, sem passar do corte do YouTube
+HDX = 42                                                          # cabeçalho e rodapé centrados no espaço depois da barra
 def draw_banners(frame, t):
     k = back_out((t - 0.4) / 0.55, 1.2)
     if t < 0.4: return
