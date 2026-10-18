@@ -288,7 +288,7 @@ SEG = PersonSeg(f"{S}/seg/u2net_human_seg.onnx")
 def BIGF(s): return ImageFont.truetype(f"{FD}/Anton-Regular.ttf", s)
 def SERIF(s): return ImageFont.truetype(f"{FD}/DMSerifDisplay-Regular.ttf", s)
 ZOOMS = [(19.0, 23.4, 0.06), (27.9, 32.4, 0.06), (32.75, 35.1, 0.07), (35.85, 39.3, 0.07)]
-BIG = [(19.0, 21.3, "DRONE", NAVY), (21.6, 23.6, "INSTAGRAM", NAVY), (27.9, 29.7, "SELEÇÃO", NAVY), (33.9, 35.25, "CIDADÃO COMUM", NAVY),
+BIG = [(27.9, 29.7, "SELEÇÃO", NAVY), (33.9, 35.25, "CIDADÃO COMUM", NAVY),
        (35.85, 37.45, "DIA 25", RED), (38.4, 39.45, "POVO", NAVY)]
 SEAM = 1060; PH = H - SEAM
 
@@ -538,10 +538,12 @@ def main():
         sheet.save(OUTFILE, quality=90); return
     if MODE == "info": print("TOTAL", TOTAL, [(s["src"], round(s["t0"], 2), round(s["t1"], 2)) for s in segs], "FIN", FIN_IN, "MUS", MUS_IN); return
     vout = f"{V}/video.mp4"
-    enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-                            "-c:v", "libx264", "-preset", "medium", "-crf", "17", "-pix_fmt", "yuv420p", vout], stdin=subprocess.PIPE)
-    for i in range(int(round(TOTAL * FPS))): enc.stdin.write(finish(render_frame(i / FPS), i / FPS).tobytes())
-    enc.stdin.close(); enc.wait()
+    import os
+    if not (os.environ.get("REUSE") and os.path.exists(vout)):
+        enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
+                                "-c:v", "libx264", "-preset", "medium", "-crf", "17", "-pix_fmt", "yuv420p", vout], stdin=subprocess.PIPE)
+        for i in range(int(round(TOTAL * FPS))): enc.stdin.write(finish(render_frame(i / FPS), i / FPS).tobytes())
+        enc.stdin.close(); enc.wait()
     SR = 48000; n = int(TOTAL * SR)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", ME, "-ar", "48000", "-ac", "2", f"{V}/me48.wav"], check=True)
     voice = readw(f"{V}/me48.wav"); vt = np.zeros((n, 2), np.float32)
