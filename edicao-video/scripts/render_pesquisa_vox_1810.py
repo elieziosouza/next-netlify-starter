@@ -313,19 +313,20 @@ def big_behind(img, st):
     for a, b, word, col in BIG:
         if not (a <= st < b): continue
         u = st - a; k = back_out(u / 0.35, 1.6); al = clamp(u / 0.12) * clamp((b - st) / 0.25)
-        size = 280; f = BIGF(size); d0 = ImageDraw.Draw(Image.new("L", (4, 4)))
-        while d0.textlength(word, font=f) > W - 300: size -= 6; f = BIGF(size)
+        size = 330; f = BIGF(size); d0 = ImageDraw.Draw(Image.new("L", (4, 4)))
+        while d0.textlength(word, font=f) > W - 190: size -= 6; f = BIGF(size)
         lay = Image.new("RGBA", (W, int(size * 1.4)), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
         d.text((W / 2 + 6, lay.height / 2 + 10), word, font=f, fill=(0, 0, 0, 160), anchor="mm"); d.text((W / 2, lay.height / 2), word, font=f, fill=col + (255,), anchor="mm")
         L = np.asarray(lay, np.float32) / 255; sc = 0.78 + 0.22 * k
         L = cv2.resize(L, (int(L.shape[1] * sc), int(L.shape[0] * sc)), interpolation=cv2.INTER_LINEAR)
-        m = np.clip((cv2.resize(SEG(cv2.resize(img, (478, 850), interpolation=cv2.INTER_AREA)), (W, H)) - 0.35) / 0.3, 0, 1)
+        m = cv2.resize(SEG(cv2.resize(img, (478, 850), interpolation=cv2.INTER_AREA)), (W, H))
+        m = cv2.GaussianBlur(cv2.dilate(np.clip((m - 0.3) / 0.25, 0, 1).astype(np.float32), np.ones((9, 9), np.uint8)), (0, 0), 2.5)   # contorno limpo: nenhuma letra invade a cabeça
         y0 = int(BIG_Y - L.shape[0] / 2); x0 = int(W / 2 + 40 - L.shape[1] / 2); ya, yb = max(0, y0), min(H, y0 + L.shape[0]); xa, xb = max(0, x0), min(W, x0 + L.shape[1])
         Lc = L[ya - y0:yb - y0, xa - x0:xb - x0]; A = Lc[..., 3:4] * al * (1 - m[ya:yb, xa:xb, None])
         img[ya:yb, xa:xb] = np.clip(img[ya:yb, xa:xb].astype(np.float32) * (1 - A) + Lc[..., :3] * 255 * A, 0, 255).astype(np.uint8)
     return img
-BIG_Y = 300
-CAP_Y = 1690
+BIG_Y = 330                                                      # atrás dele: a cabeça passa na frente das letras; topo das letras abaixo do cabeçalho
+CAP_Y = 1495                                                     # legenda logo abaixo do queixo; a caixa fixa fica embaixo dela
 
 def pill(frame, txt, cx, y, k, fill=RED, tcol=WH, size=40):
     if k <= 0: return
@@ -341,9 +342,24 @@ RECS = {i: Image.open(f"{RECDIR}/recorte_{i}.png").convert("RGBA") for i in rang
 yy_, xx_ = np.mgrid[0:SEAM, 0:W]
 MAT = (np.array([10, 40, 66], np.float32) + 10 * np.sin(xx_ / 900.0)[..., None]).astype(np.float32)
 MAT[((xx_ % 60 < 2) | (yy_ % 60 < 2))] += 26; MAT[((xx_ % 300 < 3) | (yy_ % 300 < 3))] += 30; MAT = np.clip(MAT, 0, 255).astype(np.uint8)
-PAPER = {1: [(1, 0.35, 470, -1.5, 1.0)], 2: [(2, 0.25, 330, 1.4, 1.0), (3, 1.45, 690, -1.2, 0.95)]}   # (recorte, entrada, y, giro, escala)
-CARD = {1: (0.9, 4.2, "ELEIÇÕES 2026", ["PESQUISA VOX BRASIL:", "LULA NA FRENTE"])}
-SPLIT_CAP_Y = {1: 790, 2: SEAM}
+PAPER = {1: [(1, 0.35, 440, -1.5, 1.0)], 2: [(2, 0.25, 270, 1.4, 0.92), (3, 1.45, 545, -1.2, 0.8)]}   # (recorte, entrada, y, giro, escala)
+# caixa de manchete fixa: entra no começo e fica até a música; na tela dividida sobe para a emenda, em tela cheia fica abaixo da legenda
+CARD_TXT = ("ELEIÇÕES 2026", ["PESQUISA VOX BRASIL:", "LULA 51% x 49% FLÁVIO"]); CARD_IN = 0.9
+CARD_Y = {"full": 1655, "split": SEAM - 105}
+SPLIT_CAP_Y = {1: 790, 2: 800}
+# convite SIGA · COMPARTILHE na barra: um lembrete no meio e outro quando ele pede para seguir
+CTA = [(out_t(13.95), out_t(17.9)), (out_t(25.05), out_t(28.30))]
+def cta_level(t):
+    return max([clamp((t - a) / 0.4) * clamp((b - t) / 0.4) for a, b in CTA] + [0.0])
+def card_y(tt):
+    s = seg_at(tt)
+    if s is None: return CARD_Y["full"]
+    i = segs.index(s); cur = CARD_Y[s["mode"]]
+    if i == 0: return cur
+    prev = CARD_Y[segs[i - 1]["mode"]]; return lerp(prev, cur, ease_io((tt - s["t0"]) / 0.35))
+def draw_card(frame, t, tt):
+    k = ease_out((t - CARD_IN) / 0.5) * (1 - ease_in((tt - (FIN_IN - 0.35)) / 0.35))
+    if k > 0: BAR.lower_card(frame, CARD_TXT[0], CARD_TXT[1], int(card_y(tt)), k, fs=44)
 def slap(frame, img, cx, cy, q, rot, scale=1.0):
     if q < 0: return
     k = ease_out(q / 0.14); s = (1.22 - 0.22 * k) * scale
@@ -359,11 +375,7 @@ def split_scene(tt, s, t):
     if si == 1 and u < 0.18: frame.alpha_composite(Image.new("RGBA", (W, H), (255, 255, 255, int(170 * (1 - u / 0.18)))))
     for rid, t0, cy, rot, sc in PAPER.get(si, []): slap(frame, RECS[rid], W / 2 + 30, cy, u - t0, rot, sc)
     d.rectangle((0, SEAM - 2, W, SEAM + 1), fill=GOLD + (int(230 * k_in),))
-    if si in CARD:
-        a, b, kick, lines = CARD[si]
-        kc = ease_out((u - a) / 0.45) * (1 - ease_out((u - (b - 0.35)) / 0.35))
-        BAR.lower_card(frame, kick, lines, SEAM - 120, kc)
-    draw_caption(frame, t, SPLIT_CAP_Y.get(si, SEAM), 50, ("me", "au"))
+    draw_caption(frame, t, SPLIT_CAP_Y.get(si, SEAM), 44, ("me", "au"))
     return frame
 
 def lyrics(frame, t):
@@ -392,9 +404,10 @@ def render_frame(t):
         st = me_at(tt); z = zoom_suave.nivel(st, ZOOMS) + (0.04 * ease_io((tt - FIN_IN) / FIN_LEN) if tt >= FIN_IN else 0)
         img = big_behind(me_src(st).copy(), st); img = zoom_suave.aplica(img, z, 0.42)
         frame = Image.fromarray(img).convert("RGBA")
-        if tt < FIN_IN: draw_caption(frame, t, CAP_Y, 56, ("me", "au"))
+        if tt < FIN_IN: draw_caption(frame, t, CAP_Y, 48, ("me", "au"))
         else: lyrics(frame, t)
-    BAR.draw_bar(frame, clamp(t / END_IN), "canal", ease_out((t - 0.2) / 0.6))
+    if tt < FIN_IN: draw_card(frame, t, tt)
+    BAR.draw_bar(frame, clamp(t / END_IN), "canal", ease_out((t - 0.2) / 0.6), cta_level(t), 0.5 + 0.5 * math.sin(t * 5))
     draw_banners(frame, t)
     if t >= END_IN: frame.alpha_composite(fade(end_card(t), clamp((t - END_IN) / 0.35)))
     return frame
@@ -437,8 +450,8 @@ def main():
     ev = [(0.3, sfx.whoosh(0.5), 0.2), (segs[1]["t0"] - 0.12, sfx.whoosh(0.5), 0.26), (segs[3]["t0"] - 0.1, sfx.whoosh(0.5, False), 0.22)]
     for si, lst in PAPER.items():
         for rid, t0, *_ in lst: ev += [(segs[si]["t0"] + t0, sfx.paper(), 0.55), (segs[si]["t0"] + t0, sfx.thud(), 0.18)]
-    for si, (a, b, *_ ) in CARD.items(): ev.append((segs[si]["t0"] + a, sfx.whoosh(0.4), 0.22))
-    for a, b, w, _ in BIG: ev.append((out_t(a), sfx.click(), 0.45))
+    ev += [(0.18, sfx.barra(), 0.2), (CARD_IN, sfx.whoosh(0.4), 0.16)] + [(a, sfx.barra(), 0.11) for a, b in CTA]
+    for a, b, w, _ in BIG: ev.append((out_t(a), sfx.click(), 0.6))                     # clique de mouse na entrada de cada palavra
     ev.append((END_IN - 0.3, sfx.whoosh(0.6), 0.25))
     sfx.build([e for e in ev if 0 <= e[0] < TOTAL - 0.9], TOTAL, f"{V}/sfx.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/bed_g.wav", "-i", f"{V}/song.wav", "-filter_complex",

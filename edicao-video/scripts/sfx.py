@@ -96,3 +96,17 @@ def circulo(dur=0.5, seed=3):
     out = 0.8 * tok + 0.35 * brush; out /= np.abs(out).max() + 1e-9
     pan = np.clip(p, 0, 1)
     return np.stack([out * (1 - 0.3 * pan), out * (0.7 + 0.3 * pan)], 1)
+
+def barra(dur=1.2, seed=7):
+    """entrada da barra lateral: sopro curto subindo e um acorde de sino suave (mi, si, mi) que some devagar"""
+    r = np.random.default_rng(seed); n = int(dur * SR); t = np.arange(n) / SR
+    x = r.normal(0, 1, n); p = np.clip(t / 0.35, 0, 1)
+    air = onepole_lp(x, 400 + 5000 * p ** 2); air = air - onepole_lp(air, np.full(n, 300.0))
+    air *= np.sin(np.pi * p) ** 2 * (t < 0.35); air /= np.abs(air).max() + 1e-9
+    bell = np.zeros(n); t1 = np.clip(t - 0.22, 0, None); on = (t >= 0.22)
+    for f, g in ((659.3, 1.0), (987.8, 0.7), (1318.5, 0.45), (1975.5, 0.18)):
+        bell += g * np.sin(2 * np.pi * f * t1) * np.exp(-t1 / (0.55 if f < 1500 else 0.25))
+    bell *= on * (1 - np.exp(-t1 * 400)); bell /= np.abs(bell).max() + 1e-9
+    out = 0.35 * air + 0.6 * bell; out /= np.abs(out).max() + 1e-9
+    d = int(0.012 * SR); right = np.concatenate([np.zeros(d), out[:-d]])         # leve abertura estéreo
+    return np.stack([out, right], 1)
