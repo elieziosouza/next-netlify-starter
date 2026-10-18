@@ -17,7 +17,7 @@ def big(img, txt, cy, size, col=YEL, band=None, rot=0, maxw=W - 60):
 def panel(si, u, tgt, lab):
     top, kind, q = R.clip_panel(si, u); P = Image.fromarray(top).convert("RGBA")
     R.highlight(P, 2.0, tgt, lab); return P
-ATKP = panel(0, 3.6, (R.ATK[0], R.ATK[1], R.ATK[2], R.ATK[2] + 30), "ATACANDO O CARRO")
+ATKP = panel(0, 1.5, (R.ATK[0], R.ATK[1], R.ATK[2], R.ATK[2] + 30), "ATACANDO O CARRO")
 WINP = panel(1, 5.3, None, "VIDRO TRASEIRO QUEBRADO")
 me = R.me_src(27.6).copy()                                          # olhando para a câmera, boca fechada, fazendo o L
 
@@ -34,14 +34,14 @@ A.alpha_composite(R.top)
 # B: ele em tela cheia com BOLSONARISTAS atrás da cabeça e manchete embaixo
 fb = R.big_behind(me.copy(), 18.6)
 B = Image.fromarray(fb).convert("RGBA"); B.alpha_composite(R.top)
-big(B, "ATACARAM CARRO DO PT", 1665, 130); big(B, "VIDRO QUEBRADO!", 1820, 110, (255, 255, 255), R.RED, -2)
+big(B, "ATACAM CARRO COM ADESIVO DO PT", 1665, 130); big(B, "VIDRO QUEBRADO!", 1820, 110, (255, 255, 255), R.RED, -2)
 
 # C: sem rosto, ataque em cima, vidro embaixo, faixa no meio
 C = Image.new("RGBA", (W, H), (0, 0, 0, 255))
 C.alpha_composite(ATKP.crop((0, 100, W, 1060)), (0, 0)); C.alpha_composite(WINP.crop((0, 140, W, 1060)), (0, 1000))
 ImageDraw.Draw(C).rectangle((0, 990, W, 1004), fill=R.RED + (255,))
 C.alpha_composite(R.top)
-big(C, "ÓDIO NAS RUAS", 905, 150); big(C, "CARRO DO PT ATACADO", 1075, 104, (255, 255, 255), R.RED, -2)
+big(C, "ATACAM CARRO", 905, 160); big(C, "COM ADESIVO DO PT", 1075, 112, (255, 255, 255), R.RED, -2)
 
 for k, im in zip("ABC", (A, B, C)): im.convert("RGB").save(f"{V}/capa2_{k}.jpg", quality=95)
 sheet = Image.new("RGB", (1080, 640)); [sheet.paste(Image.open(f"{V}/capa2_{k}.jpg").resize((360, 640)), (i * 360, 0)) for i, k in enumerate("ABC")]
