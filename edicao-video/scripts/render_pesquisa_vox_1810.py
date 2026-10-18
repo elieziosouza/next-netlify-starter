@@ -324,7 +324,7 @@ def big_behind(img, st):
         if not (a <= st < b): continue
         u = st - a; k = ease_out(u / SLIDE); out = ease_in((st - (b - 0.22)) / 0.22)
         size = 300; f = BIGF(size); d0 = ImageDraw.Draw(Image.new("L", (4, 4)))
-        while d0.textlength(word, font=f) > W - 190: size -= 6; f = BIGF(size)
+        while d0.textlength(word, font=f) > W - 380: size -= 6; f = BIGF(size)
         lay = Image.new("RGBA", (W, int(size * 1.3)), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
         d.text((W / 2 + 3, lay.height / 2 + 4), word, font=f, fill=(0, 0, 0, 90), anchor="mm")          # sombra curta e discreta
         d.text((W / 2, lay.height / 2), word, font=f, fill=col + (255,), anchor="mm")
@@ -334,7 +334,7 @@ def big_behind(img, st):
             if L > 2: lay = Image.fromarray(cv2.filter2D(np.asarray(lay), -1, np.ones((1, L), np.float32) / L))
         lay = fade(lay, 1 - out)
         fr = Image.fromarray(img).convert("RGBA")
-        fr.alpha_composite(lay, (int(40 + dx), int(BIG_Y - lay.height / 2 - 40 * out)))
+        fr.alpha_composite(lay, (int(42 + dx), int(BIG_Y - lay.height / 2 - 40 * out)))
         img = np.asarray(fr.convert("RGB")).copy()
     return img
 SLIDE = 0.28
@@ -355,7 +355,7 @@ RECS = {i: Image.open(f"{RECDIR}/recorte_{i}.png").convert("RGBA") for i in rang
 yy_, xx_ = np.mgrid[0:SEAM, 0:W]
 MAT = (np.array([10, 40, 66], np.float32) + 10 * np.sin(xx_ / 900.0)[..., None]).astype(np.float32)
 MAT[((xx_ % 60 < 2) | (yy_ % 60 < 2))] += 26; MAT[((xx_ % 300 < 3) | (yy_ % 300 < 3))] += 30; MAT = np.clip(MAT, 0, 255).astype(np.uint8)
-PAPER = {1: [(1, 0.35, 440, -1.5, 1.0)], 2: [(2, 0.25, 270, 1.4, 0.92), (3, 1.45, 545, -1.2, 0.8)]}   # (recorte, entrada, y, giro, escala)
+PAPER = {1: [(1, 0.35, 440, -1.5, 0.82)], 2: [(2, 0.25, 280, 1.4, 0.8), (3, 1.45, 555, -1.2, 0.74)]}   # dentro da área segura do YouTube, à direita da barra   # (recorte, entrada, y, giro, escala)
 # caixa de manchete fixa: entra no começo e fica até a música; na tela dividida sobe para a emenda, em tela cheia fica abaixo da legenda
 CARD_TXT = ("ELEIÇÕES 2026", ["PESQUISA VOX BRASIL:", "LULA 51% x 49% FLÁVIO"]); CARD_IN = 0.9
 CARD_Y = {"full": 1655, "split": SEAM - 105}
@@ -388,7 +388,7 @@ def split_scene(tt, s, t):
     frame = Image.fromarray(canvas).convert("RGBA"); d = ImageDraw.Draw(frame)
     k_in = ease_out(u / 0.25) if si == 1 else 1.0
     if si == 1 and u < 0.18: frame.alpha_composite(Image.new("RGBA", (W, H), (255, 255, 255, int(170 * (1 - u / 0.18)))))
-    for rid, t0, cy, rot, sc in PAPER.get(si, []): slap(frame, RECS[rid], W / 2 + 30, cy, u - t0, rot, sc)
+    for rid, t0, cy, rot, sc in PAPER.get(si, []): slap(frame, RECS[rid], 581, cy, u - t0, rot, sc)
     d.rectangle((0, SEAM - 2, W, SEAM + 1), fill=GOLD + (int(230 * k_in),))
     draw_caption(frame, t, SPLIT_CAP_Y.get(si, SEAM), 44, ("me", "au"))
     return frame

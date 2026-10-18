@@ -32,3 +32,4 @@ Ao entregar cada vídeo, termine sempre com título (opções), legenda do post,
 Quando o Eliezio aprovar uma melhoria, atualize o README (seções 1 a 6 e o histórico) e faça commit.
 - Palavras gigantes: atrás dele (máscara) só se o recorte ficar limpo; senão acima da cabeça entrando pela lateral com clique. Nunca na frente, nunca comendo a cabeça, nunca no cabeçalho, sem transparência. Recorte ruim: avisar antes de entregar.
 - Barra lateral do canal (`barra_lateral.py`, azul/marinho/dourado) com progresso e cápsula SIGA · COMPARTILHE, e caixa de manchete fixa. Nada de vermelho nesses elementos.
+- Área segura do YouTube Shorts: nada importante a menos de ~110 px das laterais (o YouTube corta). Barra lateral recuada (INSET 108).

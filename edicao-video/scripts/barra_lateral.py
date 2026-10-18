@@ -29,6 +29,8 @@ def make_bar(style="canal", bw=84):
     txt = txt.rotate(90, expand=True)
     _cache[key] = (Image.fromarray(np.clip(glow, 0, 255).astype(np.uint8), "RGBA"), Image.fromarray(np.clip(bar, 0, 255).astype(np.uint8), "RGBA"), txt, bw)
     return _cache[key]
+# o YouTube Shorts corta as laterais em celulares compridos (cerca de 50 a 100 px de cada lado): a barra fica recuada da borda
+INSET = 108
 _cta = {}
 def cta_layer(bw, txt="SIGA  ·  COMPARTILHE"):
     if (bw, txt) in _cta: return _cta[(bw, txt)]
@@ -39,8 +41,8 @@ def cta_layer(bw, txt="SIGA  ·  COMPARTILHE"):
     lay = lay.rotate(90, expand=True); _cta[(bw, txt)] = lay; return lay
 def draw_bar(frame, prog, style="canal", intro=1.0, cta=0.0, pulse=0.0):
     """prog 0..1: o preenchimento dourado desce pela barra; intro 0..1 faz a barra entrar pela esquerda"""
-    glow, bar, txt, bw = make_bar(style); dx = int(-bw * 1.6 * (1 - intro))
-    frame.alpha_composite(glow, (dx, 0)) if dx == 0 else frame.alpha_composite(glow.transform(glow.size, Image.AFFINE, (1, 0, -dx, 0, 1, 0)))
+    glow, bar, txt, bw = make_bar(style); dx = INSET + int(-(bw + INSET) * 1.6 * (1 - intro))
+    frame.alpha_composite(glow.transform(glow.size, Image.AFFINE, (1, 0, -dx, 0, 1, 0)))
     b = bar.copy(); d = ImageDraw.Draw(b); y = int(H * prog)
     d.rectangle((bw - 7, 0, bw - 1, y), fill=GOLD + (255,)); d.rectangle((bw - 7, y, bw - 1, H), fill=(255, 255, 255, 40))
     d.ellipse((bw - 14, y - 7, bw + 6, y + 13), fill=GOLD_L + (255,))
@@ -55,11 +57,11 @@ def draw_bar(frame, prog, style="canal", intro=1.0, cta=0.0, pulse=0.0):
         gl = gl.filter(ImageFilter.GaussianBlur(14)); gl.putalpha(gl.getchannel("A").point(lambda v: int(v * (0.5 + 0.3 * pulse))))
         cx = (bw - 7) // 2; cy = int(H * 0.5)
         b.alpha_composite(gl, (cx - gl.width // 2, cy - gl.height // 2)); b.alpha_composite(c, (cx - c.width // 2, cy - c.height // 2))
-    frame.alpha_composite(b.transform(b.size, Image.AFFINE, (1, 0, -dx, 0, 1, 0)) if dx else b)
+    frame.alpha_composite(b.transform(b.size, Image.AFFINE, (1, 0, -dx, 0, 1, 0)))
 def lower_card(frame, kicker, lines, y, k=1.0, accent=GOLD, fs=54):
     """cartão de vidro fosco azul-marinho com aba dourada em cima (como o letreiro da BandNews, nas cores do canal)"""
     if k <= 0: return
-    x0, x1 = 150, W - 70; f = MF("ExtraBold", fs); lh = int(fs * 1.22); h = int(fs * 0.9) + lh * len(lines)
+    x0, x1 = 232, W - 112; f = MF("ExtraBold", fs); lh = int(fs * 1.22); h = int(fs * 0.9) + lh * len(lines)
     region = frame.crop((x0, y, x1, y + h)).filter(ImageFilter.GaussianBlur(18))
     glass = Image.new("RGBA", region.size, (0, 0, 0, 0)); glass.alpha_composite(region)
     glass.alpha_composite(Image.new("RGBA", region.size, NAVY + (215,)))
