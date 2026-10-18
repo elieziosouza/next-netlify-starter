@@ -319,26 +319,26 @@ def fit_frame(img):
     return bg.astype(np.uint8)
 
 def big_behind(img, st):
-    """palavra grande atrás dele: a máscara de pessoa recorta a cabeça na frente das letras"""
-    for a, b, word, col in BIG:
+    """palavra grande acima da cabeça, entrando pela lateral (alterna direita e esquerda) e parando com um clique; some subindo de leve"""
+    for i, (a, b, word, col) in enumerate(BIG):
         if not (a <= st < b): continue
-        u = st - a; k = back_out(u / 0.35, 1.6); al = clamp(u / 0.12) * clamp((b - st) / 0.25)
+        u = st - a; k = ease_out(u / SLIDE); out = ease_in((st - (b - 0.22)) / 0.22)
         size = 300; f = BIGF(size); d0 = ImageDraw.Draw(Image.new("L", (4, 4)))
         while d0.textlength(word, font=f) > W - 190: size -= 6; f = BIGF(size)
-        lay = Image.new("RGBA", (W, int(size * 1.4)), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
-        d.text((W / 2 + 6, lay.height / 2 + 10), word, font=f, fill=(0, 0, 0, 160), anchor="mm"); d.text((W / 2, lay.height / 2), word, font=f, fill=col + (255,), anchor="mm")
-        L = np.asarray(lay, np.float32) / 255; sc = 0.78 + 0.22 * k
-        L = cv2.resize(L, (int(L.shape[1] * sc), int(L.shape[0] * sc)), interpolation=cv2.INTER_LINEAR)
-        m = cv2.resize(SEG(cv2.resize(img, (478, 850), interpolation=cv2.INTER_AREA)), (W, H))
-        m = np.clip((m - 0.18) / 0.2, 0, 1).astype(np.float32)
-        m = cv2.dilate(m, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25)))
-        up = np.zeros_like(m); up[:-34] = m[34:]; m = np.maximum(m, up)           # margem acima do contorno: o cabelo grisalho nunca fica embaixo das letras
-        m = cv2.GaussianBlur(m, (0, 0), 3)
-        y0 = int(BIG_Y - L.shape[0] / 2); x0 = int(W / 2 + 40 - L.shape[1] / 2); ya, yb = max(0, y0), min(H, y0 + L.shape[0]); xa, xb = max(0, x0), min(W, x0 + L.shape[1])
-        Lc = L[ya - y0:yb - y0, xa - x0:xb - x0]; A = Lc[..., 3:4] * al * (1 - m[ya:yb, xa:xb, None])
-        img[ya:yb, xa:xb] = np.clip(img[ya:yb, xa:xb].astype(np.float32) * (1 - A) + Lc[..., :3] * 255 * A, 0, 255).astype(np.uint8)
+        lay = Image.new("RGBA", (W, int(size * 1.3)), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+        d.text((W / 2 + 3, lay.height / 2 + 4), word, font=f, fill=(0, 0, 0, 90), anchor="mm")          # sombra curta e discreta
+        d.text((W / 2, lay.height / 2), word, font=f, fill=col + (255,), anchor="mm")
+        side = 1 if i % 2 == 0 else -1; dx = side * (W * 0.95) * (1 - k)
+        if u < SLIDE:                                                     # rastro de movimento só durante a entrada
+            L = int(60 * (1 - k)) + 1
+            if L > 2: lay = Image.fromarray(cv2.filter2D(np.asarray(lay), -1, np.ones((1, L), np.float32) / L))
+        lay = fade(lay, 1 - out)
+        fr = Image.fromarray(img).convert("RGBA")
+        fr.alpha_composite(lay, (int(40 + dx), int(BIG_Y - lay.height / 2 - 40 * out)))
+        img = np.asarray(fr.convert("RGB")).copy()
     return img
-BIG_Y = 362                                                      # como nos exemplos: a cabeça entra só na base das letras; topo abaixo do cabeçalho
+SLIDE = 0.28
+BIG_Y = 300                                                      # acima da cabeça (ele 12% menor em tela cheia), abaixo do cabeçalho
 CAP_Y = 1495                                                     # legenda logo abaixo do queixo; a caixa fixa fica embaixo dela
 
 def pill(frame, txt, cx, y, k, fill=RED, tcol=WH, size=40):
@@ -364,15 +364,17 @@ SPLIT_CAP_Y = {1: 790, 2: 800}
 CTA = [(out_t(13.95), out_t(17.9)), (out_t(25.05), out_t(28.30))]
 def cta_level(t):
     return max([clamp((t - a) / 0.4) * clamp((b - t) / 0.4) for a, b in CTA] + [0.0])
-def card_y(tt):
+def card_pos(tt):
+    """posição da caixa e quanto ela aparece: na troca entre tela cheia e dividida ela reaparece no lugar novo, sem atravessar o rosto"""
     s = seg_at(tt)
-    if s is None: return CARD_Y["full"]
+    if s is None: return CARD_Y["full"], 1.0
     i = segs.index(s); cur = CARD_Y[s["mode"]]
-    if i == 0: return cur
-    prev = CARD_Y[segs[i - 1]["mode"]]; return lerp(prev, cur, ease_io((tt - s["t0"]) / 0.35))
+    if i > 0 and segs[i - 1]["mode"] != s["mode"]: return cur, ease_out((tt - s["t0"]) / 0.3)
+    return cur, 1.0
 def draw_card(frame, t, tt):
     k = ease_out((t - CARD_IN) / 0.5) * (1 - ease_in((tt - (FIN_IN - 0.35)) / 0.35))
-    if k > 0: BAR.lower_card(frame, CARD_TXT[0], CARD_TXT[1], int(card_y(tt)), k, fs=44)
+    y, kk = card_pos(tt); k *= kk
+    if k > 0: BAR.lower_card(frame, CARD_TXT[0], CARD_TXT[1], int(y), k, fs=44)
 def slap(frame, img, cx, cy, q, rot, scale=1.0):
     if q < 0: return
     k = ease_out(q / 0.14); s = (1.22 - 0.22 * k) * scale
@@ -464,7 +466,7 @@ def main():
     for si, lst in PAPER.items():
         for rid, t0, *_ in lst: ev += [(segs[si]["t0"] + t0, sfx.paper(), 0.55), (segs[si]["t0"] + t0, sfx.thud(), 0.18)]
     ev += [(0.18, sfx.barra(), 0.2), (CARD_IN, sfx.whoosh(0.4), 0.16)] + [(a, sfx.barra(), 0.11) for a, b in CTA]
-    for a, b, w, _ in BIG: ev.append((out_t(a), sfx.click(), 0.6))                     # clique de mouse na entrada de cada palavra
+    for a, b, w, _ in BIG: ev += [(out_t(a), sfx.whoosh(0.3), 0.12), (out_t(a) + SLIDE - 0.02, sfx.click(), 0.6)]   # passa rápido e para com o clique                     # clique de mouse na entrada de cada palavra
     ev.append((END_IN - 0.3, sfx.whoosh(0.6), 0.25))
     sfx.build([e for e in ev if 0 <= e[0] < TOTAL - 0.9], TOTAL, f"{V}/sfx.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/bed_g.wav", "-i", f"{V}/song.wav", "-filter_complex",

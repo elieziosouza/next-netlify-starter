@@ -30,5 +30,5 @@ Nunca cortar o rosto nem o topo da cabeça do Eliezio (vídeo, janelinha, capa, 
 Ao entregar cada vídeo, termine sempre com título (opções), legenda do post, hashtags e título para Shorts (seção 7.1 do README). O primeiro bloco é sempre o título com 4 hashtags na mesma linha, pronto para copiar e colar.
 
 Quando o Eliezio aprovar uma melhoria, atualize o README (seções 1 a 6 e o histórico) e faça commit.
-- Palavras gigantes (Anton, grandes) sempre atrás da cabeça dele, recortadas pela máscara: nunca acima da cabeça, nunca na frente, nunca cobrindo a cabeça, nunca no cabeçalho, nunca cortadas na borda; entram com clique de mouse.
+- Palavras gigantes: atrás dele (máscara) só se o recorte ficar limpo; senão acima da cabeça entrando pela lateral com clique. Nunca na frente, nunca comendo a cabeça, nunca no cabeçalho, sem transparência. Recorte ruim: avisar antes de entregar.
 - Barra lateral do canal (`barra_lateral.py`, azul/marinho/dourado) com progresso e cápsula SIGA · COMPARTILHE, e caixa de manchete fixa. Nada de vermelho nesses elementos.
