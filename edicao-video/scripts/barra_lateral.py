@@ -12,9 +12,9 @@ def grad(h, stops):
     for (a, ca), (b, cb) in zip(stops, stops[1:]):
         m = (ys >= a) & (ys <= b); k = ((ys[m] - a) / (b - a))[:, None]; out[m] = np.array(ca) * (1 - k) + np.array(cb) * k
     return out
-STYLES = {"ouro": [(0, (24, 92, 190)), (0.45, (10, 46, 96)), (0.8, (150, 112, 46)), (1, GOLD)], "vermelho": [(0, (24, 92, 190)), (0.45, (12, 44, 104)), (0.75, (150, 24, 40)), (1, (225, 36, 46))]}
+STYLES = {"canal": [(0, (30, 98, 196)), (0.35, (14, 58, 118)), (0.62, NAVY), (0.85, (150, 120, 62)), (1, GOLD_L)], "ouro": [(0, (24, 92, 190)), (0.45, (10, 46, 96)), (0.8, (150, 112, 46)), (1, GOLD)], "vermelho": [(0, (24, 92, 190)), (0.45, (12, 44, 104)), (0.75, (150, 24, 40)), (1, (225, 36, 46))]}
 _cache = {}
-def make_bar(style="ouro", bw=84):
+def make_bar(style="canal", bw=84):
     """camadas fixas da barra: brilho, faixa e texto vertical"""
     key = (style, bw)
     if key in _cache: return _cache[key]
@@ -29,7 +29,7 @@ def make_bar(style="ouro", bw=84):
     txt = txt.rotate(90, expand=True)
     _cache[key] = (Image.fromarray(np.clip(glow, 0, 255).astype(np.uint8), "RGBA"), Image.fromarray(np.clip(bar, 0, 255).astype(np.uint8), "RGBA"), txt, bw)
     return _cache[key]
-def draw_bar(frame, prog, style="ouro", intro=1.0):
+def draw_bar(frame, prog, style="canal", intro=1.0):
     """prog 0..1: o preenchimento dourado desce pela barra; intro 0..1 faz a barra entrar pela esquerda"""
     glow, bar, txt, bw = make_bar(style); dx = int(-bw * 1.6 * (1 - intro))
     frame.alpha_composite(glow, (dx, 0)) if dx == 0 else frame.alpha_composite(glow.transform(glow.size, Image.AFFINE, (1, 0, -dx, 0, 1, 0)))
@@ -38,19 +38,21 @@ def draw_bar(frame, prog, style="ouro", intro=1.0):
     d.ellipse((bw - 14, y - 7, bw + 6, y + 13), fill=GOLD_L + (255,))
     b.alpha_composite(txt, (0, 0))
     frame.alpha_composite(b.transform(b.size, Image.AFFINE, (1, 0, -dx, 0, 1, 0)) if dx else b)
-def lower_card(frame, kicker, lines, y, k=1.0, accent=RED):
-    """cartão de vidro fosco com aba do assunto em cima (como o letreiro da BandNews, nas cores do canal)"""
+def lower_card(frame, kicker, lines, y, k=1.0, accent=GOLD):
+    """cartão de vidro fosco azul-marinho com aba dourada em cima (como o letreiro da BandNews, nas cores do canal)"""
     if k <= 0: return
     x0, x1 = 150, W - 70; f = MF("ExtraBold", 54); lh = 66; h = 50 + lh * len(lines)
     region = frame.crop((x0, y, x1, y + h)).filter(ImageFilter.GaussianBlur(18))
-    glass = Image.new("RGBA", region.size, (255, 255, 255, 0)); glass.alpha_composite(region)
-    tint = Image.new("RGBA", region.size, (250, 246, 236, 205)); glass.alpha_composite(tint)
+    glass = Image.new("RGBA", region.size, (0, 0, 0, 0)); glass.alpha_composite(region)
+    glass.alpha_composite(Image.new("RGBA", region.size, NAVY + (215,)))
+    sheen = Image.linear_gradient("L").resize(region.size).point(lambda v: int(60 * (1 - v / 255)))   # brilho de vidro no alto
+    hl = Image.new("RGBA", region.size, (120, 170, 230, 0)); hl.putalpha(sheen); glass.alpha_composite(hl)
     m = Image.new("L", region.size, 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, region.width - 1, h - 1), 16, fill=255); glass.putalpha(m)
-    d = ImageDraw.Draw(glass)
-    for i, ln in enumerate(lines): d.text((region.width / 2, 25 + lh * i + lh / 2), ln, font=f, fill=NAVY + (255,), anchor="mm")
+    d = ImageDraw.Draw(glass); d.rounded_rectangle((1, 1, region.width - 2, h - 2), 16, outline=GOLD + (230,), width=3)
+    for i, ln in enumerate(lines): d.text((region.width / 2, 25 + lh * i + lh / 2), ln, font=f, fill=(255, 255, 255, 255), anchor="mm")
     fk = MF("ExtraBold", 30); tab_w = int(ImageDraw.Draw(glass).textlength(" ".join(kicker), font=fk) + 60)
     tab = Image.new("RGBA", (tab_w, 58), (0, 0, 0, 0)); dt = ImageDraw.Draw(tab)
-    dt.rounded_rectangle((0, 0, tab_w - 1, 70), 12, fill=accent + (255,)); dt.text((30, 30), " ".join(kicker), font=fk, fill=(255, 255, 255, 255), anchor="lm")
+    dt.rounded_rectangle((0, 0, tab_w - 1, 70), 12, fill=accent + (255,)); dt.text((30, 30), " ".join(kicker), font=fk, fill=NAVY + (255,), anchor="lm")
     side = Image.new("RGBA", (12, h + 58), accent + (255,))
     off = int(40 * (1 - k)); a = int(255 * min(1, k * 1.5))
     for im, pos in ((side, (x0 - 16, y - 58)), (tab, (x0 - 4, y - 58)), (glass, (x0, y))):

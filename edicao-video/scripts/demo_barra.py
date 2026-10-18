@@ -14,7 +14,7 @@ enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_f
                         "-map", "0:v", "-map", "1:a", "-c:v", "libx264", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-shortest", f"{S}/v31/demo_barra_lateral.mp4"], stdin=subprocess.PIPE)
 for i in range(len(fr)):
     t = i / FPS; f = Image.fromarray(fr[i]).convert("RGBA")
-    B.draw_bar(f, t / D, "vermelho", eo(t / 0.6)); f.alpha_composite(top)
+    B.draw_bar(f, t / D, "canal", eo(t / 0.6)); f.alpha_composite(top)
     B.lower_card(f, "ELEIÇÕES 2026", ["PESQUISA VOX BRASIL:", "LULA 51% x 49% FLÁVIO"], 1600, eo((t - 0.8) / 0.5))
     enc.stdin.write(f.convert("RGB").tobytes())
 enc.stdin.close(); enc.wait(); print("ok")
