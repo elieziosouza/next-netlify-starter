@@ -93,9 +93,11 @@ def card(frame, t, s, y):
     k = ease_out((t - max(s["t0"], 0.6)) / 0.4) * (1 - ease_in((t - (s["t1"] - 0.25)) / 0.25) if s is not segs[-1] else 1)
     if s is segs[-1]: k *= 1 - ease_in((t - (FIN_IN - 0.35)) / 0.35)
     if k > 0: BAR.lower_card(frame, CARD[0], CARD[1], y, k, fs=44)
+FREEZE_X = 2.3                                                     # pedido dele: no fim, um quadro que o favoreça (boca fechada, olhando para a câmera)
 def frame_at(t):
     tt = min(t, EDIT_END - 1e-3); s = seg_at(min(tt, EDIT_CUT - 1e-3)); x = s["a"] + min(tt, s["t1"] - 0.02) - s["t0"]
     if s["src"] == "me":
+        if tt >= FIN_IN: x = FREEZE_X                              # final congelado num quadro em que ele está de boca fechada
         frame = me_frame(x); big_word(frame, t, 300)
         if tt < FIN_IN:
             R.draw_caption(frame, t, 1500, 48, ("me", "au")); card(frame, t, s, 1655)
@@ -117,6 +119,7 @@ def frame_at(t):
     for sg in segs[1:]:                                            # flash curto em cada troca de fonte
         if sg["src"] != segs[segs.index(sg) - 1]["src"] and abs(t - sg["t0"]) < 0.1:
             frame = Image.blend(frame, Image.new("RGBA", frame.size, (255, 255, 255, 255)), (1 - abs(t - sg["t0"]) / 0.1) * 0.45)
+    if abs(t - FIN_IN) < 0.1: frame = Image.blend(frame, Image.new("RGBA", frame.size, (255, 255, 255, 255)), (1 - abs(t - FIN_IN) / 0.1) * 0.45)
     if t >= END_IN: frame.alpha_composite(R.fade(R.end_card(t), clamp((t - END_IN) / 0.35)))
     return frame.convert("RGB")
 
