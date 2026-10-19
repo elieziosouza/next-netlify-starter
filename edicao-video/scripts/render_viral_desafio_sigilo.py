@@ -137,7 +137,7 @@ def main():
         enc.stdin.close(); enc.wait()
     SR = 48000; n = int(TOTAL * SR)
     for nm, p in (("me", ME), ("eh", EH)): subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", p, "-ar", "48000", "-ac", "2", f"{V}/{nm}48.wav"], check=True)
-    srcw = {"me": R.readw(f"{V}/me48.wav") * 0.37, "eh": R.readw(f"{V}/eh48.wav") * 1.25}   # voz dele no nível do debate
+    srcw = {"me": R.readw(f"{V}/me48.wav") * 0.55, "eh": R.readw(f"{V}/eh48.wav") * 1.25}   # voz dele uns 3 dB acima do debate (ele achou baixa no mesmo nível)
     vt = np.zeros((n, 2), np.float32); f = int(0.03 * SR)
     for s in segs:
         c = srcw[s["src"]][int(s["a"] * SR):int(s["b"] * SR)].copy(); c[:f] *= np.linspace(0, 1, f)[:, None]; c[-f:] *= np.linspace(1, 0, f)[:, None]

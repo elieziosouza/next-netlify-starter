@@ -154,6 +154,7 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
 ## 6. Áudio
 
 - Voz: passa-alta 80 Hz, compressão leve, loudnorm em duas passagens com alvo de **-15 LUFS** e pico de -2 dBTP. Sem reverb.
+- **Voz dele x áudio de terceiros (19/10/2026):** a voz do Eliezio fica **3 a 4 dB acima** do trecho do debate/reportagem (medir cada trecho com ebur128). No mesmo nível ele achou a voz baixa, porque o áudio de TV vem muito comprimido.
 - Música: trilha própria (`music.py`, 96 BPM, tom menor), com volume 0,30 e **ducking** automático quando a voz entra.
 - Efeitos (`sfx.py`): "whoosh" curto na troca de layout e de painel, "tic" em itens de lista, batida grave em carimbo. Todos baixos.
 - **Finalização sem cortar o áudio:** a tela final só começa 0,4 s depois da última palavra. Um riser de 2 s (tom subindo com ruído) cresce por baixo das últimas frases, depois vem um whoosh e uma batida grave na entrada da tela final.
