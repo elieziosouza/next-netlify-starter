@@ -1,6 +1,7 @@
 """Corte viral: Eliezio abre ("as eleições estão pegando fogo"), Lula faz no debate da Band o desafio de abrir os sigilos (vídeo repostado
 pela Erika Hilton, imagens da Band), e Eliezio fecha perguntando se o Flávio deve aceitar, chamando para comentar e lembrando do dia 25.
-Tela cheia nele, caixa com o debate no meio; legendas, palavras grandes com clique, barra lateral, caixa fixa e vai dar PT."""
+Tela cheia nele, caixa com o debate no meio; legendas, palavras grandes com clique, barra lateral e caixa fixa.
+Sem o vai dar PT nem música de campanha: ele quer que o vídeo sirva para os dois lados."""
 import sys, math, subprocess, importlib.util, os
 import numpy as np, cv2
 from PIL import Image, ImageDraw
@@ -70,7 +71,7 @@ BIG = [("me", 3.9, 4.95, "PEGANDO FOGO", (235, 60, 60)), ("eh", 4.9, 6.0, "EU DE
 BIG = [(out_t(s, a), out_t(s, b), w, c) for s, a, b, w, c in BIG]
 PILLS = [(out_t("eh", 0.3), out_t("eh", 4.6), "DEBATE NA BAND · 18/10", R.NAVY), (out_t("eh", 33.1), out_t("eh", 38.9), "PROPOSTA DO LULA: ENTREGAR OS DADOS À JUSTIÇA", R.NAVY)]
 MUS_IN = EDIT_CUT - 4.87; FIN_IN = EDIT_CUT                       # o "vai dar PT" da música cai no fim da fala dele
-R.MUS_IN = MUS_IN; R.FIN_IN = FIN_IN; FIN_LEN = 3.4; EDIT_END = FIN_IN + FIN_LEN; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
+R.MUS_IN = MUS_IN; R.FIN_IN = FIN_IN; FIN_LEN = 0.9; EDIT_END = FIN_IN + FIN_LEN; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
 R.END_IN = END_IN; R.EDIT_END = EDIT_END
 CARD = ("DEBATE NA BAND · 18/10", ["LULA DESAFIA FLÁVIO:", "ABRE O SIGILO"])
 CTA = [(out_t("eh", 15.5), out_t("eh", 19.1)), (out_t("me", 9.0), out_t("me", 12.2))]
@@ -99,9 +100,7 @@ def frame_at(t):
     if s["src"] == "me":
         if tt >= FIN_IN: x = FREEZE_X                              # final congelado num quadro em que ele está de boca fechada
         frame = me_frame(x); big_word(frame, t, 300)
-        if tt < FIN_IN:
-            R.draw_caption(frame, t, 1500, 48, ("me", "au")); card(frame, t, s, 1655)
-        else: R.lyrics(frame, t)
+        if tt < FIN_IN: R.draw_caption(frame, t, 1500, 48, ("me", "au")); card(frame, t, s, 1655)
     else:
         fr = eh_img(x); bg = R.blur_bg(fr, 0.32); frame = Image.fromarray(np.clip(bg, 0, 255).astype(np.uint8)).convert("RGBA")
         k = ease_out((t - s["t0"]) / 0.3) if s is segs[1] else 1.0
@@ -144,18 +143,14 @@ def main():
         c = srcw[s["src"]][int(s["a"] * SR):int(s["b"] * SR)].copy(); c[:f] *= np.linspace(0, 1, f)[:, None]; c[-f:] *= np.linspace(1, 0, f)[:, None]
         o = int(s["t0"] * SR); vt[o:o + len(c)] += c[:n - o]
     R.writew(f"{V}/voice.wav", vt)
-    song = R.readw(f"{S}/v15/song_vox.wav"); Ls = min(len(song), n - int(MUS_IN * SR)); tl = np.arange(Ls) / SR; lead = FIN_IN - MUS_IN
-    gain = np.where(tl < lead, 10 ** ((-22 + 22 * tl / lead) / 20), 1.0) * np.clip(1 - (tl - (TOTAL - MUS_IN - 1.6)) / 1.5, 0, 1)
-    sg = np.zeros((n, 2), np.float32); sg[int(MUS_IN * SR):int(MUS_IN * SR) + Ls] = song[:Ls] * gain[:, None]; R.writew(f"{V}/song.wav", sg)
     ev = [(0.18, sfx.barra(), 0.2), (FIN_IN - 0.1, sfx.whoosh(0.5), 0.2), (END_IN - 0.3, sfx.whoosh(0.6), 0.25)]
     ev += [(sg_["t0"] - 0.12, sfx.whoosh(0.4), 0.2) for i, sg_ in enumerate(segs[1:], 1) if sg_["src"] != segs[i - 1]["src"]]
     ev += [(a, sfx.whoosh(0.3), 0.12) for a, *_ in BIG] + [(a + 0.26, sfx.click(), 0.6) for a, *_ in BIG]
     ev += [(a, sfx.click(), 0.35) for a, *_ in PILLS] + [(a, sfx.barra(), 0.11) for a, b in CTA]
     sfx.build([e for e in ev if 0 <= e[0] < TOTAL - 0.9], TOTAL, f"{V}/sfx.wav")
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/song.wav", "-filter_complex",
-                    "[1:a]highpass=f=70,asplit=2[vox][k2];[2:a]volume=0.8[sf];[3:a]volume=0.95[sg];"
-                    "[sg][k2]sidechaincompress=threshold=0.03:ratio=5:attack=20:release=400[sgd];"
-                    f"[vox][sf][sgd]amix=inputs=3:normalize=0:duration=longest,atrim=0:{TOTAL:.2f},alimiter=limit=0.79:level=false:asc=1[a]",
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-filter_complex",
+                    "[1:a]highpass=f=70[vox];[2:a]volume=0.8[sf];"
+                    f"[vox][sf]amix=inputs=2:normalize=0:duration=longest,atrim=0:{TOTAL:.2f},alimiter=limit=0.79:level=false:asc=1[a]",
                     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", OUTFILE], check=True)
     print("done")
 main()
