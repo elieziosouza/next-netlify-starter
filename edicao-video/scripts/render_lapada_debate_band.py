@@ -64,7 +64,7 @@ def big_word(frame, t):
 def frame_at(t):
     tt = min(t, EDIT_END - 1e-3)
     if t < INTRO: return intro_at(t)
-    if tt >= FIN_IN: return finale_at(t, tt)
+    # final: congela no Lula com zoom lento (ele preferiu sem o L dele no fim)
     ct = min(tt, CLIP_END - 0.02); fr = src(ct)
     bg = R.blur_bg(fr[CROP[1]:CROP[3], CROP[0]:CROP[2]], 0.32)
     frame = Image.fromarray(np.clip(bg, 0, 255).astype(np.uint8)).convert("RGBA")
