@@ -8,6 +8,7 @@ S = sys.argv[1]; OUTFILE = sys.argv[2]; MODE = sys.argv[3] if len(sys.argv) > 3 
 sys.argv = [sys.argv[0], S, "/dev/null", "lib"]
 spec = importlib.util.spec_from_file_location("ra", f"{S}/work/render_atrop.py"); R = importlib.util.module_from_spec(spec); spec.loader.exec_module(R)
 import sfx
+BLUE = (14, 62, 120)                                                # azul do canal para destaques (no lugar do vermelho)
 BAR = R.BAR; W, H, FPS = R.W, R.H, R.FPS; CX = R.CX; clamp = R.clamp; ease_out = R.ease_out; ease_in = R.ease_in; ease_io = R.ease_io
 V = f"{S}/v43"; ME = f"{V}/me.mp4"; CL = f"{V}/cl.mp4"
 PARTS = [("me", 1.6, 11.3), ("cl", 26.15, 30.45), ("cl", 98.1, 117.2), ("cl", 122.6, 126.45), ("me", 14.0, 19.6)]   # começa nele em tela cheia (pedido de 20/10)
@@ -77,11 +78,11 @@ for i, s in enumerate(segs):
         for w in ws: ts.append(a2 + (b2 - a2 - 0.1) * k / tot); k += len(w) + 2
         CAPS.append(dict(words=ws, ts=ts, start=a2, end=b2, src="au" if any(w in HOT for w in ws) else "me"))
 CAPS.sort(key=lambda c: c["start"]); R.CAPS = CAPS; R.HOT = HOT; R._capcache.clear()
-BIG = [(1, 27.45, 29.5, "QUEBRA DE SIGILO", (235, 60, 60)), (0, 2.75, 4.6, "JÁ ABRIU", R.GOLD_L), (0, 7.9, 9.7, "E O FLÁVIO?", (235, 60, 60)),
+BIG = [(1, 27.45, 29.5, "QUEBRA DE SIGILO", R.GOLD_L), (0, 2.75, 4.6, "JÁ ABRIU", R.GOLD_L), (0, 7.9, 9.7, "E O FLÁVIO?", R.GOLD_L),
        (2, 103.65, 105.6, "DEBATE DA BAND", R.WHITE), (2, 109.9, 111.4, "BANCÁRIO E FISCAL", R.GOLD_L), (2, 112.3, 113.4, "TELEFÔNICO", R.WHITE),
-       (2, 115.9, 117.15, "E DA FAMÍLIA", (235, 60, 60)), (3, 124.4, 126.4, "ATÉ A JANJA", R.GOLD_L), (4, 14.05, 15.1, "DIA 25", (235, 60, 60)), (4, 15.55, 16.75, "INEVITÁVEL", R.GOLD_L)]
+       (2, 115.9, 117.15, "E DA FAMÍLIA", R.GOLD_L), (3, 124.4, 126.4, "ATÉ A JANJA", R.GOLD_L), (4, 14.05, 15.1, "DIA 25", R.GOLD_L), (4, 15.55, 16.75, "INEVITÁVEL", R.GOLD_L)]
 BIG = [(segmap(i, a), segmap(i, b), w, c) for i, a, b, w, c in BIG]
-PILLS = [(0, 2.75, 6.1, "SEGUNDO A CNN BRASIL: PEDIDO FEITO AO TSE", R.NAVY), (0, 6.65, 9.7, "CONDIÇÃO: O FLÁVIO AUTORIZAR O MESMO", R.RED),
+PILLS = [(0, 2.75, 6.1, "SEGUNDO A CNN BRASIL: PEDIDO FEITO AO TSE", R.NAVY), (0, 6.65, 9.7, "CONDIÇÃO: O FLÁVIO AUTORIZAR O MESMO", BLUE),
          (2, 98.15, 102.8, "PETIÇÃO CÍVEL NO TSE · 20/10/2026", R.NAVY), (2, 103.65, 109.6, "O DESAFIO FOI FEITO NO DEBATE DA BAND", R.NAVY),
          (3, 122.65, 126.4, "ROSÂNGELA (JANJA), ESPOSA DO PRESIDENTE", R.NAVY)]
 PILLS = [(segmap(i, a), segmap(i, b), x, c) for i, a, b, x, c in PILLS]
@@ -92,6 +93,10 @@ CARD = ("DESAFIO DO SIGILO", ["O LULA AUTORIZOU.", "E O FLÁVIO?"])
 CTA = [(segmap(2, 107.0), segmap(2, 111.4)), (segmap(4, 14.05), segmap(4, 16.75))]
 def cta_level(t): return max([clamp((t - a) / 0.4) * clamp((b - t) / 0.4) for a, b in CTA] + [0.0])
 SPLIT_T, SPLIT_END = segs[1]["t0"], segs[4]["t0"]
+def caption(frame, t, y, size, tracks):
+    old = R.RED; R.RED = BLUE                                       # palavra quente da legenda em azul do canal
+    try: R.draw_caption(frame, t, y, size, tracks)
+    finally: R.RED = old
 def big_word(frame, t, zone):
     """palavra grande sempre dentro da faixa livre (zone = topo, base): mede o texto de verdade e reduz até caber, sem encostar em nada"""
     z0, z1 = zone
@@ -100,11 +105,12 @@ def big_word(frame, t, zone):
         u = t - a; k = ease_out(u / 0.28); out = ease_in((t - (b - 0.22)) / 0.22)
         size = 200
         while True:
-            f = R.BIGF(size); bb = f.getbbox(word, stroke_width=8)
+            f = R.BIGF(size); bb = f.getbbox(word, stroke_width=10)
             if (bb[3] - bb[1]) <= (z1 - z0) - 16 and (bb[2] - bb[0]) <= 680: break
             size -= 4
-        lay = Image.new("RGBA", (W, bb[3] - bb[1] + 20), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
-        d.text((W / 2 - (bb[0] + bb[2]) / 2, 10 - bb[1]), word, font=f, fill=col + (255,), stroke_width=8, stroke_fill=R.NAVY + (255,))
+        lay = Image.new("RGBA", (W, bb[3] - bb[1] + 30), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+        d.text((W / 2 - (bb[0] + bb[2]) / 2 + 5, 10 - bb[1] + 7), word, font=f, fill=(0, 0, 0, 120), stroke_width=10, stroke_fill=(0, 0, 0, 120))
+        d.text((W / 2 - (bb[0] + bb[2]) / 2, 10 - bb[1]), word, font=f, fill=col + (255,), stroke_width=10, stroke_fill=R.NAVY + (255,))
         dx = (1 if i % 2 == 0 else -1) * W * 0.95 * (1 - k)
         if u < 0.28:
             Lb = int(60 * (1 - k)) + 1
@@ -135,7 +141,7 @@ def frame_at(t):
             f = R.BIGF(fs_); d = ImageDraw.Draw(frame); k = ease_out(t / 0.2)
             d.text((CX, 230 - 20 * (1 - k)), "SAIU AGORA NA CNN:", font=f, fill=R.GOLD_L + (int(255 * k),), anchor="mm", stroke_width=8, stroke_fill=R.NAVY + (255,))
         big_word(frame, t, (120, 350))
-        R.draw_caption(frame, t, 360 + hh + 190, 54, ("me", "au"))
+        caption(frame, t, 360 + hh + 190, 54, ("me", "au"))
     elif SPLIT_T <= t < SPLIT_END:
         mex = x if s["src"] == "me" else listen_x(t)
         if s is segs[2]: card = doc_card(x, 640, t); kind = "doc"
@@ -163,14 +169,14 @@ def frame_at(t):
             if a <= t < b: R.pill(frame, txt, CX, cy0 + ch + 48, clamp((t - a) / 0.3) * clamp((b - t) / 0.25), fill=colr, size=pill_size(txt))
         kc = card_k(t)
         if kc > 0: BAR.lower_card(frame, CARD[0], CARD[1], CARD_Y_SPLIT, kc, fs=36)
-        R.draw_caption(frame, t, CAP_Y_SPLIT, 42, ("me", "au"))
+        caption(frame, t, CAP_Y_SPLIT, 42, ("me", "au"))
     else:
         frame = Image.fromarray(np.clip(me_full(x), 0, 255).astype(np.uint8)).convert("RGBA")
         big_word(frame, t, (130, 430))
         if tt < FIN_IN:
             for a, b, txt, colr in PILLS:
                 if a <= t < b: R.pill(frame, txt, CX, 1392, clamp((t - a) / 0.3) * clamp((b - t) / 0.25), fill=colr, size=pill_size(txt))
-            R.draw_caption(frame, t, 1500, 48, ("me", "au")); kc = card_k(t)
+            caption(frame, t, 1500, 48, ("me", "au")); kc = card_k(t)
             if kc > 0: BAR.lower_card(frame, CARD[0], CARD[1], 1655, kc, fs=40)
         else: R.lyrics(frame, t)
     BAR.draw_bar(frame, clamp(t / END_IN), "canal", ease_out((t - 0.2) / 0.6), cta_level(t), 0.5 + 0.5 * math.sin(t * 5))
