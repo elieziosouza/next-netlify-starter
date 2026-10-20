@@ -10,7 +10,7 @@ spec = importlib.util.spec_from_file_location("ra", f"{S}/work/render_atrop.py")
 import sfx
 BAR = R.BAR; W, H, FPS = R.W, R.H, R.FPS; CX = R.CX; clamp = R.clamp; ease_out = R.ease_out; ease_in = R.ease_in; ease_io = R.ease_io
 V = f"{S}/v43"; ME = f"{V}/me.mp4"; CL = f"{V}/cl.mp4"
-PARTS = [("cl", 26.15, 30.45), ("me", 1.6, 11.3), ("cl", 98.1, 117.2), ("cl", 122.6, 126.45), ("me", 14.0, 19.6)]
+PARTS = [("me", 1.6, 11.3), ("cl", 26.15, 30.45), ("cl", 98.1, 117.2), ("cl", 122.6, 126.45), ("me", 14.0, 19.6)]   # começa nele em tela cheia (pedido de 20/10)
 segs = []; acc = 0.0
 for src_, a, b in PARTS: segs.append(dict(src=src_, a=a, b=b, t0=acc, t1=acc + b - a)); acc += b - a
 EDIT_CUT = acc
@@ -77,11 +77,11 @@ for i, s in enumerate(segs):
         for w in ws: ts.append(a2 + (b2 - a2 - 0.1) * k / tot); k += len(w) + 2
         CAPS.append(dict(words=ws, ts=ts, start=a2, end=b2, src="au" if any(w in HOT for w in ws) else "me"))
 CAPS.sort(key=lambda c: c["start"]); R.CAPS = CAPS; R.HOT = HOT; R._capcache.clear()
-BIG = [(0, 27.45, 29.5, "QUEBRA DE SIGILO", (235, 60, 60)), (1, 2.75, 4.6, "JÁ ABRIU", R.GOLD_L), (1, 7.9, 9.7, "E O FLÁVIO?", (235, 60, 60)),
+BIG = [(1, 27.45, 29.5, "QUEBRA DE SIGILO", (235, 60, 60)), (0, 2.75, 4.6, "JÁ ABRIU", R.GOLD_L), (0, 7.9, 9.7, "E O FLÁVIO?", (235, 60, 60)),
        (2, 103.65, 105.6, "DEBATE DA BAND", R.WHITE), (2, 109.9, 111.4, "BANCÁRIO E FISCAL", R.GOLD_L), (2, 112.3, 113.4, "TELEFÔNICO", R.WHITE),
        (2, 115.9, 117.15, "E DA FAMÍLIA", (235, 60, 60)), (3, 124.4, 126.4, "ATÉ A JANJA", R.GOLD_L), (4, 14.05, 15.1, "DIA 25", (235, 60, 60)), (4, 15.55, 16.75, "INEVITÁVEL", R.GOLD_L)]
 BIG = [(segmap(i, a), segmap(i, b), w, c) for i, a, b, w, c in BIG]
-PILLS = [(1, 2.75, 6.1, "SEGUNDO A CNN BRASIL: PEDIDO FEITO AO TSE", R.NAVY), (1, 6.65, 9.7, "CONDIÇÃO: O FLÁVIO AUTORIZAR O MESMO", R.RED),
+PILLS = [(0, 2.75, 6.1, "SEGUNDO A CNN BRASIL: PEDIDO FEITO AO TSE", R.NAVY), (0, 6.65, 9.7, "CONDIÇÃO: O FLÁVIO AUTORIZAR O MESMO", R.RED),
          (2, 98.15, 102.8, "PETIÇÃO CÍVEL NO TSE · 20/10/2026", R.NAVY), (2, 103.65, 109.6, "O DESAFIO FOI FEITO NO DEBATE DA BAND", R.NAVY),
          (3, 122.65, 126.4, "ROSÂNGELA (JANJA), ESPOSA DO PRESIDENTE", R.NAVY)]
 PILLS = [(segmap(i, a), segmap(i, b), x, c) for i, a, b, x, c in PILLS]
@@ -114,14 +114,16 @@ def pill_size(txt, size=30):
     while R.MF("ExtraBold", size).getlength(txt) + 50 > 660: size -= 1          # selo nunca passa da largura segura
     return size
 def card_k(t):
-    k = ease_out((t - SPLIT_T - 0.4) / 0.4) * (1 - ease_in((t - (FIN_IN - 0.35)) / 0.35))
-    if abs(t - SPLIT_END) < 0.3: k *= abs(t - SPLIT_END) / 0.3
+    k = ease_out((t - 0.6) / 0.4) * (1 - ease_in((t - (FIN_IN - 0.35)) / 0.35))
+    if SPLIT_T - 0.35 <= t < SPLIT_T + 0.6: k *= clamp((SPLIT_T - t) / 0.35)            # some antes de ele encolher
+    elif SPLIT_T + 0.6 <= t < SPLIT_T + 0.95: k *= (t - SPLIT_T - 0.6) / 0.35           # e volta só com ele já na janela
+    if abs(t - SPLIT_END) < 0.35: k *= abs(t - SPLIT_END) / 0.35
     return k
 FREEZE = 19.3
 def frame_at(t):
     tt = min(t, EDIT_END - 1e-3); s = seg_at(tt); x = s["a"] + min(tt, s["t1"] - 0.02) - s["t0"]
     if s is segs[-1] and tt >= FIN_IN: x = min(x, FREEZE)
-    if s is segs[0]:                                               # gancho: o áudio em tela cheia, com soco de zoom
+    if False:                                                      # (sem gancho da CNN: o vídeo começa nele em tela cheia)
         card = tv_card(x, 980); bg = R.blur_bg(tv_at(x), 0.30); frame = Image.fromarray(np.clip(bg, 0, 255).astype(np.uint8)).convert("RGBA")
         pz = 1.10 - 0.10 * ease_out(t / 0.25); hh = card.shape[0]
         img = cv2.resize(card, (int(980 * pz), int(hh * pz)), interpolation=cv2.INTER_LINEAR); y0 = (img.shape[0] - hh) // 2; x0 = (img.shape[1] - 980) // 2
@@ -136,13 +138,20 @@ def frame_at(t):
         R.draw_caption(frame, t, 360 + hh + 190, 54, ("me", "au"))
     elif SPLIT_T <= t < SPLIT_END:
         mex = x if s["src"] == "me" else listen_x(t)
-        if s is segs[1]: card = fit_w(FOTO, 760); kind = "foto"
-        elif s is segs[2]: card = doc_card(x, 640, t); kind = "doc"
+        if s is segs[2]: card = doc_card(x, 640, t); kind = "doc"
         else: card = tv_card(x, 880); kind = "tv"
         bg = R.blur_bg(card, 0.28); frame = Image.fromarray(np.clip(bg, 0, 255).astype(np.uint8)).convert("RGBA")
-        u = t - SPLIT_T; kw = ease_out(u / 0.4)
-        win = Image.fromarray(R.rounded(win_img(mex), 28, 4)); R.paste(frame, R.fade(win, kw), WIN_X, WIN_Y - 40 * (1 - kw), 0.55, 18, (6, 16))
-        kin = ease_out((u - 0.2) / 0.6); ch, cw = card.shape[:2]; cy0 = CRD_Y + (CRD_H - ch) / 2
+        u = t - SPLIT_T; kw = ease_io(u / 0.55)
+        kin = ease_out((u - 0.3) / 0.6)                     # ele encolhe da tela cheia até a janela de cima
+        if kw < 1:
+            full = me_full(segs[0]["b"] - 0.03 if t < SPLIT_T + 0.6 else mex)
+            frame = Image.fromarray(np.clip(full * (1 - kw) + np.asarray(frame.convert("RGB"), np.float32) * kw, 0, 255).astype(np.uint8)).convert("RGBA")
+            wx, wy = _fx + (WIN_X - _fx) * kw, _fy + (WIN_Y - _fy) * kw; ww, wh = _fw + (WIN_W - _fw) * kw, _fh + (WIN_H - _fh) * kw
+            wimg = cv2.resize(cv2.LUT(me_big(mex)[40:1480], R.LUT), (max(8, int(ww)), max(8, int(wh))), interpolation=cv2.INTER_AREA)
+            R.paste(frame, R.fade(Image.fromarray(R.rounded(wimg, int(28 * kw) + 1, 4 if kw > 0.6 else 0)), clamp(kw * 2)), wx, wy, 0.55 * kw, 18, (6, 16))
+        else:
+            win = Image.fromarray(R.rounded(win_img(mex), 28, 4)); R.paste(frame, win, WIN_X, WIN_Y, 0.55, 18, (6, 16))
+        kin = ease_out((u - 0.5) / 0.5); ch, cw = card.shape[:2]; cy0 = CRD_Y + (CRD_H - ch) / 2
         cardi = R.rounded(card, 26, 4)
         if kin < 1: cardi = persp_top(cardi, 0.02 + 0.3 * (1 - kin))
         if s in segs[2:4] and t - s["t0"] < 0.5:                    # troca de cartão: o novo sobe
@@ -159,6 +168,8 @@ def frame_at(t):
         frame = Image.fromarray(np.clip(me_full(x), 0, 255).astype(np.uint8)).convert("RGBA")
         big_word(frame, t, (130, 430))
         if tt < FIN_IN:
+            for a, b, txt, colr in PILLS:
+                if a <= t < b: R.pill(frame, txt, CX, 1392, clamp((t - a) / 0.3) * clamp((b - t) / 0.25), fill=colr, size=pill_size(txt))
             R.draw_caption(frame, t, 1500, 48, ("me", "au")); kc = card_k(t)
             if kc > 0: BAR.lower_card(frame, CARD[0], CARD[1], 1655, kc, fs=40)
         else: R.lyrics(frame, t)
@@ -196,8 +207,8 @@ def main():
     sg = np.zeros((n, 2), np.float32); sg[int(MUS_IN * SR):int(MUS_IN * SR) + Ls] = song[:Ls] * gain[:, None]; R.writew(f"{V}/song.wav", sg)
     ev = [(0.0, sfx.whoosh(0.4), 0.2), (0.18, sfx.barra(), 0.2), (END_IN - 0.3, sfx.whoosh(0.6), 0.25)]
     ev += [(sg_["t0"] - 0.12, sfx.whoosh(0.45), 0.22) for sg_ in segs[1:]]
-    ev += [(a, sfx.whoosh(0.3), 0.12) for a, *_ in BIG] + [(a + 0.26, sfx.click(), 0.6) for a, *_ in BIG]
-    ev += [(a, sfx.click(), 0.35) for a, *_ in PILLS] + [(a, sfx.barra(), 0.11) for a, b in CTA]
+    ev += [(a, sfx.whoosh(0.35), 0.24) for a, *_ in BIG] + [(a + 0.26, sfx.click(), 0.75) for a, *_ in BIG] + [(a + 0.26, sfx.thud(0.3), 0.18) for a, *_ in BIG]   # palavra grande: sopro, clique e batida leve
+    ev += [(a, sfx.click(), 0.35) for a, *_ in PILLS] + [(a, sfx.siga(), 0.16) for a, b in CTA]   # siga: duas notas suaves
     sfx.build([e for e in ev if 0 <= e[0] < TOTAL - 0.9], TOTAL, f"{V}/sfx.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/song.wav", "-filter_complex",
                     "[1:a]highpass=f=70,asplit=2[vox][k2];[2:a]volume=0.8[sf];[3:a]volume=0.95[sg];"

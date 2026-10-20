@@ -110,3 +110,15 @@ def barra(dur=1.2, seed=7):
     out = 0.35 * air + 0.6 * bell; out /= np.abs(out).max() + 1e-9
     d = int(0.012 * SR); right = np.concatenate([np.zeros(d), out[:-d]])         # leve abertura estéreo
     return np.stack([out, right], 1)
+
+
+def siga(dur=0.9, seed=9):
+    """chamada do "siga · compartilhe": duas notas suaves de marimba (sol, ré), ataque macio e grave, sem brilho"""
+    n = int(dur * SR); t = np.arange(n) / SR; out = np.zeros(n)
+    for t0, f in ((0.0, 392.0), (0.16, 587.3)):
+        tt = np.clip(t - t0, 0, None); on = t >= t0
+        tone = np.sin(2 * np.pi * f * tt) + 0.25 * np.sin(2 * np.pi * 2 * f * tt) * np.exp(-tt / 0.08)
+        out += on * tone * (1 - np.exp(-tt * 180)) * np.exp(-tt / 0.32)
+    out = onepole_lp(out, np.full(n, 2500.0)); out /= np.abs(out).max() + 1e-9
+    d = int(0.010 * SR); right = np.concatenate([np.zeros(d), out[:-d]])
+    return np.stack([out, right], 1)
