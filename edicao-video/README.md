@@ -154,6 +154,7 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
 ## 6. Áudio
 
 - Voz: passa-alta 80 Hz, compressão leve, loudnorm em duas passagens com alvo de **-15 LUFS** e pico de -2 dBTP. Sem reverb.
+- **Palavra grande sempre encaixada (20/10/2026):** a palavra grande é medida de verdade (caixa do texto) e reduzida até caber na faixa livre (na tela dividida: entre a janela dele e o cartão ou o selo do cartão, com 20 px de folga), entra pela lateral e sai só sumindo, sem subir. Títulos e selos também encolhem até caber na largura segura (≈ 660 px). Nunca sobrepor janela, cartão, selo ou cabeçalho.
 - **Resumo com compilação (19/10/2026, `render_resumo_debate_v3.py`):** layout do react em que o Flávio fala "Lula" 7x: ele numa janela em cima (384×512, cabeça inteira), palavra grande entre a janela e o cartão, debate num cartão embaixo entrando em 3D, caixa fixa e legenda com folga até o rodapé, tudo centrado em CX. Quando a compilação repete o vídeo em cima e embaixo, usar em cada trecho **a versão melhor** (a de cima é mais aberta e mostra os dois). **Não cortar ninguém**; selos vão na borda de cima do cartão, nunca sobre cabeça.
 - **Voz dele x áudio de terceiros (19/10/2026):** a voz do Eliezio fica **3 a 4 dB acima** do trecho do debate/reportagem (medir cada trecho com ebur128). No mesmo nível ele achou a voz baixa, porque o áudio de TV vem muito comprimido.
 - Música: trilha própria (`music.py`, 96 BPM, tom menor), com volume 0,30 e **ducking** automático quando a voz entra.

@@ -82,7 +82,7 @@ BIG = [(0, 19.55, 21.6, "PRESAS PRA SEMPRE?", (235, 60, 60)), (1, 3.3, 4.6, "APA
        (3, 20.4, 21.9, "DIA 25", (235, 60, 60)), (3, 23.4, 24.4, "QUEM CUIDA DO POVO", R.GOLD_L)]
 BIG = [(segmap(i, a), segmap(i, b), w, c) for i, a, b, w, c in BIG]
 PILLS = [(1, 3.3, 7.9, "NA IMPRENSA: UOL", R.NAVY), (1, 8.6, 13.6, "NO VÍDEO: “ECONOMISTA DO CANDIDATO”", R.NAVY), (2, 0.2, 7.0, "ÁUDIO DA ECONOMISTA DO CANDIDATO", R.NAVY),
-         (2, 21.6, 25.3, "O OUTRO LADO: FLÁVIO DIZ QUE O BOLSA FAMÍLIA É “DIREITO ADQUIRIDO”", R.NAVY)]
+         (2, 21.6, 25.3, "O OUTRO LADO: FLÁVIO DIZ QUE É “DIREITO ADQUIRIDO”", R.NAVY)]
 PILLS = [(segmap(i, a), segmap(i, b), x, c) for i, a, b, x, c in PILLS]
 FIN_IN = segmap(3, 24.45); FIN_LEN = EDIT_CUT - FIN_IN; MUS_IN = FIN_IN - (9.45 - FIN_LEN)
 R.MUS_IN = MUS_IN; R.FIN_IN = FIN_IN; EDIT_END = EDIT_CUT; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
@@ -91,19 +91,27 @@ CARD = ("BOLSA FAMÍLIA", ["DE “BOLSA FARELO”", "A “PRESAS PRA SEMPRE”"]
 CTA = [(segmap(2, 9.3), segmap(2, 13.0)), (segmap(3, 22.5), segmap(3, 24.4))]
 def cta_level(t): return max([clamp((t - a) / 0.4) * clamp((b - t) / 0.4) for a, b in CTA] + [0.0])
 SPLIT_T, SPLIT_END = segs[1]["t0"], segs[3]["t0"]
-def big_word(frame, t, cy, size0):
+def big_word(frame, t, zone):
+    """palavra grande sempre dentro da faixa livre (zone = topo, base): mede o texto de verdade e reduz até caber, sem encostar em nada"""
+    z0, z1 = zone
     for i, (a, b, word, col) in enumerate(BIG):
         if not (a <= t < b): continue
         u = t - a; k = ease_out(u / 0.28); out = ease_in((t - (b - 0.22)) / 0.22)
-        size = size0; f = R.BIGF(size); d0 = ImageDraw.Draw(Image.new("L", (4, 4)))
-        while d0.textlength(word, font=f) > 680: size -= 6; f = R.BIGF(size)
-        lay = Image.new("RGBA", (W, int(size * 1.3)), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
-        d.text((W / 2, lay.height / 2), word, font=f, fill=col + (255,), anchor="mm", stroke_width=8, stroke_fill=R.NAVY + (255,))
+        size = 200
+        while True:
+            f = R.BIGF(size); bb = f.getbbox(word, stroke_width=8)
+            if (bb[3] - bb[1]) <= (z1 - z0) - 16 and (bb[2] - bb[0]) <= 680: break
+            size -= 4
+        lay = Image.new("RGBA", (W, bb[3] - bb[1] + 20), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+        d.text((W / 2 - (bb[0] + bb[2]) / 2, 10 - bb[1]), word, font=f, fill=col + (255,), stroke_width=8, stroke_fill=R.NAVY + (255,))
         dx = (1 if i % 2 == 0 else -1) * W * 0.95 * (1 - k)
         if u < 0.28:
             Lb = int(60 * (1 - k)) + 1
             if Lb > 2: lay = Image.fromarray(cv2.filter2D(np.asarray(lay), -1, np.ones((1, Lb), np.float32) / Lb))
-        frame.alpha_composite(R.fade(lay, 1 - out), (int(CX - W / 2 + dx), int(cy - lay.height / 2 - 30 * out)))
+        frame.alpha_composite(R.fade(lay, 1 - out), (int(CX - W / 2 + dx), int((z0 + z1) / 2 - lay.height / 2)))
+def pill_size(txt, size=30):
+    while R.MF("ExtraBold", size).getlength(txt) + 50 > 660: size -= 1          # selo nunca passa da largura segura
+    return size
 def card_k(t):
     k = ease_out((t - SPLIT_T - 0.4) / 0.4) * (1 - ease_in((t - (FIN_IN - 0.35)) / 0.35))
     if abs(t - SPLIT_END) < 0.3: k *= abs(t - SPLIT_END) / 0.3
@@ -119,13 +127,15 @@ def frame_at(t):
         R.paste(frame, Image.fromarray(R.rounded(img[y0:y0 + hh, x0:x0 + 980], 30, 5)), CX - 490, 360, 0.6, 22, (8, 20))
         R.credit(frame, "Áudio: reprodução redes sociais", CX + 490 - 14, 360 + hh - 166, 1.0)
         if t < segmap(0, 19.55):
-            f = R.BIGF(104); d = ImageDraw.Draw(frame); k = ease_out(t / 0.2)
+            fs_ = 104
+            while R.BIGF(fs_).getlength("A ECONOMISTA DO FLÁVIO:") > 660: fs_ -= 2      # cabe na largura segura
+            f = R.BIGF(fs_); d = ImageDraw.Draw(frame); k = ease_out(t / 0.2)
             d.text((CX, 230 - 20 * (1 - k)), "A ECONOMISTA DO FLÁVIO:", font=f, fill=R.GOLD_L + (int(255 * k),), anchor="mm", stroke_width=8, stroke_fill=R.NAVY + (255,))
-        big_word(frame, t, 230, 130)
+        big_word(frame, t, (120, 350))
         R.draw_caption(frame, t, 360 + hh + 170, 54, ("me", "au"))
     elif SPLIT_T <= t < SPLIT_END:
         mex = x if s["src"] == "me" else listen_x(t)
-        if s is segs[1] and x < 8.45: card = uol_card(x, 590); kind = "uol"
+        if s is segs[1] and x < 8.45: card = uol_card(x, 540); kind = "uol"
         else: card = audio_card(x if s["src"] == "cl" else 0.0, 740); kind = "aud"
         bg = R.blur_bg(PHOTO if kind == "aud" else UOL, 0.28); frame = Image.fromarray(np.clip(bg, 0, 255).astype(np.uint8)).convert("RGBA")
         u = t - SPLIT_T; kw = ease_out(u / 0.4)
@@ -138,15 +148,16 @@ def frame_at(t):
         R.paste(frame, R.fade(Image.fromarray(cardi, "RGBA"), clamp(kin * 1.6)), CX - cw / 2, cy0 + 380 * (1 - kin), 0.6, 22, (10, 26))
         R.credit(frame, "Reprodução: UOL · Foto: Gabriela Biló/Folhapress" if kind == "uol" else "Áudio: reprodução redes sociais", CX + cw / 2 - 14,
                  cy0 + ch - (46 if kind == "uol" else 166), kin)
-        big_word(frame, t, BIG_Y_SPLIT, 104)
+        pill_on = any(a <= t < b for a, b, *_ in PILLS)
+        big_word(frame, t, (WIN_Y + WIN_H + 20, cy0 - (56 if pill_on else 22)))       # entre a janela e o cartão (ou o selo dele)
         for a, b, txt, colr in PILLS:
-            if a <= t < b: R.pill(frame, txt, CX, cy0 - 4, clamp((t - a) / 0.3) * clamp((b - t) / 0.25), fill=colr, size=26 if len(txt) > 40 else 30)
+            if a <= t < b: R.pill(frame, txt, CX, cy0 - 4, clamp((t - a) / 0.3) * clamp((b - t) / 0.25), fill=colr, size=pill_size(txt))
         kc = card_k(t)
         if kc > 0: BAR.lower_card(frame, CARD[0], CARD[1], CARD_Y_SPLIT, kc, fs=36)
         R.draw_caption(frame, t, CAP_Y_SPLIT, 42, ("me", "au"))
     else:
         frame = Image.fromarray(np.clip(me_full(x), 0, 255).astype(np.uint8)).convert("RGBA")
-        big_word(frame, t, 300, 190)
+        big_word(frame, t, (130, 430))
         if tt < FIN_IN:
             R.draw_caption(frame, t, 1500, 48, ("me", "au")); kc = card_k(t)
             if kc > 0: BAR.lower_card(frame, CARD[0], CARD[1], 1655, kc, fs=40)
