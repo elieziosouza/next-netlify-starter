@@ -11,7 +11,7 @@ import sfx
 BLUE = (14, 62, 120)                                                # azul do canal para destaques (no lugar do vermelho)
 BAR = R.BAR; W, H, FPS = R.W, R.H, R.FPS; CX = R.CX; clamp = R.clamp; ease_out = R.ease_out; ease_in = R.ease_in; ease_io = R.ease_io
 V = f"{S}/v43"; ME = f"{V}/me.mp4"; CL = f"{V}/cl.mp4"
-PARTS = [("me", 1.6, 11.3), ("cl", 26.15, 30.45), ("cl", 98.1, 117.2), ("cl", 122.6, 126.45), ("me", 14.0, 19.6)]   # começa nele em tela cheia (pedido de 20/10)
+PARTS = [("me", 1.6, 11.3), ("cl", 26.15, 30.42), ("cl", 97.95, 126.6), ("me", 14.0, 19.6)]   # a fala da repórter só corta em fim de frase   # começa nele em tela cheia (pedido de 20/10)
 segs = []; acc = 0.0
 for src_, a, b in PARTS: segs.append(dict(src=src_, a=a, b=b, t0=acc, t1=acc + b - a)); acc += b - a
 EDIT_CUT = acc
@@ -23,7 +23,7 @@ def segmap(i, x): return segs[i]["t0"] + x - segs[i]["a"]
 FULL = MODE == "full" or MODE.startswith(("frames", "cover"))
 MEF = R.decode(ME, 0, 21.0, 720, 1280, "scale=720:1280") if FULL else None
 TVY, TVH = 656, 428                                                 # o quadro da TV dentro do vídeo deles (fora a tarja, a manchete e a faixa da CNN)
-CLR = {k: (a, R.decode(CL, a, b, 1080, TVH, f"crop=1080:{TVH}:0:{TVY}")) for k, a, b in [("h", 26.0, 30.6), ("p", 98.0, 117.3), ("j", 122.5, 126.6)]} if FULL else {}
+CLR = {k: (a, R.decode(CL, a, b, 1080, TVH, f"crop=1080:{TVH}:0:{TVY}")) for k, a, b in [("h", 26.0, 30.6), ("p", 117.3, 126.7)]} if FULL else {}
 def tv_at(x):
     for a, arr in CLR.values():
         if a <= x <= a + len(arr) / FPS: return arr[int(clamp((x - a) * FPS, 0, len(arr) - 1))]
@@ -52,7 +52,7 @@ def listen_x(t):
 def fit_w(img, w): return cv2.resize(img, (w, int(w * img.shape[0] / img.shape[1])), interpolation=cv2.INTER_LANCZOS4)
 def tv_card(x, w): return fit_w(tv_at(x)[30:], w)                 # sem a marca da emissora no alto da imagem
 def doc_card(x, w, t):
-    z = 1.0 + 0.08 * clamp((x - 98.1) / 19)                         # aproxima devagar no documento
+    z = 1.0 + 0.08 * clamp((x - 98.1) / 20)                         # aproxima devagar no documento
     im = fit_w(DOC, int(w * z)); h = int(w * DOC.shape[0] / DOC.shape[1]); y0 = (im.shape[0] - h) // 4; x0 = (im.shape[1] - w) // 2
     return im[y0:y0 + h, x0:x0 + w]
 def persp_top(rgba, a):
@@ -66,6 +66,7 @@ CL_CAPS = [("LULA JÁ AUTORIZOU", 26.2, 27.45), ("A QUEBRA DE SIGILO", 27.45, 28
            ("EM DECORRÊNCIA DO DESAFIO", 98.15, 99.9), ("LANÇADO DURANTE", 99.9, 100.7), ("O DEBATE PRESIDENCIAL", 100.7, 102.0), ("AO QUAL ME REFERIA,", 102.0, 102.8),
            ("NA REDE BANDEIRANTES DE COMUNICAÇÃO,", 103.65, 105.6), ("AUTORIZAR", 105.6, 106.5), ("A LIBERAÇÃO DOS SIGILOS", 107.0, 109.6), ("BANCÁRIO E FISCAL", 109.9, 111.4),
            ("E TELEFÔNICO", 112.3, 113.2), ("DE SUA PESSOA FÍSICA", 113.9, 115.5), ("E DE SEUS FAMILIARES.", 115.9, 117.1),
+           ("E AÍ NÓS TEMOS AQUI", 117.82, 119.1), ("O NOME DESSES FAMILIARES", 119.45, 120.95), ("QUE EU VOU CONTAR PRA VOCÊS.", 120.95, 122.2),
            ("ROSÂNGELA LULA DA SILVA,", 122.65, 124.5), ("ESPOSA DO PRESIDENTE DA REPÚBLICA.", 124.5, 126.4)]
 HOT = {"ABRIU", "SIGILO", "BANCÁRIO", "FAMÍLIA", "FLÁVIO", "MESMA", "AUTORIZOU", "QUEBRA", "FAMÍLIA.", "DESAFIO", "DEBATE", "AUTORIZAR", "SIGILOS", "FISCAL", "TELEFÔNICO",
        "FAMILIARES.", "ESPOSA", "25", "INEVITÁVEL.", "MATÉRIA."}
@@ -80,19 +81,19 @@ for i, s in enumerate(segs):
 CAPS.sort(key=lambda c: c["start"]); R.CAPS = CAPS; R.HOT = HOT; R._capcache.clear()
 BIG = [(1, 27.45, 29.5, "QUEBRA DE SIGILO", R.GOLD_L), (0, 2.75, 4.6, "JÁ ABRIU", R.GOLD_L), (0, 7.9, 9.7, "E O FLÁVIO?", R.GOLD_L),
        (2, 103.65, 105.6, "DEBATE DA BAND", R.WHITE), (2, 109.9, 111.4, "BANCÁRIO E FISCAL", R.GOLD_L), (2, 112.3, 113.4, "TELEFÔNICO", R.WHITE),
-       (2, 115.9, 117.15, "E DA FAMÍLIA", R.GOLD_L), (3, 124.4, 126.4, "ATÉ A JANJA", R.GOLD_L), (4, 14.05, 15.1, "DIA 25", R.GOLD_L), (4, 15.55, 16.75, "INEVITÁVEL", R.GOLD_L)]
+       (2, 115.9, 117.15, "E DA FAMÍLIA", R.GOLD_L), (2, 124.4, 126.4, "ATÉ A JANJA", R.GOLD_L), (3, 14.05, 15.1, "DIA 25", R.GOLD_L), (3, 15.55, 16.75, "INEVITÁVEL", R.GOLD_L)]
 BIG = [(segmap(i, a), segmap(i, b), w, c) for i, a, b, w, c in BIG]
 PILLS = [(0, 2.75, 6.1, "SEGUNDO A CNN BRASIL: PEDIDO FEITO AO TSE", R.NAVY), (0, 6.65, 9.7, "CONDIÇÃO: O FLÁVIO AUTORIZAR O MESMO", BLUE),
          (2, 98.15, 102.8, "PETIÇÃO CÍVEL NO TSE · 20/10/2026", R.NAVY), (2, 103.65, 109.6, "O DESAFIO FOI FEITO NO DEBATE DA BAND", R.NAVY),
-         (3, 122.65, 126.4, "ROSÂNGELA (JANJA), ESPOSA DO PRESIDENTE", R.NAVY)]
+         (2, 122.65, 126.4, "ROSÂNGELA (JANJA), ESPOSA DO PRESIDENTE", R.NAVY)]
 PILLS = [(segmap(i, a), segmap(i, b), x, c) for i, a, b, x, c in PILLS]
-FIN_IN = segmap(4, 16.8); FIN_LEN = EDIT_CUT - FIN_IN; MUS_IN = FIN_IN - (9.45 - FIN_LEN)
+FIN_IN = segmap(3, 16.8); FIN_LEN = EDIT_CUT - FIN_IN; MUS_IN = FIN_IN - (9.45 - FIN_LEN)
 R.MUS_IN = MUS_IN; R.FIN_IN = FIN_IN; EDIT_END = EDIT_CUT; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
 R.END_IN = END_IN; R.EDIT_END = EDIT_END
 CARD = ("DESAFIO DO SIGILO", ["O LULA AUTORIZOU.", "E O FLÁVIO?"])
-CTA = [(segmap(2, 107.0), segmap(2, 111.4)), (segmap(4, 14.05), segmap(4, 16.75))]
+CTA = [(segmap(2, 107.0), segmap(2, 111.4)), (segmap(3, 14.05), segmap(3, 16.75))]
 def cta_level(t): return max([clamp((t - a) / 0.4) * clamp((b - t) / 0.4) for a, b in CTA] + [0.0])
-SPLIT_T, SPLIT_END = segs[1]["t0"], segs[4]["t0"]
+SPLIT_T, SPLIT_END = segs[1]["t0"], segs[3]["t0"]
 def caption(frame, t, y, size, tracks):
     old = R.RED; R.RED = BLUE                                       # palavra quente da legenda em azul do canal
     try: R.draw_caption(frame, t, y, size, tracks)
@@ -144,7 +145,7 @@ def frame_at(t):
         caption(frame, t, 360 + hh + 190, 54, ("me", "au"))
     elif SPLIT_T <= t < SPLIT_END:
         mex = x if s["src"] == "me" else listen_x(t)
-        if s is segs[2]: card = doc_card(x, 640, t); kind = "doc"
+        if s is segs[2] and x < 117.5: card = doc_card(x, 640, t); kind = "doc"
         else: card = tv_card(x, 880); kind = "tv"
         bg = R.blur_bg(card, 0.28); frame = Image.fromarray(np.clip(bg, 0, 255).astype(np.uint8)).convert("RGBA")
         u = t - SPLIT_T; kw = ease_io(u / 0.55)
@@ -160,8 +161,9 @@ def frame_at(t):
         kin = ease_out((u - 0.5) / 0.5); ch, cw = card.shape[:2]; cy0 = CRD_Y + (CRD_H - ch) / 2
         cardi = R.rounded(card, 26, 4)
         if kin < 1: cardi = persp_top(cardi, 0.02 + 0.3 * (1 - kin))
-        if s in segs[2:4] and t - s["t0"] < 0.5:                    # troca de cartão: o novo sobe
-            kk = ease_out((t - s["t0"]) / 0.5); cy0 += 300 * (1 - kk)
+        sw = s["t0"] if s is segs[2] and x < 117.5 else segmap(2, 117.5) if s is segs[2] else None
+        if sw is not None and 0 <= t - sw < 0.5:                   # troca de cartão: o novo sobe
+            kk = ease_out((t - sw) / 0.5); cy0 += 300 * (1 - kk)
         R.paste(frame, R.fade(Image.fromarray(cardi, "RGBA"), clamp(kin * 1.6)), CX - cw / 2, cy0 + 380 * (1 - kin), 0.6, 22, (10, 26))
         R.credit(frame, "Foto: reprodução" if kind == "foto" else "Imagens: reprodução CNN Brasil", CX, 1820, kin, anchor="mm")   # crédito embaixo, fora de tudo
         big_word(frame, t, (WIN_Y + WIN_H + 20, cy0 - 22))           # entre a janela e o cartão, sem encostar em nenhum dos dois
@@ -181,7 +183,7 @@ def frame_at(t):
         else: R.lyrics(frame, t)
     BAR.draw_bar(frame, clamp(t / END_IN), "canal", ease_out((t - 0.2) / 0.6), cta_level(t), 0.5 + 0.5 * math.sin(t * 5))
     R.draw_banners(frame, t)
-    for e in [sg["t0"] for sg in segs[1:]]:
+    for e in [sg["t0"] for sg in segs[1:]] + [segmap(2, 117.5)]:
         if abs(t - e) < 0.09: frame = Image.blend(frame, Image.new("RGBA", frame.size, (255, 255, 255, 255)), (1 - abs(t - e) / 0.09) * 0.4)
     if t >= END_IN: frame.alpha_composite(R.fade(R.end_card(t), clamp((t - END_IN) / 0.35)))
     return frame.convert("RGB")
@@ -211,8 +213,8 @@ def main():
     song = R.readw(f"{S}/v15/song_vox.wav"); Ls = min(len(song), n - int(MUS_IN * SR)); tl = np.arange(Ls) / SR; lead = FIN_IN - MUS_IN
     gain = np.where(tl < lead, 10 ** ((-22 + 22 * tl / lead) / 20), 1.0) * np.clip(1 - (tl - (TOTAL - MUS_IN - 1.6)) / 1.5, 0, 1)
     sg = np.zeros((n, 2), np.float32); sg[int(MUS_IN * SR):int(MUS_IN * SR) + Ls] = song[:Ls] * gain[:, None]; R.writew(f"{V}/song.wav", sg)
-    ev = [(0.0, sfx.whoosh(0.4), 0.2), (0.18, sfx.barra(), 0.2), (END_IN - 0.3, sfx.whoosh(0.6), 0.25)]
-    ev += [(sg_["t0"] - 0.12, sfx.whoosh(0.45), 0.22) for sg_ in segs[1:]]
+    ev = [(0.0, sfx.whoosh(0.4), 0.2), (END_IN - 0.3, sfx.whoosh(0.6), 0.25)]
+    ev += [(sg_["t0"] - 0.12, sfx.whoosh(0.45), 0.22) for sg_ in segs[1:]] + [(segmap(2, 117.4), sfx.whoosh(0.45), 0.22)]
     ev += [(a, sfx.whoosh(0.35), 0.24) for a, *_ in BIG] + [(a + 0.26, sfx.click(), 0.75) for a, *_ in BIG] + [(a + 0.26, sfx.thud(0.3), 0.18) for a, *_ in BIG]   # palavra grande: sopro, clique e batida leve
     ev += [(a, sfx.click(), 0.35) for a, *_ in PILLS] + [(a, sfx.siga(), 0.16) for a, b in CTA]   # siga: duas notas suaves
     sfx.build([e for e in ev if 0 <= e[0] < TOTAL - 0.9], TOTAL, f"{V}/sfx.wav")
