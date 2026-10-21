@@ -154,6 +154,16 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
 ## 6. Áudio
 
 - Voz: passa-alta 80 Hz, compressão leve, loudnorm em duas passagens com alvo de **-15 LUFS** e pico de -2 dBTP. Sem reverb.
+- **Proteção jurídica em todo roteiro, legenda, capa e texto de post (21/10/2026):** opinião sim, acusação sem prova não. Antes de entregar, conferir:
+  - **Fato x acusação:** o que não tem decisão da Justiça é "acusado", "réu", "investigado", "segundo o MP", "fulano diz". Nunca "assassino", "ladrão", "corrupto", "criminoso" na voz do Eliezio, nem na legenda ou na capa, sem condenação definitiva.
+  - **Fala de terceiros:** termo forte dito por campanha, jornal ou político fica atribuído na tela (selo "peça da campanha", "segundo a CNN") e, se preciso, com a ressalva ("o PM é réu; o júri não aconteceu").
+  - **Sempre o outro lado:** a resposta ou negativa do citado aparece no vídeo ou na legenda.
+  - **Opinião como opinião:** "eu acho", "pra mim", pergunta retórica, crítica à atuação pública. Nada sobre vida íntima, família sem relação com o fato, aparência ou xingamento.
+  - **Números e datas** só conferidos em mais de um veículo, com fonte na legenda; sem número na dúvida.
+  - **Montagem honesta:** não cortar fala de modo a mudar o sentido; não usar imagem fora de contexto; sem IA imitando voz ou rosto de ninguém.
+  - **Crianças e vítimas:** sem foto de vítima menor na capa; tom respeitoso.
+  - **Propaganda:** não impulsionar conteúdo eleitoral pago (só candidato, partido ou coligação podem); nada de pesquisa sem registro ou "fake news" sobre urna e votação.
+  - Na dúvida, avisar o Eliezio no começo da resposta e sugerir a versão mais segura.
 - **Nunca cortar fala de terceiros no meio (20/10/2026):** repórter, entrevistado ou político só entra e sai em fim de frase. Medir o envelope de áudio nos pontos de corte: começar ~0,1 s antes da primeira sílaba e terminar depois da última, no silêncio. Não cortar lista no meio (nomes, números); se a lista não couber, terminar na frase anterior. Se dois trechos estão a poucos segundos, emendar num só em vez de pular.
 - **Sem vermelho nos textos (20/10/2026):** palavras grandes só em dourado claro ou branco, contorno azul-marinho grosso (10 px) e sombra, letras garrafais (o maior tamanho que cabe na faixa livre). Destaque da legenda e selos em azul do canal (14, 62, 120). Vermelho só no "PT" do vai dar PT.
 - **Abertura e sons (20/10/2026):** o vídeo começa com ele **grande em tela cheia**; quando entra a matéria, ele encolhe até o card de cima (444×592) e só então o cartão da matéria sobe. A caixa fixa some durante a troca. O som do "siga · compartilhe" é `sfx.siga()` (duas notas suaves e graves), não o sino. Palavra grande entra com sopro + clique + batida leve (`thud`).
