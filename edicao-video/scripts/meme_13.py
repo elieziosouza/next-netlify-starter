@@ -1,0 +1,21 @@
+"""Meme do número 13 (áudio do vídeo de referência) refeito no vídeo dele fotografando: texto amarelo condensado, contorno preto e sombra,
+emoji colorido no fim, @ embaixo. Texto em baixo, sobre o corpo e o chão, para não cobrir o rosto."""
+import sys
+from PIL import Image, ImageDraw, ImageFont
+S, OUT, HANDLE = sys.argv[1], sys.argv[2], sys.argv[3]; LINES = sys.argv[4].split("|")
+W, H = 1080, 1920; YEL = (250, 232, 30)
+f = ImageFont.truetype(f"{S}/fontdl/Oswald-SemiBold.ttf", 86); fe = ImageFont.truetype("/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf", 109)
+img = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(img)
+lh = 104; y = int(sys.argv[5]) if len(sys.argv) > 5 else 980
+for line in LINES:
+    emo = line.endswith("😂"); txt = line.replace("😂", "").rstrip()
+    tw = d.textlength(txt, font=f) + (96 if emo else 0); x = (W - tw) / 2
+    d.text((x + 4, y + 6), txt, font=f, fill=(0, 0, 0, 150), stroke_width=5, stroke_fill=(0, 0, 0, 150))
+    d.text((x, y), txt, font=f, fill=YEL + (255,), stroke_width=4, stroke_fill=(0, 0, 0, 255))
+    if emo:
+        e = Image.new("RGBA", (140, 140), (0, 0, 0, 0)); ImageDraw.Draw(e).text((0, 0), "😂", font=fe, embedded_color=True)
+        e = e.resize((84, 84), Image.LANCZOS); img.alpha_composite(e, (int(x + tw - 84), int(y + 16)))
+    y += lh
+fh = ImageFont.truetype(f"{S}/fontdl/Oswald-SemiBold.ttf", 54)
+hw = d.textlength(HANDLE, font=fh); d.text(((W - hw) / 2, y + 90), HANDLE, font=fh, fill=(255, 255, 255, 235), stroke_width=3, stroke_fill=(0, 0, 0, 200))
+img.save(OUT)
