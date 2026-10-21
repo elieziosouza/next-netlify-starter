@@ -13,7 +13,7 @@ BAR = R.BAR; W, H, FPS = R.W, R.H, R.FPS; CX = R.CX; clamp = R.clamp; ease_out =
 V = f"{S}/v45"; ME = f"{V}/me.mp4"; MA = f"{V}/mae/mae.mp4"; IC = f"{S}/v44/src.mp4"
 POSTER = "/root/.claude/uploads/698dd744-d40f-5d96-b9e9-72023ae79dbf/6b5d6b3b-image.jpg"
 # (fonte, início, fim, cartão, início do cartão no vídeo de origem)
-PARTS = [("me", 0.44, 2.33, None, 0), ("me", 2.82, 6.77, None, 0),
+PARTS = [("me", 0.30, 2.33, None, 0), ("me", 2.82, 6.77, None, 0),
          ("ma", 26.55, 30.7, "ma", 26.55),
          ("me", 7.2, 11.41, "ic", 0.6), ("me", 12.1, 13.97, "ic", 4.81),
          ("me", 14.84, 17.55, "folha", 0), ("me", 18.4, 19.87, "folha", 2.71),
@@ -60,8 +60,8 @@ def win_img(x):
     img = fr_of(MEW, x - 7.0)[20:740]                                                 # mesmo enquadramento da janela (cabeça inteira)
     return cv2.resize(cv2.LUT(img, R.LUT), (WIN_W, WIN_H), interpolation=cv2.INTER_AREA)
 def listen_x(t):
-    u = (t * 0.7) % 5.0
-    return 53.6 + (u if u < 2.5 else 5.0 - u)                                         # ele calado, sério, ouvindo a mãe
+    u = (t * 0.45) % 2.2
+    return 57.55 + (u if u < 1.1 else 2.2 - u)                                        # ele parado e sério ouvindo a mãe (trecho sem gesto de mão)
 def fit_w(img, w): return cv2.resize(img, (w, int(w * img.shape[0] / img.shape[1])), interpolation=cv2.INTER_LANCZOS4)
 def fit_h(img, h): return cv2.resize(img, (int(h * img.shape[1] / img.shape[0]), h), interpolation=cv2.INTER_LANCZOS4)
 def card_img(s, x):
