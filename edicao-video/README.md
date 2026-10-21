@@ -154,6 +154,7 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
 ## 6. Áudio
 
 - Voz: passa-alta 80 Hz, compressão leve, loudnorm em duas passagens com alvo de **-15 LUFS** e pico de -2 dBTP. Sem reverb.
+- **Voz dele sempre cheia (21/10/2026):** igualar o volume de todas as frases dele (cada trecho pela mediana do RMS; o começo costuma ser gravado mais baixo), compressão leve na voz e master final em -14 LUFS. Terceiros 3 a 4 dB abaixo, trilha bem baixa (~-41 LUFS no bruto). Medir com ebur128 nos trechos dele, no meio e no começo, antes de entregar.
 - **Proteção jurídica em todo roteiro, legenda, capa e texto de post (21/10/2026):** opinião sim, acusação sem prova não. Antes de entregar, conferir:
   - **Fato x acusação:** o que não tem decisão da Justiça é "acusado", "réu", "investigado", "segundo o MP", "fulano diz". Nunca "assassino", "ladrão", "corrupto", "criminoso" na voz do Eliezio, nem na legenda ou na capa, sem condenação definitiva.
   - **Fala de terceiros:** termo forte dito por campanha, jornal ou político fica atribuído na tela (selo "peça da campanha", "segundo a CNN") e, se preciso, com a ressalva ("o PM é réu; o júri não aconteceu").
