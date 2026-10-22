@@ -60,26 +60,34 @@ def draw_bar(frame, prog, style="canal", intro=1.0, cta=0.0, pulse=0.0):
         b.alpha_composite(gl, (cx - gl.width // 2, cy - gl.height // 2)); b.alpha_composite(c, (cx - c.width // 2, cy - c.height // 2))
     frame.alpha_composite(b.transform(b.size, Image.AFFINE, (1, 0, -dx, 0, 1, 0)))
 def lower_card(frame, kicker, lines, y, k=1.0, accent=GOLD, fs=54):
-    """caixa fixa numa peça só: faixa dourada com o assunto em cima e vidro azul-marinho embaixo, mesma largura,
-    um só contorno arredondado (sem aba solta nem barra lateral). y é o topo da parte azul; a faixa fica logo acima."""
+    """cartão de vidro azul-marinho com aba dourada em cima e barra dourada do lado (estilo do canal),
+    tudo encostado: a barra cola na caixa, a aba nasce da barra e assenta na caixa, sem vãos."""
     if k <= 0: return
-    x0, x1 = CARD_X; f = MF("ExtraBold", fs); lh = int(fs * 1.22); bh = int(fs * 0.7) + lh * len(lines); th = 50
-    wdt, h = x1 - x0, th + bh; top = y - th
-    region = frame.crop((x0, top, x1, top + h)).filter(ImageFilter.GaussianBlur(18))
-    card = Image.new("RGBA", (wdt, h), (0, 0, 0, 0)); card.alpha_composite(region)
-    card.alpha_composite(Image.new("RGBA", (wdt, h), NAVY + (225,)))
-    sheen = Image.linear_gradient("L").resize((wdt, bh)).point(lambda v: int(50 * (1 - v / 255)))
-    hl = Image.new("RGBA", (wdt, bh), (120, 170, 230, 0)); hl.putalpha(sheen); card.alpha_composite(hl, (0, th))
-    d = ImageDraw.Draw(card); d.rectangle((0, 0, wdt, th), fill=accent + (255,))                       # faixa dourada colada na caixa
-    d.line((0, th, wdt, th), fill=(0, 0, 0, 90), width=2)
-    fk = MF("ExtraBold", 28); d.text((wdt / 2, th / 2 + 1), " ".join(kicker), font=fk, fill=NAVY + (255,), anchor="mm")
-    for i, ln in enumerate(lines): d.text((wdt / 2, th + int(fs * 0.35) + lh * i + lh / 2), ln, font=f, fill=(255, 255, 255, 255), anchor="mm")
-    m = Image.new("L", (wdt, h), 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, wdt - 1, h - 1), 18, fill=255); card.putalpha(m)
-    ImageDraw.Draw(card).rounded_rectangle((1, 1, wdt - 2, h - 2), 18, outline=accent + (255,), width=3)
-    sh = Image.new("RGBA", (wdt + 40, h + 40), (0, 0, 0, 0)); ImageDraw.Draw(sh).rounded_rectangle((20, 26, wdt + 20, h + 26), 20, fill=(0, 0, 0, 120))
+    x0, x1 = CARD_X; f = MF("ExtraBold", fs); lh = int(fs * 1.22); h = int(fs * 0.8) + lh * len(lines)
+    th, bw, r = 52, 12, 16                                          # altura da aba, largura da barra, raio
+    region = frame.crop((x0, y, x1, y + h)).filter(ImageFilter.GaussianBlur(18))
+    glass = Image.new("RGBA", region.size, (0, 0, 0, 0)); glass.alpha_composite(region)
+    glass.alpha_composite(Image.new("RGBA", region.size, NAVY + (215,)))
+    sheen = Image.linear_gradient("L").resize(region.size).point(lambda v: int(60 * (1 - v / 255)))
+    hl = Image.new("RGBA", region.size, (120, 170, 230, 0)); hl.putalpha(sheen); glass.alpha_composite(hl)
+    m = Image.new("L", region.size, 0); dm = ImageDraw.Draw(m)
+    dm.rounded_rectangle((0, 0, region.width - 1, h - 1), r, fill=255); dm.rectangle((0, 0, r, h - 1), fill=255)   # lado esquerdo reto, colado na barra
+    glass.putalpha(m)
+    ol = Image.new("RGBA", region.size, (0, 0, 0, 0)); do = ImageDraw.Draw(ol)
+    do.rounded_rectangle((1, 1, region.width - 2, h - 2), r, outline=GOLD + (230,), width=3)
+    ol.paste((0, 0, 0, 0), (0, 0, r + 2, h)); do.line((0, 1, r + 3, 1), fill=GOLD + (230,), width=3); do.line((0, h - 2, r + 3, h - 2), fill=GOLD + (230,), width=3)
+    glass.alpha_composite(ol); d = ImageDraw.Draw(glass)
+    for i, ln in enumerate(lines): d.text((region.width / 2, int(fs * 0.4) + lh * i + lh / 2), ln, font=f, fill=(255, 255, 255, 255), anchor="mm")
+    fk = MF("ExtraBold", 30); tab_w = int(ImageDraw.Draw(glass).textlength(" ".join(kicker), font=fk) + 64)
+    tab = Image.new("RGBA", (tab_w, th), (0, 0, 0, 0)); dt = ImageDraw.Draw(tab)
+    dt.rounded_rectangle((0, 0, tab_w - 1, th + 20), 12, fill=accent + (255,)); dt.rectangle((0, 0, 14, th), fill=accent + (255,))   # reto do lado da barra, base reta na caixa
+    dt.text((32, th / 2 + 1), " ".join(kicker), font=fk, fill=NAVY + (255,), anchor="lm")
+    side = Image.new("RGBA", (bw, h + th), (0, 0, 0, 0)); ds_ = ImageDraw.Draw(side)
+    ds_.rounded_rectangle((0, 0, bw + 8, h + th - 1), 6, fill=accent + (255,))            # arredonda só por fora; por dentro emenda na caixa e na aba
+    sh = Image.new("RGBA", (x1 - x0 + bw + 40, h + th + 40), (0, 0, 0, 0)); ImageDraw.Draw(sh).rounded_rectangle((20, 26, x1 - x0 + bw + 20, h + th + 26), 18, fill=(0, 0, 0, 110))
     sh = sh.filter(ImageFilter.GaussianBlur(10))
     off = int(40 * (1 - k)); a = int(255 * min(1, k * 1.5))
-    for im, pos in ((sh, (x0 - 20, top - 20)), (card, (x0, top))):
+    for im, pos in ((sh, (x0 - bw - 20, y - th - 20)), (side, (x0 - bw, y - th)), (tab, (x0, y - th)), (glass, (x0, y))):
         im = im.copy(); im.putalpha(im.getchannel("A").point(lambda v: v * a // 255)); frame.alpha_composite(im, (pos[0] + off, pos[1]))
 if __name__ == "__main__":
     S = sys.argv[1]; FD = f"{S}/fontdl"; sys.path.insert(0, f"{S}/work")
