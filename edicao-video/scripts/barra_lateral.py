@@ -60,23 +60,26 @@ def draw_bar(frame, prog, style="canal", intro=1.0, cta=0.0, pulse=0.0):
         b.alpha_composite(gl, (cx - gl.width // 2, cy - gl.height // 2)); b.alpha_composite(c, (cx - c.width // 2, cy - c.height // 2))
     frame.alpha_composite(b.transform(b.size, Image.AFFINE, (1, 0, -dx, 0, 1, 0)))
 def lower_card(frame, kicker, lines, y, k=1.0, accent=GOLD, fs=54):
-    """cartão de vidro fosco azul-marinho com aba dourada em cima (como o letreiro da BandNews, nas cores do canal)"""
+    """caixa fixa numa peça só: faixa dourada com o assunto em cima e vidro azul-marinho embaixo, mesma largura,
+    um só contorno arredondado (sem aba solta nem barra lateral). y é o topo da parte azul; a faixa fica logo acima."""
     if k <= 0: return
-    x0, x1 = CARD_X; f = MF("ExtraBold", fs); lh = int(fs * 1.22); h = int(fs * 0.9) + lh * len(lines)
-    region = frame.crop((x0, y, x1, y + h)).filter(ImageFilter.GaussianBlur(18))
-    glass = Image.new("RGBA", region.size, (0, 0, 0, 0)); glass.alpha_composite(region)
-    glass.alpha_composite(Image.new("RGBA", region.size, NAVY + (215,)))
-    sheen = Image.linear_gradient("L").resize(region.size).point(lambda v: int(60 * (1 - v / 255)))   # brilho de vidro no alto
-    hl = Image.new("RGBA", region.size, (120, 170, 230, 0)); hl.putalpha(sheen); glass.alpha_composite(hl)
-    m = Image.new("L", region.size, 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, region.width - 1, h - 1), 16, fill=255); glass.putalpha(m)
-    d = ImageDraw.Draw(glass); d.rounded_rectangle((1, 1, region.width - 2, h - 2), 16, outline=GOLD + (230,), width=3)
-    for i, ln in enumerate(lines): d.text((region.width / 2, int(fs * 0.45) + lh * i + lh / 2), ln, font=f, fill=(255, 255, 255, 255), anchor="mm")
-    fk = MF("ExtraBold", 30); tab_w = int(ImageDraw.Draw(glass).textlength(" ".join(kicker), font=fk) + 60)
-    tab = Image.new("RGBA", (tab_w, 58), (0, 0, 0, 0)); dt = ImageDraw.Draw(tab)
-    dt.rounded_rectangle((0, 0, tab_w - 1, 70), 12, fill=accent + (255,)); dt.text((30, 30), " ".join(kicker), font=fk, fill=NAVY + (255,), anchor="lm")
-    side = Image.new("RGBA", (12, h + 58), accent + (255,))
+    x0, x1 = CARD_X; f = MF("ExtraBold", fs); lh = int(fs * 1.22); bh = int(fs * 0.7) + lh * len(lines); th = 50
+    wdt, h = x1 - x0, th + bh; top = y - th
+    region = frame.crop((x0, top, x1, top + h)).filter(ImageFilter.GaussianBlur(18))
+    card = Image.new("RGBA", (wdt, h), (0, 0, 0, 0)); card.alpha_composite(region)
+    card.alpha_composite(Image.new("RGBA", (wdt, h), NAVY + (225,)))
+    sheen = Image.linear_gradient("L").resize((wdt, bh)).point(lambda v: int(50 * (1 - v / 255)))
+    hl = Image.new("RGBA", (wdt, bh), (120, 170, 230, 0)); hl.putalpha(sheen); card.alpha_composite(hl, (0, th))
+    d = ImageDraw.Draw(card); d.rectangle((0, 0, wdt, th), fill=accent + (255,))                       # faixa dourada colada na caixa
+    d.line((0, th, wdt, th), fill=(0, 0, 0, 90), width=2)
+    fk = MF("ExtraBold", 28); d.text((wdt / 2, th / 2 + 1), " ".join(kicker), font=fk, fill=NAVY + (255,), anchor="mm")
+    for i, ln in enumerate(lines): d.text((wdt / 2, th + int(fs * 0.35) + lh * i + lh / 2), ln, font=f, fill=(255, 255, 255, 255), anchor="mm")
+    m = Image.new("L", (wdt, h), 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, wdt - 1, h - 1), 18, fill=255); card.putalpha(m)
+    ImageDraw.Draw(card).rounded_rectangle((1, 1, wdt - 2, h - 2), 18, outline=accent + (255,), width=3)
+    sh = Image.new("RGBA", (wdt + 40, h + 40), (0, 0, 0, 0)); ImageDraw.Draw(sh).rounded_rectangle((20, 26, wdt + 20, h + 26), 20, fill=(0, 0, 0, 120))
+    sh = sh.filter(ImageFilter.GaussianBlur(10))
     off = int(40 * (1 - k)); a = int(255 * min(1, k * 1.5))
-    for im, pos in ((side, (x0 - 16, y - 58)), (tab, (x0 - 4, y - 58)), (glass, (x0, y))):
+    for im, pos in ((sh, (x0 - 20, top - 20)), (card, (x0, top))):
         im = im.copy(); im.putalpha(im.getchannel("A").point(lambda v: v * a // 255)); frame.alpha_composite(im, (pos[0] + off, pos[1]))
 if __name__ == "__main__":
     S = sys.argv[1]; FD = f"{S}/fontdl"; sys.path.insert(0, f"{S}/work")

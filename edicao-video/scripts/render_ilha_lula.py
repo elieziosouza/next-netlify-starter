@@ -165,7 +165,7 @@ def frame_at(t):
         R.credit(frame, cred, CX, 1820, kin, anchor="mm")
         big_word(frame, t, (WIN_Y + WIN_H + 20, cy0 - 22))
         for a, b, txt, colr in PILLS:
-            if a <= t < b: R.pill(frame, txt, CX, cy0 + ch + 48, clamp((t - a) / 0.3) * clamp((b - t) / 0.25) * kin, fill=colr, size=pill_size(txt))
+            if a <= t < b: R.pill(frame, txt, CX, cy0 + ch + 30, clamp((t - a) / 0.3) * clamp((b - t) / 0.25) * kin, fill=colr, size=pill_size(txt))
         kc = card_k(t)
         if kc > 0: BAR.lower_card(frame, CARD[0], CARD[1], CARD_Y_SPLIT, kc, fs=36)
         caption(frame, t, CAP_Y_SPLIT, 42, ("me", "au"))
