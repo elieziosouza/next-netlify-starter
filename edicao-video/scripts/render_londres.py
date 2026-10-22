@@ -11,7 +11,8 @@ BLUE = (14, 62, 120)
 BAR = R.BAR; W, H, FPS = R.W, R.H, R.FPS; CX = R.CX; clamp = R.clamp; ease_out = R.ease_out; ease_in = R.ease_in
 V = f"{S}/v49"; ME = f"{V}/me.mp4"; CL = f"{V}/cl.mp4"
 PARTS = [("me", 0.05, 3.75), ("cl", 13.6, 27.6), ("-", 0, 3.4, "h1"), ("-", 0, 3.8, "h2"), ("me", 4.25, 7.2)]
-MUTE = [(19.4, 23.0)]                                               # palavrão do rapaz: sem o áudio dele aqui
+MUTE = [(19.4, 23.0)]
+BIPS = [(5.62, 6.28), (11.42, 12.02), (17.28, 17.88), (22.95, 23.67)]   # palavrões da música, cobertos com bip                                               # palavrão do rapaz: sem o áudio dele aqui
 segs = []; acc = 0.0
 for p_ in PARTS: src_, a, b = p_[:3]; segs.append(dict(src=src_, a=a, b=b, t0=acc, t1=acc + b - a, card=p_[3] if len(p_) > 3 else None)); acc += b - a
 EDIT_END = acc; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
@@ -182,8 +183,16 @@ def main():
         c = srcw[s["src"]][int(s["a"] * SR):int(s["b"] * SR)].copy(); c[:f] *= np.linspace(0, 1, f)[:, None]; c[-f:] *= np.linspace(1, 0, f)[:, None]
         o = int(s["t0"] * SR); vt[o:o + len(c)] += c[:n - o]
     R.writew(f"{V}/voice.wav", vt)
-    bed = R.readw(f"{V}/bed.wav"); L = min(len(bed), n); tl = np.arange(L) / SR
-    gain = 0.10 * np.clip(tl / 0.8, 0, 1) * np.where((tl > segs[1]["t0"]) & (tl < segs[4]["t0"]), 1.8, 1.0) * np.where((tl > segs[2]["t0"]) & (tl < segs[4]["t0"]), 1.6, 1.0) * np.clip(1 - (tl - (TOTAL - 1.6)) / 1.5, 0, 1)
+    if os.environ.get("TRILHA", "funk13") == "funk13":                # a música que ele mandou, com bip nos palavrões
+        tr = R.readw(f"{V}/tr/t48.wav").copy(); tt_ = np.arange(len(tr)) / SR
+        for a_, b_ in BIPS:
+            i0, i1 = int(a_ * SR), min(len(tr), int(b_ * SR)); k_ = np.arange(i1 - i0) / SR
+            env_ = np.minimum(1, np.minimum(k_, (i1 - i0) / SR - k_) / 0.01)
+            tr[i0:i1] = (0.32 * np.sin(2 * np.pi * 1000 * k_) * env_)[:, None]
+        reps = int(np.ceil(n / len(tr))) + 1; bed = np.concatenate([tr] * reps)[:n]
+    else: bed = R.readw(f"{V}/bed.wav")
+    L = min(len(bed), n); tl = np.arange(L) / SR
+    gain = float(os.environ.get("TRG", "0.22")) * np.clip(tl / 0.8, 0, 1) * np.where((tl > segs[1]["t0"]) & (tl < segs[4]["t0"]), 1.8, 1.0) * np.where((tl > segs[2]["t0"]) & (tl < segs[4]["t0"]), 1.6, 1.0) * np.clip(1 - (tl - (TOTAL - 1.6)) / 1.5, 0, 1)
     sg = np.zeros((n, 2), np.float32); sg[:L] = bed[:L] * gain[:, None]; R.writew(f"{V}/song.wav", sg)
     ev = [(segs[2]["t0"], sfx.paper(), 0.5), (segs[3]["t0"], sfx.paper(), 0.5), (0.0, sfx.whoosh(0.4), 0.2), (END_IN - 0.3, sfx.whoosh(0.6), 0.25)] + [(sg_["t0"] - 0.12, sfx.whoosh(0.45), 0.22) for sg_ in segs[1:]]
     ev += [(a, sfx.whoosh(0.35), 0.24) for a, *_ in BIG] + [(a + 0.26, sfx.click(), 0.75) for a, *_ in BIG] + [(a + 0.26, sfx.thud(0.3), 0.18) for a, *_ in BIG]
