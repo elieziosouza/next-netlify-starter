@@ -166,6 +166,8 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
   - **Montagem honesta:** não cortar fala de modo a mudar o sentido; não usar imagem fora de contexto; sem IA imitando voz ou rosto de ninguém.
   - **Crianças e vítimas:** sem foto de vítima menor na capa; tom respeitoso.
   - **Propaganda:** não impulsionar conteúdo eleitoral pago (só candidato, partido ou coligação podem); nada de pesquisa sem registro ou "fake news" sobre urna e votação.
+  - **Pessoas comuns:** em print de rede social, desfocar foto e nome de quem comentou (e de qualquer pessoa que não seja figura pública). Placas de carro, endereços e telefones também.
+  - **Vídeo de político sem fonte na imprensa:** avisar que só deve ser postado se vier de perfil oficial (risco de montagem ou deepfake).
   - Na dúvida, avisar o Eliezio no começo da resposta e sugerir a versão mais segura.
 - **Nunca cortar fala de terceiros no meio (20/10/2026):** repórter, entrevistado ou político só entra e sai em fim de frase. Medir o envelope de áudio nos pontos de corte: começar ~0,1 s antes da primeira sílaba e terminar depois da última, no silêncio. Não cortar lista no meio (nomes, números); se a lista não couber, terminar na frase anterior. Se dois trechos estão a poucos segundos, emendar num só em vez de pular.
 - **Sem vermelho nos textos (20/10/2026):** palavras grandes só em dourado claro ou branco, contorno azul-marinho grosso (10 px) e sombra, letras garrafais (o maior tamanho que cabe na faixa livre). Destaque da legenda e selos em azul do canal (14, 62, 120). Vermelho só no "PT" do vai dar PT.
