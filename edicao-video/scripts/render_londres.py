@@ -2,7 +2,7 @@
 Ele provoca em tela cheia, o cartaz entra em tela cheia com ele reagindo numa janelinha (áudio do rapaz sem o palavrão), fecha com o "Postei!"."""
 import sys, math, subprocess, importlib.util, os
 import numpy as np, cv2
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 S = sys.argv[1]; OUTFILE = sys.argv[2]; MODE = sys.argv[3] if len(sys.argv) > 3 else "full"
 sys.argv = [sys.argv[0], S, "/dev/null", "lib"]
 spec = importlib.util.spec_from_file_location("ra", f"{S}/work/render_atrop.py"); R = importlib.util.module_from_spec(spec); spec.loader.exec_module(R)
@@ -10,9 +10,9 @@ import sfx
 BLUE = (14, 62, 120)
 BAR = R.BAR; W, H, FPS = R.W, R.H, R.FPS; CX = R.CX; clamp = R.clamp; ease_out = R.ease_out; ease_in = R.ease_in
 V = f"{S}/v49"; ME = f"{V}/me.mp4"; CL = f"{V}/cl.mp4"
-PARTS = [("me", 0.05, 3.75), ("cl", 13.6, 27.6), ("-", 0, 3.4, "h1"), ("-", 0, 3.8, "h2"), ("me", 4.25, 7.2)]
+PARTS = [("me", 0.05, 3.75), ("cl", 13.6, 27.6), ("-", 0, 3.4, "h1"), ("-", 0, 3.8, "h2"), ("me", 4.25, 7.2), ("fin", 0.0, 12.05)]   # depois do "Postei!": a música dele com a foto do Big Ben
 MUTE = [(19.4, 23.0)]
-BIPS = [(5.62, 6.28), (11.42, 12.02), (17.28, 17.88), (22.95, 23.67)]   # palavrões da música, cobertos com bip                                               # palavrão do rapaz: sem o áudio dele aqui
+BIPS = [(5.62, 6.28), (11.42, 12.02)]                                 # palavrões da música no trecho do final: no lugar, um "muuu" (a letra fala em gado)                                               # palavrão do rapaz: sem o áudio dele aqui
 segs = []; acc = 0.0
 for p_ in PARTS: src_, a, b = p_[:3]; segs.append(dict(src=src_, a=a, b=b, t0=acc, t1=acc + b - a, card=p_[3] if len(p_) > 3 else None)); acc += b - a
 EDIT_END = acc; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
@@ -80,13 +80,13 @@ for i, s in enumerate(segs):
         CAPS.append(dict(words=ws, ts=ts, start=a2, end=b2, src="au" if any(w in HOT for w in ws) else "me"))
 CAPS.sort(key=lambda c: c["start"]); R.CAPS = CAPS; R.HOT = HOT; R._capcache.clear()
 BIG = [(0, 0.9, 1.9, "CHORAM", R.WHITE), (2, 0.4, 3.2, "SOBERANIA", R.WHITE), (3, 0.4, 3.6, "AO LADO DO BIG BEN", R.GOLD_L), (1, 16.2, 19.3, "O MUNDO PRECISA DE LULA", R.GOLD_L), (1, 14.3, 16.1, "É O LULA!", R.WHITE),
-       (1, 25.0, 27.4, "NÃO É IA", R.GOLD_L), (4, 4.42, 6.4, "POSTEI!", R.GOLD_L)]
+       (1, 25.0, 27.4, "NÃO É IA", R.GOLD_L), (4, 4.42, 6.4, "POSTEI!", R.GOLD_L), (5, 0.4, 5.4, "O MUNDO PRECISA DE LULA", R.GOLD_L), (5, 6.6, 11.3, "DIA 25", R.WHITE)]
 BIG = [(segmap(i, a), segmap(i, b), w, c) for i, a, b, w, c in BIG]
 PILLS = [(1, 13.8, 19.3, "LONDRES, PERTO DO BIG BEN", R.NAVY), (1, 19.4, 24.8, "TRADUÇÃO: “O MUNDO PRECISA DE LULA”", BLUE),
          (2, 0.6, 3.3, "NO CARTAZ: “A AMÉRICA LATINA NÃO É QUINTAL DO TRUMP”", BLUE)]
 PILLS = [(segmap(i, a), segmap(i, b), x, c) for i, a, b, x, c in PILLS]
 CARD = ("LONDRES", ["“O MUNDO PRECISA", "DE LULA”"])
-CTA = [(segmap(4, 4.4), segmap(4, 7.0))]
+CTA = [(segmap(4, 4.4), segmap(4, 7.0)), (segmap(5, 7.0), segmap(5, 11.5))]
 def cta_level(t): return max([clamp((t - a) / 0.4) * clamp((b - t) / 0.4) for a, b in CTA] + [0.0])
 def caption(frame, t, y, size, tracks):
     old = R.RED; R.RED = BLUE
@@ -147,10 +147,33 @@ def frame_at(t):
         for a, b, txt, colr in PILLS:
             if a <= t < b: R.pill(frame, txt, CX, cy0 + card.shape[0] - 46, clamp((t - a) / 0.3) * clamp((b - t) / 0.25), fill=colr, size=pill_size(txt))
         caption(frame, t, 1680, 46, ("me", "au"))
+    elif s["src"] == "fin":                                           # final: a foto do Big Ben em tela cheia com a música
+        u = t - s["t0"]; z = 1.0 + 0.14 * (u / 12.0)
+        fh = int(H * z); fw_ = int(fh * FOTO.shape[1] / FOTO.shape[0])
+        if fw_ < W: fw_ = int(W * z); fh = int(fw_ * FOTO.shape[0] / FOTO.shape[1])
+        big_ = cv2.resize(cv2.LUT(FOTO, R.LUT), (fw_, fh), interpolation=cv2.INTER_LINEAR)
+        ox, oy = (fw_ - W) // 2, int((fh - H) * 0.35); frame = Image.fromarray(big_[oy:oy + H, ox:ox + W]).convert("RGBA")
+        sh_ = Image.new("RGBA", (W, H), (0, 0, 0, 0)); ds_ = ImageDraw.Draw(sh_)
+        for i_ in range(560): ds_.line((0, i_, W, i_), fill=(0, 0, 0, int(150 * (1 - i_ / 560))))
+        frame.alpha_composite(sh_)
+        big_word(frame, t, (150, 420))
+        for b0 in BIPS:                                               # a vaquinha aparece junto com o "muuu"
+            k_ = (u - b0[0] + 0.05) / 0.7
+            if 0 <= k_ <= 1:
+                fe = ImageFont.truetype("/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf", 109)
+                e = Image.new("RGBA", (140, 140), (0, 0, 0, 0)); ImageDraw.Draw(e).text((0, 0), "🐮", font=fe, embedded_color=True)
+                sc = 2.6 * (0.6 + 0.4 * ease_out(min(1, k_ * 3))) * (1 - ease_in(max(0, (k_ - 0.75) / 0.25)) * 0.3)
+                e = e.resize((int(140 * sc), int(140 * sc)), Image.LANCZOS); e = R.fade(e, 1 - ease_in(max(0, (k_ - 0.8) / 0.2)))
+                frame.alpha_composite(e, (int(CX - e.width / 2), int(1080 - e.height / 2)))
+                d_ = ImageDraw.Draw(frame); f_ = R.BIGF(150)
+                d_.text((CX, 1080 + e.height / 2 + 80), "MUUU!", font=f_, fill=R.GOLD_L + (int(255 * (1 - ease_in(max(0, (k_ - 0.8) / 0.2)))),), anchor="mm", stroke_width=10, stroke_fill=R.NAVY + (255,))
+        win = Image.fromarray(R.rounded(cv2.resize(cv2.LUT(me_big(react_x(t))[260:1460], R.LUT), (250, 250), interpolation=cv2.INTER_AREA), 125, 4))
+        R.paste(frame, win, 110, 1480, 0.55, 18, (6, 16))                       # do lado do ônibus, sem cobrir o Lula do cartaz
+        R.credit(frame, "Foto: reprodução redes sociais", CX, 1840, 1.0, anchor="mm")
     else:
         frame = Image.fromarray(np.clip(me_full(x), 0, 255).astype(np.uint8)).convert("RGBA")
         big_word(frame, t, (130, 430)); caption(frame, t, 1500, 48, ("me", "au"))
-        kc = clamp((t - 0.6) / 0.4) * (1 - clamp((t - (END_IN - 0.35)) / 0.35)) if s is segs[-1] else 0.0
+        kc = clamp((t - 0.6) / 0.4) * (1 - clamp((t - (segs[5]["t0"] - 0.35)) / 0.35)) if s is segs[4] else 0.0
         if kc > 0: BAR.lower_card(frame, CARD[0], CARD[1], 1655, kc, fs=40)
     BAR.draw_bar(frame, clamp(t / END_IN), "canal", ease_out((t - 0.2) / 0.6), cta_level(t), 0.5 + 0.5 * math.sin(t * 5))
     R.draw_banners(frame, t)
@@ -179,21 +202,24 @@ def main():
         i0, i1 = int(a * SR), int(b * SR); srcw["cl"][i0:i1] = 0
     vt = np.zeros((n, 2), np.float32); f = int(0.03 * SR)
     for s in segs:
-        if s["src"] == "-": continue
+        if s["src"] in ("-", "fin"): continue
         c = srcw[s["src"]][int(s["a"] * SR):int(s["b"] * SR)].copy(); c[:f] *= np.linspace(0, 1, f)[:, None]; c[-f:] *= np.linspace(1, 0, f)[:, None]
         o = int(s["t0"] * SR); vt[o:o + len(c)] += c[:n - o]
     R.writew(f"{V}/voice.wav", vt)
-    if os.environ.get("TRILHA", "funk13") == "funk13":                # a música que ele mandou, com bip nos palavrões
-        tr = R.readw(f"{V}/tr/t48.wav").copy(); tt_ = np.arange(len(tr)) / SR
-        for a_, b_ in BIPS:
-            i0, i1 = int(a_ * SR), min(len(tr), int(b_ * SR)); k_ = np.arange(i1 - i0) / SR
-            env_ = np.minimum(1, np.minimum(k_, (i1 - i0) / SR - k_) / 0.01)
-            tr[i0:i1] = (0.32 * np.sin(2 * np.pi * 1000 * k_) * env_)[:, None]
-        reps = int(np.ceil(n / len(tr))) + 1; bed = np.concatenate([tr] * reps)[:n]
-    else: bed = R.readw(f"{V}/bed.wav")
-    L = min(len(bed), n); tl = np.arange(L) / SR
-    gain = float(os.environ.get("TRG", "0.22")) * np.clip(tl / 0.8, 0, 1) * np.where((tl > segs[1]["t0"]) & (tl < segs[4]["t0"]), 1.8, 1.0) * np.where((tl > segs[2]["t0"]) & (tl < segs[4]["t0"]), 1.6, 1.0) * np.clip(1 - (tl - (TOTAL - 1.6)) / 1.5, 0, 1)
-    sg = np.zeros((n, 2), np.float32); sg[:L] = bed[:L] * gain[:, None]; R.writew(f"{V}/song.wav", sg)
+    bed = R.readw(f"{V}/bed.wav"); L = min(len(bed), n); tl = np.arange(L) / SR       # batidão próprio por baixo das falas
+    F0 = segs[5]["t0"]
+    gain = 0.10 * np.clip(tl / 0.8, 0, 1) * np.where((tl > segs[1]["t0"]) & (tl < segs[4]["t0"]), 1.8, 1.0) * np.where((tl > segs[2]["t0"]) & (tl < segs[4]["t0"]), 1.6, 1.0)
+    gain = gain * np.clip((F0 + 0.2 - tl) / 0.4, 0, 1)                            # sai quando a música dele entra
+    sg = np.zeros((n, 2), np.float32); sg[:L] = bed[:L] * gain[:, None]
+    tr = R.readw(f"{V}/tr/t48.wav").copy()                                       # a música que ele mandou, no final
+    for a_, b_ in BIPS:                                                          # palavrão vira "muuu" de vaca
+        i0, i1 = int(a_ * SR), min(len(tr), int(b_ * SR)); tr[i0:i1] *= np.linspace(1, 0, i1 - i0)[:, None] ** 8
+        m_ = sfx.muu(min(0.8, b_ - a_ + 0.15)); k0 = max(0, i0 - int(0.05 * SR)); tr[k0:k0 + len(m_)] += 0.55 * m_[:len(tr) - k0]
+    seg_ = tr[:int(13.6 * SR)]; tl2 = np.arange(len(seg_)) / SR
+    g2 = float(os.environ.get("TRG", "0.85")) * np.clip(tl2 / 0.15, 0, 1) * np.clip(1 - (tl2 - 12.05) / 1.5, 0, 1)
+    o = int(F0 * SR); m2 = min(len(seg_), n - o); sg[o:o + m2] += seg_[:m2] * g2[:m2, None]
+    R.writew(f"{V}/song.wav", sg)
+
     ev = [(segs[2]["t0"], sfx.paper(), 0.5), (segs[3]["t0"], sfx.paper(), 0.5), (0.0, sfx.whoosh(0.4), 0.2), (END_IN - 0.3, sfx.whoosh(0.6), 0.25)] + [(sg_["t0"] - 0.12, sfx.whoosh(0.45), 0.22) for sg_ in segs[1:]]
     ev += [(a, sfx.whoosh(0.35), 0.24) for a, *_ in BIG] + [(a + 0.26, sfx.click(), 0.75) for a, *_ in BIG] + [(a + 0.26, sfx.thud(0.3), 0.18) for a, *_ in BIG]
     ev += [(a, sfx.click(), 0.35) for a, *_ in PILLS] + [(a, sfx.siga(), 0.16) for a, b in CTA]

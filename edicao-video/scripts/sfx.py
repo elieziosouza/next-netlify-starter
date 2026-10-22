@@ -122,3 +122,14 @@ def siga(dur=0.9, seed=9):
     out = onepole_lp(out, np.full(n, 2500.0)); out /= np.abs(out).max() + 1e-9
     d = int(0.010 * SR); right = np.concatenate([np.zeros(d), out[:-d]])
     return np.stack([out, right], 1)
+
+def muu(dur=0.75, seed=13):
+    """mugido de vaca de desenho (para tapar palavrão com humor): dente-de-serra grave que sobe e cai, com formantes de 'u'"""
+    n = int(dur * SR); t = np.arange(n) / SR
+    f0 = 118 + 38 * np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 0.7 + 3 * np.sin(2 * np.pi * 5.5 * t)
+    ph = 2 * np.pi * np.cumsum(f0) / SR; saw = 2 * ((ph / (2 * np.pi)) % 1.0) - 1
+    rng = np.random.default_rng(seed); saw += 0.04 * rng.normal(0, 1, n)
+    out = onepole_lp(saw, np.full(n, 700.0)) + 0.5 * onepole_lp(saw, np.full(n, 280.0))
+    env = np.minimum(1, t / 0.06) * np.minimum(1, (dur - t) / 0.18) ** 1.5
+    out = out * env; out /= np.abs(out).max() + 1e-9
+    return np.stack([out, out], 1)
