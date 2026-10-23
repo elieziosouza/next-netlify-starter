@@ -10,7 +10,7 @@ M = importlib.util.module_from_spec(spec); spec.loader.exec_module(M); R = M.R
 import sfx
 BAR = R.BAR; W, H, FPS = R.W, R.H, R.FPS; CX = R.CX; clamp = R.clamp; ease_out = R.ease_out; ease_in = R.ease_in; ease_io = R.ease_io
 V = f"{S}/v56"; M.ME = f"{V}/me.mp4"; M._ch.clear(); M._gr.clear(); CL = f"{V}/cl.mp4"; BLUE = M.BLUE
-PARTS = [("me", 0.55, 4.66, "full"), ("cl", 0.2, 12.6, "clip"), ("me", 4.9, 9.3, "stare")]
+PARTS = [("me", 0.55, 4.66, "full"), ("cl", 0.2, 14.1, "clip"), ("me", 4.9, 9.3, "stare")]
 segs = []; acc = 0.0
 for src_, a, b, mode in PARTS: segs.append(dict(src=src_, a=a, b=b, mode=mode, t0=acc, t1=acc + b - a)); acc += b - a
 EDIT_END = acc; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
@@ -30,7 +30,7 @@ for txt, a, b in ME_CAPS:
 R.CAPS = CAPS; R.HOT = HOT; R._capcache.clear()
 BIG = [(1.5, 3.0, "MINHA ESPOSA", R.GOLD_L, False), (3.9, 4.66, "MUITO BOM", R.WHITE, True), (6.4, 9.3, "MUDEI DE IDEIA", R.GOLD_L, True)]
 ICONS = [(1.6, 3.0, "😍", 880, 1150, 150), (3.0, 4.66, "🍽️", 880, 1150, 150), (6.6, 9.3, "😅", 880, 1150, 170)]
-CLIP_POPS = [(1.4, "😳", 230, 520), (4.2, "🍽️", 880, 560), (6.9, "😱", 230, 1200), (9.4, "😂", 880, 1150), (11.0, "🤣", 230, 560)]
+CLIP_POPS = [(1.4, "😳", 230, 520), (4.2, "🍽️", 880, 560), (6.9, "😱", 230, 1200), (9.4, "😂", 880, 1150), (11.0, "🤣", 230, 560), (13.3, "🍴", 880, 560)]
 _cl = {}
 def cl_frame(x):
     if not _cl:
