@@ -121,7 +121,7 @@ def zoom_level(x, ki, t):
 def big_layer(word, col, u, dur, shake, idx):
     """palavra inteira, centrada na área segura, semitransparente; entra crescendo do centro (nunca cortada pela borda)"""
     size = 330; f = R.BIGF(size)
-    while f.getlength(word) > 820: size -= 6; f = R.BIGF(size)
+    while f.getlength(word) > 820 or (f.getbbox(word)[3] - f.getbbox(word)[1]) > 230: size -= 6; f = R.BIGF(size)
     lay = Image.new("RGBA", (W, int(size * 1.35)), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
     d.text((CX + 5, lay.height / 2 + 7), word, font=f, fill=(0, 0, 0, 70), anchor="mm")
     d.text((CX, lay.height / 2), word, font=f, fill=col + (205,), anchor="mm", stroke_width=4, stroke_fill=R.NAVY + (190,))
@@ -132,7 +132,7 @@ def big_layer(word, col, u, dur, shake, idx):
         lay = big.crop((ox, oy, ox + W, oy + lay.height))
     dx = 0; dy = 0
     if shake and 0.3 < u < 1.0: a_ = 7 * (1 - (u - 0.3) / 0.7); dx = a_ * math.sin(u * 90); dy = a_ * 0.6 * math.cos(u * 70)
-    return R.fade(lay, k * (1 - out)), int(dx), int(470 - lay.height / 2 + dy)
+    return R.fade(lay, k * (1 - out)), int(dx), int(300 - lay.height / 2 + dy)
 # ---------------- tela dividida ----------------
 SEAM = 900
 NAVY_BG = np.clip(R.NAVYBG, 0, 255).astype(np.uint8)
@@ -223,14 +223,10 @@ def frame_at(t):
     if sk is not None: frame = split_scene(x, tt, sk)
     else:
         img, idx = graded(x); z = zoom_level(x, ki, tt)
-        bigs = [(i, b) for i, b in enumerate(BIG) if b[0] <= x < b[1]]
-        if bigs:
-            m = person_mask(img, idx); fr = Image.fromarray(img).convert("RGBA")
-            for i, (a, b, word, col, shk) in bigs:
-                lay, dx, y = big_layer(word, col, x - a, b - a, shk, i); fr.alpha_composite(lay, (dx, y))
-            comp = np.asarray(fr.convert("RGB")).astype(np.float32); img = (comp * (1 - m) + img.astype(np.float32) * m).astype(np.uint8)
         img = zoom(img, z)
         frame = Image.fromarray(img).convert("RGBA")
+        for i, (a, b, word, col, shk) in enumerate(BIG):                     # palavra grande ACIMA da cabeça (o fundo do carro não deixa recortar limpo)
+            if a <= x < b: lay, dx, y = big_layer(word, col, x - a, b - a, shk, i); frame.alpha_composite(lay, (dx, y))
         g = np.zeros((520, W, 4), np.uint8); g[..., :3] = (4, 14, 28); g[..., 3] = np.linspace(0, 200, 520)[:, None].astype(np.uint8); frame.alpha_composite(Image.fromarray(g), (0, H - 520))
         for a, b, ch, cx, cy, sz, lab in ICONS:
             if a <= x < b:
@@ -271,8 +267,8 @@ def main():
         c = me[int(a * SR):int(b * SR)].copy(); c[:f] *= np.linspace(0, 1, f)[:, None]; c[-f:] *= np.linspace(1, 0, f)[:, None]
         o = int(OFF[i] * SR); vt[o:o + len(c)] += c[:n - o]
     R.writew(f"{V}/voice.wav", vt)
-    bed = R.readw(f"{V}/bed.wav"); L = min(len(bed), n); tl = np.arange(L) / SR
-    gain = (0.06 * np.clip(tl / 1.0, 0, 1) + 0.05 * np.clip((tl - (EDIT_END - 0.3)) / 0.5, 0, 1)) * np.clip(1 - (tl - (TOTAL - 1.6)) / 1.5, 0, 1)
+    bed = R.readw(os.environ.get("BED", f"{V}/bed.wav")); L = min(len(bed), n); tl = np.arange(L) / SR
+    gain = (float(os.environ.get("BEDG", "0.06")) * np.clip(tl / 1.0, 0, 1) + 0.08 * np.clip((tl - (EDIT_END - 0.3)) / 0.5, 0, 1)) * np.clip(1 - (tl - (TOTAL - 1.6)) / 1.5, 0, 1)
     sg = np.zeros((n, 2), np.float32); sg[:L] = bed[:L] * gain[:, None]; R.writew(f"{V}/song.wav", sg)
     ev = [(0.0, sfx.whoosh(0.4), 0.2), (END_IN - 0.3, sfx.whoosh(0.6), 0.25)]
     for i, (a, b, *_r) in enumerate(BIG): ta = out_of(a); ev += [(ta, sfx.whoosh(0.35), 0.24), (ta + 0.26, sfx.click(), 0.7), (ta + 0.26, sfx.thud(0.3), 0.2)]
