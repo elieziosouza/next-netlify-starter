@@ -1,6 +1,6 @@
 """Humor: "vou levar minha esposa nesse restaurante, me disseram que o atendimento lá é muito bom" + o vídeo do restaurante temático de Natal
 (atendimento "do Nordeste antigo", ELLO TV) num card com ele reagindo no canto + a cara séria dele no fim com zoom lento ("MUDEI DE IDEIA").
-O áudio do restaurante sai (tem música, risco de direitos); entram a trilha nossa e efeitos. Usa os ajudantes do render_exercito."""
+O áudio original do restaurante fica (ele pediu: sem ele perde a graça), 3-4 dB abaixo da voz dele, sem trilha por cima. Usa os ajudantes do render_exercito."""
 import sys, math, subprocess, importlib.util, os
 import numpy as np, cv2
 from PIL import Image, ImageDraw
@@ -82,17 +82,24 @@ def main():
         sh = Image.new("RGB", (360 * len(outs), 640)); [sh.paste(o, (i * 360, 0)) for i, o in enumerate(outs)]; sh.save(OUTFILE, quality=90); return
     if MODE == "info": print("TOTAL", round(TOTAL, 2), [(s["mode"], round(s["t0"], 2)) for s in segs]); return
     vout = f"{V}/video.mp4"
-    enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-                            "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", vout], stdin=subprocess.PIPE)
-    for k in range(int(round(TOTAL * FPS))): enc.stdin.write(frame_at(k / FPS).tobytes())
-    enc.stdin.close(); enc.wait()
+    if not (os.environ.get("REUSE") and os.path.exists(vout)):
+        enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
+                                "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", vout], stdin=subprocess.PIPE)
+        for k in range(int(round(TOTAL * FPS))): enc.stdin.write(frame_at(k / FPS).tobytes())
+        enc.stdin.close(); enc.wait()
     SR = 48000; n = int(TOTAL * SR)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", M.ME, "-ar", "48000", "-ac", "2", f"{V}/me48.wav"], check=True)
     me = R.readw(f"{V}/me48.wav"); vt = np.zeros((n, 2), np.float32); s0 = segs[0]; f = int(0.012 * SR)
     c = me[int(s0["a"] * SR):int(s0["b"] * SR)].copy(); c[:f] *= np.linspace(0, 1, f)[:, None]; c[-f:] *= np.linspace(1, 0, f)[:, None]; vt[:len(c)] += c
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", CL, "-ar", "48000", "-ac", "2", f"{V}/cl48.wav"], check=True)   # o som do restaurante volta (ele pediu)
+    cl = R.readw(f"{V}/cl48.wav"); s1 = segs[1]; c = cl[int(s1["a"] * SR):int(s1["b"] * SR)].copy()
+    def rms(x_): return float(np.sqrt((x_ ** 2).mean())) + 1e-6
+    c *= (rms(vt[:len(vt) // 4]) / rms(c)) * 10 ** (-3.5 / 20)                                       # 3-4 dB abaixo da voz dele
+    fl = int(0.15 * SR); c[:fl] *= np.linspace(0, 1, fl)[:, None]; c[-fl:] *= np.linspace(1, 0, fl)[:, None]
+    o = int(s1["t0"] * SR); vt[o:o + len(c)] += c[:n - o]
     R.writew(f"{V}/voice.wav", vt)
     bed = R.readw(f"{S}/v49/bed.wav"); L = min(len(bed), n); tl = np.arange(L) / SR
-    gain = np.where(tl < segs[1]["t0"], 0.06, np.where(tl < segs[2]["t0"], 0.30, 0.0)) * np.clip(1 - (tl - (TOTAL - 1.6)) / 1.5, 0, 1)
+    gain = np.where(tl < segs[1]["t0"], 0.06, np.where(tl < segs[2]["t0"], 0.0, 0.0)) * np.clip(1 - (tl - (TOTAL - 1.6)) / 1.5, 0, 1)
     gain = gain + 0.10 * np.clip((tl - END_IN) / 0.3, 0, 1) * (tl >= END_IN)
     sg = np.zeros((n, 2), np.float32); sg[:L] = bed[:L] * gain[:, None]; R.writew(f"{V}/song.wav", sg)
     ev = [(0.0, sfx.whoosh(0.4), 0.2), (segs[1]["t0"] - 0.12, sfx.whoosh(0.5), 0.3), (segs[2]["t0"], sfx.thud(0.6), 0.6), (END_IN - 0.3, sfx.whoosh(0.6), 0.25)]
