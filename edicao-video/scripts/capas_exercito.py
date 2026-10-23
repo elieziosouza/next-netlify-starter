@@ -17,7 +17,7 @@ def word(img, txt, cy, size, col, sw=12, rot=0, band=None, tcol=None, maxw=840):
     R.paste(img, lay, CX - lay.width / 2, cy - lay.height / 2, 0.8, 18, (6, 14))
 def scene(t1, t2, band, bcol, btc, name, emo):
     img = Image.fromarray(M.NAVY_BG.copy()).convert("RGBA")
-    me, idx = M.graded(0.25); m = me[300:1500]; top = 840; ph = H - top; fw = int(m.shape[1] * ph / m.shape[0]); fw = min(fw, 2 * (W - CX) - 4)
+    me, idx = M.graded(2.5); m = me[260:1620]; top = 880; ph = H - top; fw = int(m.shape[1] * ph / m.shape[0]); fw = min(fw, 2 * (W - CX) - 4)
     fg = cv2.resize(m, (fw, ph), interpolation=cv2.INTER_AREA); x0 = CX - fw // 2
     lay = np.zeros((ph, W, 4), np.uint8); lay[:, x0:x0 + fw, :3] = fg
     al = np.ones((ph, fw), np.float32); al[:200] *= np.linspace(0, 1, 200)[:, None]; al[:, :70] *= np.linspace(0, 1, 70)[None]; al[:, -70:] *= np.linspace(1, 0, 70)[None]
@@ -26,7 +26,7 @@ def scene(t1, t2, band, bcol, btc, name, emo):
     R.paste(img, c, CX - c.width / 2 + 110, 500, 0.8, 26, (10, 26))
     M.pop(img, M.emoji(emo, 200), CX - 330, 640, 1.0, 99, wob=False)
     word(img, t1, 200, 170, WHITE); word(img, t2, 370, 160, YEL)
-    word(img, band, 1795, 64, btc, band=bcol, tcol=btc, rot=-2)
+    word(img, band, 845, 64, btc, band=bcol, tcol=btc, rot=-2)
     BAR.draw_bar(img, 0.0, "canal"); img.alpha_composite(R.top, (R.HDX, 0)); img.convert("RGB").save(f"{V}/{name}.jpg", quality=95)
 scene("QUEREM DERRUBAR", "O EXÉRCITO DO LULA", "DOMINGO VOCÊS NÃO ESCAPAM", (150, 20, 30), WHITE, "capa_A", "🚨")
 scene("CENSURA?", "A 2 DIAS DA ELEIÇÃO", "O PEDIDO ESTÁ NO TSE", BLUE, WHITE, "capa_B", "⚖️")

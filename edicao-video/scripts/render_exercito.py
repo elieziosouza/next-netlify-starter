@@ -101,9 +101,9 @@ def zoom_level(t, i):
     base = 1.0 if i % 2 == 0 else 1.07; u = t - segs[i]["t0"]
     z = base + 0.05 * (1 - ease_out(u / 0.18)) * (i > 0) + 0.03 * (0.5 - 0.5 * math.cos(2 * math.pi * t / 7.0))
     return z
-def big_layer(word, col, u, dur, shake, idx, cy=262):
+def big_layer(word, col, u, dur, shake, idx, cy=228):
     size = 300; f = R.BIGF(size)
-    while f.getlength(word) > 840 or (f.getbbox(word)[3] - f.getbbox(word)[1]) > 205: size -= 6; f = R.BIGF(size)
+    while f.getlength(word) > 840 or (f.getbbox(word)[3] - f.getbbox(word)[1]) > 180: size -= 6; f = R.BIGF(size)
     lay = Image.new("RGBA", (W, int(size * 1.35)), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
     d.text((CX + 5, lay.height / 2 + 7), word, font=f, fill=(0, 0, 0, 70), anchor="mm")
     d.text((CX, lay.height / 2), word, font=f, fill=col + (205,), anchor="mm", stroke_width=4, stroke_fill=R.NAVY + (190,))
