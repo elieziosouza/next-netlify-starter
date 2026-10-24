@@ -61,8 +61,8 @@ SemiBold 36 espaçado com filetes, e uma sombra difusa (sem bordas) atrás do te
 
 ## Bastidores e música livre (24/10/2026)
 
-- **Bastidores ("eu fotografando"):** abrir com ele olhando ou sorrindo para a câmera e fechar com ele saindo de cena
-  andando com a câmera. Lettering `--pos baixo` (no peito) para nunca cobrir o rosto: no alto, a sombra do texto
+- **Bastidores ("eu fotografando"):** abrir com ele já em ação (andando visto por trás, fotografando), **não** com ele
+  parado olhando para a câmera (ele tirou essa abertura em 24/10/2026), e fechar com ele saindo de cena andando com a câmera. Lettering `--pos baixo` (no peito) para nunca cobrir o rosto: no alto, a sombra do texto
   escureceu a testa dele. Versão só dele (com marca); não precisa da versão do organizador.
 - **Fixar um trecho:** `clipe.mp4@0.1+3` começa em 0,1 s e dura ~3 s (arredondado na batida).
 - **Música livre:** `--musica faixa.mp3` (ver `musica.py`). Faixas do Kevin MacLeod no Wikimedia Commons, licença
