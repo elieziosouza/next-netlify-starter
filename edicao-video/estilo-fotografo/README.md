@@ -17,7 +17,9 @@ python3 edicao-video/estilo-fotografo/story_festa.py saida.mp4 clipe1.mp4 clipe2
 - **Lettering:** só quando faz sentido (nome dos noivos, aniversariante, momento: "A entrada", "Primeira dança").
   DM Serif Display branco com sombra suave no terço de cima, linha menor espaçada em Montserrat. Entra aos 0,4 s e sai
   antes da metade do vídeo para não esconder a festa.
-- **Assinatura:** @esouzafotografia pequeno, embaixo, acima da área de resposta do Instagram.
+- **Marca d'água (24/10/2026, pedido dele: tudo minimalista):** ícone do Instagram em traço fino + `esouzafotografia`
+  em Montserrat Regular 24 com letras espaçadas, branco translúcido e sombra quase invisível. Centralizada embaixo,
+  acima da área de resposta do Instagram, o vídeo todo. Sem logo colorido, sem caixa, sem fundo.
 - **Formato:** 1080x1920, 30 fps, H.264. Vídeo vertical preenche a tela; horizontal fica inteiro no meio com fundo
   desfocado do próprio vídeo.
 - **Cor:** só um toque leve de contraste e saturação. Pele não é mexida.

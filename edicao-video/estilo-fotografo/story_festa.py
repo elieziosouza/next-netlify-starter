@@ -129,13 +129,28 @@ def lettering_png(caminho):
         d.text(((W - tw) / 2, y), txt, font=fs, fill=(255, 255, 255, 235))
     img.save(caminho)
 
+def icone_ig(size, col):
+    """Ícone do Instagram em traço fino (desenhado aqui, não é o logo oficial colorido)."""
+    s = size * 4; im = Image.new('RGBA', (s, s), (0, 0, 0, 0)); d = ImageDraw.Draw(im); w = max(4, int(s * 0.065))
+    d.rounded_rectangle((w, w, s - w, s - w), int(s * 0.28), outline=col, width=w)
+    r = s * 0.21; d.ellipse((s / 2 - r, s / 2 - r, s / 2 + r, s / 2 + r), outline=col, width=w)
+    q = s * 0.05; d.ellipse((s * 0.73 - q, s * 0.27 - q, s * 0.73 + q, s * 0.27 + q), fill=col)
+    return im.resize((size, size), Image.LANCZOS)
+
 def assinatura_png(caminho):
-    img = Image.new('RGBA', (W, 120), (0, 0, 0, 0)); d = ImageDraw.Draw(img)
-    f = ImageFont.truetype(os.path.join(FONTS, 'Montserrat-Medium.ttf'), 28)
-    t = '@esouzafotografia'; tw = d.textlength(t, font=f)
-    s = Image.new('RGBA', (W, 120), (0, 0, 0, 0)); ImageDraw.Draw(s).text(((W - tw) / 2, 42), t, font=f, fill=(0, 0, 0, 140))
-    img = Image.alpha_composite(img, s.filter(ImageFilter.GaussianBlur(5))); d = ImageDraw.Draw(img)
-    d.text(((W - tw) / 2, 40), t, font=f, fill=(255, 255, 255, 200))
+    """Marca d'água minimalista: ícone fino do Instagram + esouzafotografia espaçado, branco translúcido."""
+    img = Image.new('RGBA', (W, 120), (0, 0, 0, 0))
+    f = ImageFont.truetype(os.path.join(FONTS, 'Montserrat-Regular.ttf'), 24)
+    t = 'esouzafotografia'; esp = 3.2; isz, gap = 28, 14
+    larg = [ImageDraw.Draw(img).textlength(ch, font=f) for ch in t]
+    tw = sum(larg) + esp * (len(t) - 1); x0 = (W - (isz + gap + tw)) / 2; yi = 46; yt = yi + (isz - 30) / 2
+    def desenha(camada, cor, dy=0):
+        camada.alpha_composite(icone_ig(isz, cor), (int(x0), yi + dy))
+        d = ImageDraw.Draw(camada); x = x0 + isz + gap
+        for ch, lw in zip(t, larg): d.text((x, yt + dy), ch, font=f, fill=cor); x += lw + esp
+    s = Image.new('RGBA', (W, 120), (0, 0, 0, 0)); desenha(s, (0, 0, 0, 110), 1)
+    img = Image.alpha_composite(img, s.filter(ImageFilter.GaussianBlur(4)))
+    desenha(img, (255, 255, 255, 190))
     img.save(caminho)
 
 # ---------- análise ----------
