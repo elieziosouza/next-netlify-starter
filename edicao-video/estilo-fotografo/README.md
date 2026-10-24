@@ -25,3 +25,28 @@ python3 edicao-video/estilo-fotografo/story_festa.py saida.mp4 clipe1.mp4 clipe2
 - **Cor:** só um toque leve de contraste e saturação. Pele não é mexida.
 
 Padrão: 15 s por story (`--dur`). Para Reels, até 60 s.
+
+## Acabamento completo ("edição AAA", 24/10/2026): `story_aaa.py`
+
+Padrão quando ele pede "edição AAA" ou capricho. Leva ~1min20 para 16 s (o modo rápido `story_festa.py` leva ~20 s).
+
+```bash
+python3 edicao-video/estilo-fotografo/story_aaa.py saida.mp4 clipe1.mp4 clipe2.mp4 ... --dur 16 --texto "Os detalhes"
+```
+
+- **Ordem:** a dos clipes na linha de comando (abrir com detalhe bonito, fechar com o plano geral).
+- **Cortes:** um trecho contínuo por clipe (panorâmica nunca leva salto no meio), escolhido por nitidez, movimento e
+  pouco tremido; duração em batidas inteiras.
+- **Estabilização:** vidstab em 2 passadas (smoothing 18, optzoom). Celular com estabilizador já chega firme: o ganho
+  medido foi de 15 a 25% nos detalhes; smoothing maior (30 a 45) não melhorou a panorâmica.
+- **Limpeza e nitidez:** hqdn3d leve antes, escala Lanczos e `cas=0.45` depois (compensa a compressão do WhatsApp).
+- **Cor (`cor_fotografo.py`, "luz natural"):** por clipe, branco corrigido pelos tons neutros (parede, toalha, prato)
+  a 70% e exposição para meio-tom luminoso (nunca escurece o clipe). Look único: ombro suave nos claros, curva em S
+  delicada, preto levemente aberto, vibração que protege o que já é saturado (rosas, morango), verde da folhagem
+  puxado para oliva e calor leve nos claros.
+- **Movimento:** aproximação e afastamento suaves alternados (5%) em cada cena.
+- **Transições:** a cada dois cortes, zoom com desfoque radial e brilho leve, com whoosh baixinho; os demais são corte
+  seco na batida.
+- **Lettering:** sai do desfoque subindo 18 px, sai antes da metade.
+- **Tela final (1,9 s):** último plano desfoca e escurece, ícone + esouzafotografia maior no centro. A marca d'água
+  pequena some nessa hora.
