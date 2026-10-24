@@ -50,3 +50,11 @@ python3 edicao-video/estilo-fotografo/story_aaa.py saida.mp4 clipe1.mp4 clipe2.m
 - **Lettering:** sai do desfoque subindo 18 px, sai antes da metade.
 - **Tela final (1,9 s):** último plano desfoca e escurece, ícone + esouzafotografia maior no centro. A marca d'água
   pequena some nessa hora.
+
+## Versão para cliente / organizador (24/10/2026)
+
+`--sem-marca`: tira a marca d'água e, na tela final, mostra o lettering (ex.: "Beth · 70 anos") no lugar da marca.
+Na festa, entregar sempre as duas: `..._esouza.mp4` (com marca, para o Instagram dele) e `..._organizador.mp4`.
+
+Lettering de abertura no estilo storymaker de evento: nome curto em DM Serif 176 px, linha "70 ANOS" em Montserrat
+SemiBold 36 espaçado com filetes, e uma sombra difusa (sem bordas) atrás do texto para ler sobre flores e decoração.

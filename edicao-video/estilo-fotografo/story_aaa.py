@@ -5,7 +5,7 @@
 #
 # Uso:
 #   python3 story_aaa.py saida.mp4 clipe1.mp4 [clipe2.mp4 ...] [--dur 16] [--estilo festa|romantico]
-#                        [--texto "Os detalhes"] [--sub "24.10.2026"] [--pos alto|baixo] [--som 0.15]
+#                        [--texto "Os detalhes"] [--sub "24.10.2026"] [--pos alto|baixo] [--som 0.15] [--sem-marca]
 # A ordem dos clipes na linha de comando é a ordem do vídeo.
 import sys, os, subprocess, json, argparse, tempfile, wave, numpy as np, cv2
 from concurrent.futures import ThreadPoolExecutor
@@ -22,6 +22,7 @@ ap.add_argument('saida'); ap.add_argument('clipes', nargs='+')
 ap.add_argument('--dur', type=float, default=16); ap.add_argument('--estilo', default='festa')
 ap.add_argument('--texto', default=''); ap.add_argument('--sub', default=''); ap.add_argument('--pos', default='alto')
 ap.add_argument('--som', type=float, default=0.15); ap.add_argument('--sem-final', action='store_true')
+ap.add_argument('--sem-marca', action='store_true')   # versão para cliente/organizador: sem marca d'água; a tela final mostra o lettering
 a = ap.parse_args()
 BPM = 120 if a.estilo == 'festa' else 84; BEAT = 60 / BPM
 TMP = tempfile.mkdtemp(prefix='aaa_')
@@ -123,19 +124,24 @@ def marca(isz, fsz, esp, alfa, sombra=110):
 
 def lettering():
     if not (a.texto or a.sub): return None
-    img = Image.new('RGBA', (W, 420), (0, 0, 0, 0)); d = ImageDraw.Draw(img); y = 40
+    img = Image.new('RGBA', (W, 460), (0, 0, 0, 0)); d = ImageDraw.Draw(img); y = 50
+    # sombra difusa atrás do texto: garante leitura sobre fundo cheio (flores, decoração) sem parecer caixa
+    nv = Image.new('L', img.size, 0); ImageDraw.Draw(nv).ellipse((150, 30, W - 150, 430), fill=95)
+    img.putalpha(nv.filter(ImageFilter.GaussianBlur(70))); d = ImageDraw.Draw(img)
     if a.texto:
-        tam = 124; ff = lambda t: ImageFont.truetype(os.path.join(FONTS, 'DMSerifDisplay-Regular.ttf'), t)
+        tam = 176 if len(a.texto) <= 8 else 124; ff = lambda t: ImageFont.truetype(os.path.join(FONTS, 'DMSerifDisplay-Regular.ttf'), t)
         while d.textlength(a.texto, font=ff(tam)) > W - 140 and tam > 60: tam -= 4
         f = ff(tam); tw = d.textlength(a.texto, font=f)
         s = Image.new('RGBA', img.size, (0, 0, 0, 0)); ImageDraw.Draw(s).text(((W - tw) / 2, y + 4), a.texto, font=f, fill=(0, 0, 0, 120))
         img = Image.alpha_composite(img, s.filter(ImageFilter.GaussianBlur(12))); d = ImageDraw.Draw(img)
         d.text(((W - tw) / 2, y), a.texto, font=f, fill=(255, 255, 255, 255)); y += int(tam * 1.28)
     if a.sub:
-        fs = ImageFont.truetype(os.path.join(FONTS, 'Montserrat-Medium.ttf'), 30); txt = ' '.join(a.sub.upper()); tw = d.textlength(txt, font=fs)
+        fs = ImageFont.truetype(os.path.join(FONTS, 'Montserrat-SemiBold.ttf'), 36); txt = ' '.join(a.sub.upper()); tw = d.textlength(txt, font=fs)
         for x0, x1 in [((W - tw) / 2 - 84, (W - tw) / 2 - 24), ((W + tw) / 2 + 24, (W + tw) / 2 + 84)]:
-            d.line([(x0, y + 19), (x1, y + 19)], fill=(255, 255, 255, 170), width=2)
-        d.text(((W - tw) / 2, y), txt, font=fs, fill=(255, 255, 255, 235))
+            d.line([(x0, y + 23), (x1, y + 23)], fill=(255, 255, 255, 190), width=2)
+        s = Image.new('RGBA', img.size, (0, 0, 0, 0)); ImageDraw.Draw(s).text(((W - tw) / 2, y + 2), txt, font=fs, fill=(0, 0, 0, 150))
+        img = Image.alpha_composite(img, s.filter(ImageFilter.GaussianBlur(6))); d = ImageDraw.Draw(img)
+        d.text(((W - tw) / 2, y), txt, font=fs, fill=(255, 255, 255, 245))
     return np.array(img).astype(np.float32) / 255
 
 def cola(fr, rgba, x, y, alfa=1.0):
@@ -146,11 +152,12 @@ def cola(fr, rgba, x, y, alfa=1.0):
     reg = fr[y0:y1, x0:x1].astype(np.float32)
     fr[y0:y1, x0:x1] = (reg * (1 - al) + sub[..., :3] * 255 * al).astype(np.uint8)
 
-LET = lettering(); WM = marca(28, 24, 3.2, 190); FIM = marca(54, 40, 6, 240, 0)
-y_let = 330 if a.pos == 'alto' else 1150
+LET = lettering(); WM = None if a.sem_marca else marca(28, 24, 3.2, 190)
+FIM = (LET if LET is not None else None) if a.sem_marca else marca(54, 40, 6, 240, 0)
+y_let = 300 if a.pos == 'alto' else 1120
 let_blur = [cv2.GaussianBlur(LET, (0, 0), s) if s > 0 else LET for s in np.linspace(9, 0, 12)] if LET is not None else None
 T_IN, T_OUT = 0.35, min(TOT * 0.42, 4.2)
-FINAL = 0 if a.sem_final else 1.9
+FINAL = 0 if (a.sem_final or FIM is None) else 1.9
 
 # ---------------- transições: zoom com desfoque radial nos cortes alternados ----------------
 TRANS = set(range(0, len(segs) - 1, 2))   # corte k -> k+1 com transição; os outros são corte seco na batida
@@ -233,7 +240,7 @@ for k, ((c, t0, d), arq) in enumerate(zip(segs, prontos)):
             fr = cv2.addWeighted(bl, 1 - 0.55 * p, np.zeros_like(bl), 0, 0)
             q = ease(min(1, max(0, (tf - 0.25) / 0.6)))
             cola(fr, FIM, (W - FIM.shape[1]) / 2, H / 2 - FIM.shape[0] / 2 + 14 * (1 - q), q)
-        else:
+        elif WM is not None:
             cola(fr, WM, (W - WM.shape[1]) / 2, H - 330 + 26)
         if t < 0.25: fr = (fr * (t / 0.25)).astype(np.uint8)
         enc.stdin.write(fr.tobytes())
