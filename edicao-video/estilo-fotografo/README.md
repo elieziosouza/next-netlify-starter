@@ -69,3 +69,20 @@ SemiBold 36 espaçado com filetes, e uma sombra difusa (sem bordas) atrás do te
   CC BY 3.0, exigem crédito na legenda: `Música: "Nome da faixa", Kevin MacLeod (incompetech.com), CC BY 3.0`.
   O upload.wikimedia.org limita IP compartilhado (429, retry-after 600): baixar uma faixa por vez, com intervalo.
   Epidemic Sound e Pixabay estão bloqueados na rede da sessão; ele baixa e manda o arquivo.
+
+## Recursos de storymaker (24/10/2026, "a edição está genérica e com poucos recursos")
+
+Ligados por padrão no `story_aaa.py` (`--simples` volta ao básico). Código em `efeitos.py`.
+
+- **Texto atrás da pessoa:** se a abertura tem gente, o título entra gigante (DM Serif, largura da tela) atrás dela
+  (U2Net). A cabeça cobre a metade de baixo das letras: dá profundidade e ainda se lê. A linha de baixo
+  ("BETH · 70 ANOS") fica na frente, no peito. Sem pessoa, o título fica na frente com sombra difusa.
+- **Letras animadas:** cada letra sobe e aparece, uma depois da outra (45 ms).
+- **Clique da foto:** 1 por story (2 acima de 14 s), no meio: congela no fim do trecho, flash, som de obturador
+  sintetizado e o quadro vira foto com borda branca (mais larga embaixo), inclinada, com sombra, sobre o próprio
+  quadro desfocado. Corte seco depois.
+- **Rampa de velocidade:** até 2 trechos com sobra de clipe: começa ~2x e assenta em ~0,75x (mistura de quadros).
+- **Cortes alternados:** zoom com desfoque (whoosh) · vazamento de luz quente (swish) · seco na batida.
+- **Pulso:** no tempo 3 de cada compasso, zoom de 3% e brilho rápido, longe dos cortes.
+- **Cinema:** brilho suave nos claros e granulação fina, em todos os quadros.
+- Tempo: ~3 min para 18 s (a máscara da pessoa roda a cada 2 quadros só enquanto o título está na tela).

@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, AQUI); sys.path.insert(0, os.path.join(AQUI, '..', 'scripts'))
-import cor_fotografo as cor
+import cor_fotografo as cor, efeitos as fx
 FONTS = os.path.join(AQUI, '..', 'assets', 'fonts')
 W, H, FPS, SR = 1080, 1920, 30, 48000
 
@@ -24,6 +24,7 @@ ap.add_argument('--dur', type=float, default=16); ap.add_argument('--estilo', de
 ap.add_argument('--texto', default=''); ap.add_argument('--sub', default=''); ap.add_argument('--pos', default='alto')
 ap.add_argument('--som', type=float, default=0.15); ap.add_argument('--sem-final', action='store_true')
 ap.add_argument('--sem-marca', action='store_true')
+ap.add_argument('--simples', action='store_true')   # sem os recursos de storymaker (só corte, cor, zoom e texto)
 ap.add_argument('--musica', default='')   # faixa livre (mp3/wav): BPM detectado, melhor trecho, cortes na batida dela   # versão para cliente/organizador: sem marca d'água; a tela final mostra o lettering
 a = ap.parse_args()
 BPM = 120 if a.estilo == 'festa' else 84
@@ -95,11 +96,30 @@ segs = escolhe(clipes, a.dur)
 TOT = sum(d for _, _, d in segs)
 print('trechos:', [(os.path.basename(c['p'])[-10:], round(t0, 2), round(d, 2)) for c, t0, d in segs], f'total {TOT:.2f}s', flush=True)
 
+# ---------------- plano de efeitos ----------------
+NSEG = len(segs); FOTO = set(); RAMP = {}; FX = not a.simples
+if FX:
+    # "clique da foto": 1 por story (2 se passar de 14 s), no meio, nunca na abertura nem no fim
+    for k in sorted(range(1, NSEG - 1), key=lambda k: abs(k - NSEG * 0.45)):
+        if len(FOTO) >= (1 if TOT < 14 else 2): break
+        if segs[k][2] >= 1.6 and all(abs(k - j) > 1 for j in FOTO): FOTO.add(k)
+    # rampa de velocidade (acelera e assenta): onde o clipe tem sobra para correr
+    for k in range(1, NSEG):
+        c, t0, d = segs[k]
+        sobra = (c['dur'] - t0 - 0.05) / d
+        if k not in FOTO and 'fix' not in c and len(RAMP) < 2 and d >= 1.5 and sobra >= 1.2: RAMP[k] = round(min(1.4, sobra), 2)
+# tipo de cada corte k -> k+1: zoom com desfoque, vazamento de luz ou seco na batida (depois da foto é sempre seco)
+CORTE = {}; ciclo = ['zoom', 'luz', 'seco'] if FX else ['zoom', 'seco']; j = 0
+for k in range(NSEG - 1):
+    if k in FOTO: CORTE[k] = 'seco'; continue
+    CORTE[k] = ciclo[j % len(ciclo)]; j += 1
+print('efeitos:', 'foto', sorted(FOTO), 'rampa', sorted(RAMP), 'cortes', [CORTE[k] for k in range(NSEG - 1)], flush=True)
+
 # ---------------- estabilização + limpeza + cor + escala (em paralelo) ----------------
 def prepara(k):
     c, t0, d = segs[k]; trf = os.path.join(TMP, f's{k}.trf'); lut = os.path.join(TMP, f's{k}.cube'); out = os.path.join(TMP, f's{k}.mp4')
     g, ev = cor.mede(cor.amostra(c['p'], t0, d)); cor.cube(lut, g, ev)
-    ss = ['-ss', f'{t0:.3f}', '-t', f'{d:.3f}', '-i', c['p']]
+    ss = ['-ss', f'{t0:.3f}', '-t', f'{d * RAMP.get(k, 1) + 0.05:.3f}', '-i', c['p']]
     run(['ffmpeg', '-v', 'error', '-y', *ss, '-vf', f'vidstabdetect=shakiness=7:accuracy=15:result={trf}', '-f', 'null', '-'])
     base = (f'hqdn3d=1.5:1.5:5:5,vidstabtransform=input={trf}:smoothing=18:optzoom=1:zoomspeed=0.2:interpol=bicubic,'
             f'lut3d={lut}:interp=tetrahedral')
@@ -169,12 +189,11 @@ def cola(fr, rgba, x, y, alfa=1.0):
 LET = lettering(); WM = None if a.sem_marca else marca(28, 24, 3.2, 190)
 FIM = (LET if LET is not None else None) if a.sem_marca else marca(54, 40, 6, 240, 0)
 y_let = 300 if a.pos == 'alto' else 1120
-let_blur = [cv2.GaussianBlur(LET, (0, 0), s) if s > 0 else LET for s in np.linspace(9, 0, 12)] if LET is not None else None
 T_IN, T_OUT = 0.35, min(TOT * 0.42, 4.2)
 FINAL = 0 if (a.sem_final or FIM is None) else 1.9
 
 # ---------------- transições: zoom com desfoque radial nos cortes alternados ----------------
-TRANS = set(range(0, len(segs) - 1, 2))   # corte k -> k+1 com transição; os outros são corte seco na batida
+TRANS = {k for k, v in CORTE.items() if v == 'zoom'}
 NA, NB = 4, 5                             # quadros antes / depois do corte
 
 def zoom(fr, z, cx=W / 2, cy=H / 2):
@@ -214,14 +233,22 @@ for c, t0, d in segs:
     else: x = np.zeros((n, 2), np.float32)
     amb.append(x)
 amb = np.concatenate(amb)[:NS]; mix[:len(amb)] += amb * a.som
+FZ = {}   # quadros congelados no fim de cada segmento com "clique da foto"
+for k in FOTO: FZ[k] = int(round(min(0.9, segs[k][2] * 0.5) * FPS))
+def soma(sig, t, g):
+    i0 = int(t * SR)
+    if i0 < 0: sig = sig[-i0:]; i0 = 0
+    i1 = min(NS, i0 + len(sig)); mix[i0:i1] += sig[:i1 - i0] * g
 try:
     import sfx
-    wh = sfx.whoosh(0.45) * 0.10; t_acc = 0
-    for k, (_, _, d) in enumerate(segs[:-1]):
+    wh = sfx.whoosh(0.45); sw = fx.swish(0.55); ob = fx.obturador(); t_acc = 0
+    for k, (_, _, d) in enumerate(segs):
+        if k in FOTO: soma(ob, t_acc + d - FZ[k] / FPS - 0.01, 0.55)
         t_acc += d
-        if k in TRANS:
-            i0 = int((t_acc - 0.30) * SR); i1 = min(NS, i0 + len(wh)); mix[i0:i1] += wh[:i1 - i0]
-except Exception as e: print('sem whoosh:', e)
+        if k < NSEG - 1:
+            if CORTE[k] == 'zoom': soma(wh, t_acc - 0.30, 0.10)
+            if CORTE[k] == 'luz': soma(sw, t_acc - 0.28, 0.10)
+except Exception as e: print('sem efeitos sonoros:', e)
 fo = int(1.6 * SR); mix[-fo:] *= np.linspace(1, 0, fo)[:, None] ** 1.5
 mix[:int(0.1 * SR)] *= np.linspace(0, 1, int(0.1 * SR))[:, None]
 mix = np.tanh(mix * 1.1) * 0.93
@@ -229,34 +256,118 @@ wav = os.path.join(TMP, 'mix.wav')
 with wave.open(wav, 'wb') as w_:
     w_.setnchannels(2); w_.setsampwidth(2); w_.setframerate(SR); w_.writeframes((mix * 32767).astype('<i2').tobytes())
 
-# ---------------- composição quadro a quadro ----------------
+
+# ---------------- lettering animado (atrás da pessoa quando há gente na abertura) ----------------
+F_TIT = os.path.join(FONTS, 'DMSerifDisplay-Regular.ttf'); F_SUB = os.path.join(FONTS, 'Montserrat-SemiBold.ttf')
+MODELO = os.path.join(os.environ.get('EDICAO_MODELOS', os.path.expanduser('~/.cache/edicao-video')), 'seg', 'u2net_human_seg.onnx')
+PESSOA = fx.Pessoa(MODELO) if (FX and a.texto and os.path.exists(MODELO)) else None
+TIT = SUB = None; Y_TIT = Y_SUB = None; ATRAS = False
+T_SUB = T_IN + 0.35
+
+def monta_lettering(primeiro):
+    """Decide o modo do lettering olhando o primeiro quadro da abertura."""
+    global TIT, SUB, Y_TIT, Y_SUB, ATRAS, T_SUB
+    if a.texto:
+        if PESSOA is not None:
+            m = PESSOA(primeiro)
+            if m.mean() > 0.05:
+                sp, hb, tam = fx.letras(a.texto, F_TIT, 320, largura_max=W - 60, espaco=2)
+                y = fx.faixa_atras(m, hb, letras=fx.linhas_letras(sp))
+                if y is not None: TIT, Y_TIT, ATRAS = (sp, hb), y, True
+        if TIT is None:
+            sp, hb, tam = fx.letras(a.texto, F_TIT, 176 if len(a.texto) <= 10 else 124)
+            TIT, Y_TIT = (sp, hb), (300 if a.pos == 'alto' else 1120)
+    if a.sub:
+        sp, hb, _ = fx.letras(a.sub.upper(), F_SUB, 36, espaco=9)
+        SUB = (sp, hb)
+        Y_SUB = (H - 600) if ATRAS else ((Y_TIT + TIT[1] - 34) if TIT else (300 if a.pos == 'alto' else 1120))
+    T_SUB = T_IN + 0.3 + (len(TIT[0]) * 0.045 if TIT else 0)
+    print('lettering:', 'atrás da pessoa' if ATRAS else 'na frente', f'y={Y_TIT}', flush=True)
+
+def sombra_texto(fr, y, hb, alfa):
+    """Sombra difusa atrás do texto (só no modo na frente), para ler sobre fundo cheio."""
+    y0, y1 = max(0, y - 40), min(H, y + hb + 40)
+    if y1 <= y0 or alfa <= 0: return fr
+    yy, xx = np.mgrid[y0:y1, 0:W].astype(np.float32)
+    g = np.exp(-(((xx - W / 2) / (W * 0.38)) ** 2 + ((yy - (y + hb / 2)) / (hb * 0.75)) ** 2)) * 0.38 * alfa
+    fr[y0:y1] = (fr[y0:y1].astype(np.float32) * (1 - g[..., None])).astype(np.uint8)
+    return fr
+
+class Leitor:
+    """Lê os quadros de um segmento em ordem e entrega o quadro de qualquer índice (fracionário) para a frente."""
+    def __init__(self, arq):
+        self.p = subprocess.Popen(['ffmpeg', '-v', 'quiet', '-i', arq, '-f', 'rawvideo', '-pix_fmt', 'bgr24', '-'], stdout=subprocess.PIPE)
+        self.i = -1; self.cur = None; self.prev = None
+    def _le(self):
+        b = self.p.stdout.read(W * H * 3)
+        if len(b) == W * H * 3: self.prev, self.cur = self.cur, np.frombuffer(b, np.uint8).reshape(H, W, 3)
+        self.i += 1
+    def get(self, x):
+        n = int(np.floor(x)); fr = x - n
+        while self.i < n + (1 if fr > 0.05 else 0): self._le()
+        if fr > 0.05 and self.prev is not None:   # câmera lenta: mistura dos dois quadros vizinhos
+            return cv2.addWeighted(self.prev, 1 - fr, self.cur, fr, 0)
+        return self.cur.copy()
+    def fecha(self): self.p.stdout.close(); self.p.wait()
+
+def tempo_fonte(nf, fator):
+    """Rampa de velocidade: começa ~2x e assenta em ~0,75x. Devolve o índice de quadro da fonte para cada quadro."""
+    if fator == 1: return np.arange(nf, dtype=np.float64)
+    u = np.arange(nf) / max(nf - 1, 1); v = 0.75 + 1.3 * (1 - ease(u))
+    v *= (fator * nf - 1) / v.sum()
+    return np.r_[0, np.cumsum(v)[:-1]]
+
+# cortes e batidas no tempo global
+CUTS = np.cumsum([d for _, _, d in segs])[:-1]
+def pulso_em(t):
+    """Pulso no tempo 3 de cada compasso (o tempo 1 já tem corte), longe de cortes e de foto congelada."""
+    if not FX: return 0.0
+    b3 = np.floor((t - 2 * BEAT) / (4 * BEAT)) * 4 * BEAT + 2 * BEAT
+    dt = t - b3
+    if dt < 0 or dt > 0.35 or (len(CUTS) and np.min(np.abs(CUTS - b3)) < 0.3): return 0.0
+    return float(np.exp(-dt / 0.11))
+
 enc = subprocess.Popen(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'bgr24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',
                         '-i', wav, '-map', '0:v', '-map', '1:a', '-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-profile:v', 'high',
                         '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', '-shortest', a.saida], stdin=subprocess.PIPE)
-NTOT = int(round(TOT * FPS)); gi = 0
+gi = 0; ii = 0; mask = None
 for k, ((c, t0, d), arq) in enumerate(zip(segs, prontos)):
     nf = int(round((sum(s[2] for s in segs[:k + 1])) * FPS)) - gi
-    dec = subprocess.Popen(['ffmpeg', '-v', 'quiet', '-i', arq, '-f', 'rawvideo', '-pix_fmt', 'bgr24', '-'], stdout=subprocess.PIPE)
-    ult = None; z0, z1 = (1.0, 1.05) if k % 2 == 0 else (1.05, 1.0)   # aproximação / afastamento alternados
+    lei = Leitor(arq); fz = FZ.get(k, 0); src = tempo_fonte(nf - fz, RAMP.get(k, 1)); congelado = None
+    z0, z1 = (1.0, 1.05) if k % 2 == 0 else (1.05, 1.0)   # aproximação / afastamento alternados
     for i in range(nf):
-        b = dec.stdout.read(W * H * 3)
-        fr = np.frombuffer(b, np.uint8).reshape(H, W, 3).copy() if len(b) == W * H * 3 else ult.copy()
-        ult = fr; u = i / max(nf - 1, 1); t = (gi + i) / FPS
-        z = z0 + (z1 - z0) * ease(u)
-        extra = 0.0; blur = 0.0
-        if k in TRANS and i >= nf - NA: p = (i - (nf - NA) + 1) / NA; extra, blur = 0.10 * p * p, 0.12 * p
-        if (k - 1) in TRANS and i < NB: p = 1 - i / NB; extra, blur = -0.0, 0.12 * p * p; z *= 1 + 0.08 * p * p
-        fr = zoom(fr, z * (1 + extra))
-        fr = zoom_blur(fr, blur)
-        if blur > 0.06: fr = cv2.addWeighted(fr, 1.0, np.full_like(fr, 255), 0.10 * (blur / 0.12), 0)   # brilho leve no corte
-        # lettering saindo do desfoque
-        if LET is not None and T_IN <= t <= T_OUT + 0.6:
-            if t < T_IN + 0.7:
-                p = (t - T_IN) / 0.7; idx = min(11, int(ease(p) * 11)); cola(fr, let_blur[idx], 0, y_let + 18 * (1 - ease(p)), ease(p))
-            elif t > T_OUT:
-                p = (t - T_OUT) / 0.6; idx = max(0, 11 - int(p * 11)); cola(fr, let_blur[idx], 0, y_let - 10 * p, 1 - ease(p))
-            else: cola(fr, LET, 0, y_let)
-        # tela final: escurece e desfoca o último plano, marca no centro
+        t = (gi + i) / FPS; u = i / max(nf - 1, 1)
+        if i < nf - fz:
+            fr = lei.get(src[i])
+            if k == 0 and i == 0 and (a.texto or a.sub): monta_lettering(fr)
+            z = (z0 + (z1 - z0) * ease(u)) * (1 + 0.03 * pulso_em(t))
+            extra = blur = 0.0
+            if CORTE.get(k) == 'zoom' and i >= nf - NA: p = (i - (nf - NA) + 1) / NA; extra, blur = 0.10 * p * p, 0.12 * p
+            if CORTE.get(k - 1) == 'zoom' and i < NB: p = 1 - i / NB; blur = 0.12 * p * p; z *= 1 + 0.08 * p * p
+            fr = zoom_blur(zoom(fr, z * (1 + extra)), blur)
+            if blur > 0.06: fr = cv2.addWeighted(fr, 1.0, np.full_like(fr, 255), 0.10 * (blur / 0.12), 0)
+            fr = fx.pulso(fr, pulso_em(t))
+            if i == nf - fz - 1 and fz: congelado = fr.copy()
+        else:   # clique da foto: congela, flash e vira foto com borda
+            fr = fx.foto(congelado, (i - (nf - fz)) / max(fz - 1, 1), angulo=-4 if len([j for j in FOTO if j < k]) % 2 == 0 else 3.5)
+        # vazamento de luz nos cortes "luz"
+        for kk in (k - 1, k):
+            if CORTE.get(kk) == 'luz':
+                tc = CUTS[kk]; p = (t - (tc - 0.22)) / 0.6
+                if 0 <= p <= 1: fr = fx.vazamento(fr, p, semente=kk)
+        if FX: fr = fx.cinema(fr, ii)
+        # lettering
+        if (TIT or SUB) and T_IN <= t <= T_OUT + 0.5:
+            sai = 1 - ease(min(1, max(0, (t - T_OUT) / 0.5)))
+            if ATRAS and (ii % 2 == 0 or mask is None): mask = PESSOA(fr)   # máscara a cada 2 quadros (pessoa mexe pouco)
+            if TIT:
+                faixa = fx.camada_letras(TIT[0], TIT[1], t, T_IN)
+                if not ATRAS: fr = sombra_texto(fr, Y_TIT, TIT[1], ease(min(1, (t - T_IN) / 0.5)) * sai)
+                fr = fx.aplica_faixa(fr, faixa, Y_TIT - int(12 * (1 - sai)), sai, mask)
+            if SUB and t >= T_SUB:
+                if ATRAS: fr = sombra_texto(fr, Y_SUB, SUB[1], ease(min(1, (t - T_SUB) / 0.4)) * sai * 0.8)
+                fr = fx.aplica_faixa(fr, fx.camada_letras(SUB[0], SUB[1], t, T_SUB, passo=0.02, dur=0.3, subida=14), Y_SUB, sai)
+        # tela final
         tf = t - (TOT - FINAL)
         if FINAL and tf >= 0:
             p = ease(min(1, tf / 0.6)); bl = cv2.GaussianBlur(fr, (0, 0), 1 + 14 * p)
@@ -266,7 +377,7 @@ for k, ((c, t0, d), arq) in enumerate(zip(segs, prontos)):
         elif WM is not None:
             cola(fr, WM, (W - WM.shape[1]) / 2, H - 330 + 26)
         if t < 0.25: fr = (fr * (t / 0.25)).astype(np.uint8)
-        enc.stdin.write(fr.tobytes())
-    dec.stdout.close(); dec.wait(); gi += nf
+        enc.stdin.write(fr.tobytes()); ii += 1
+    lei.fecha(); gi += nf
 enc.stdin.close(); enc.wait()
 print('pronto:', a.saida, f'{TOT:.1f}s')
