@@ -12,17 +12,17 @@ p = subprocess.run(["ffmpeg", "-v", "error", "-ss", "16.5", "-i", f"{S}/v59/cl.m
 lula = np.frombuffer(p, np.uint8).reshape(848, 480, 3)[20:520]; lula = cv2.LUT(lula, R.LUT)
 def scene(t1, t2, band, bcol, btc, name, emo, tface=16.5):
     img = Image.fromarray(M.NAVY_BG.copy()).convert("RGBA")
-    me, idx = M.graded(tface); m = me[240:1600]; top = 860; ph = H - top; fw = int(m.shape[1] * ph / m.shape[0]); fw = min(fw, 2 * (W - CX) - 4)
+    me, idx = M.graded(tface); m = me[190:1600]; top = 860; ph = H - top; fw = int(m.shape[1] * ph / m.shape[0]); fw = min(fw, 2 * (W - CX) - 4)
     fg = cv2.resize(m, (fw, ph), interpolation=cv2.INTER_AREA); x0 = CX - fw // 2
     lay = np.zeros((ph, W, 4), np.uint8); lay[:, x0:x0 + fw, :3] = fg
     al = np.ones((ph, fw), np.float32); al[:200] *= np.linspace(0, 1, 200)[:, None]; al[:, :70] *= np.linspace(0, 1, 70)[None]; al[:, -70:] *= np.linspace(1, 0, 70)[None]
     lay[:, x0:x0 + fw, 3] = (al * 255).astype(np.uint8); img.alpha_composite(Image.fromarray(lay), (0, top))
     c = Image.fromarray(R.rounded(lula, 22, 5)).resize((400, 417), Image.LANCZOS).rotate(-3, resample=Image.BICUBIC, expand=True)
-    R.paste(img, c, CX + 70, 470, 0.8, 26, (10, 26))
-    R.pill(img, "LULA NO DEBATE", CX + 70 + c.width / 2, 905, 1.0, fill=BLUE, size=30)
-    M.pop(img, M.emoji(emo, 210), CX - 250, 700, 1.0, 99, wob=False)
+    c = c.resize((int(c.width * 0.9), int(c.height * 0.9)), Image.LANCZOS); R.paste(img, c, CX + 80, 450, 0.8, 26, (10, 26))
+    R.pill(img, "LULA NO DEBATE", CX + 80 + c.width / 2, 450 + c.height - 30, 1.0, fill=BLUE, size=28)
+    
     word(img, t1, 190, 175, WHITE); word(img, t2, 360, 150, YEL)
-    word(img, band, 1000, 60, btc, band=bcol, tcol=btc, rot=-2)
+    word(img, band, 905, 60, btc, band=bcol, tcol=btc, rot=-2)
     BAR.draw_bar(img, 0.0, "canal"); img.alpha_composite(R.top, (R.HDX, 0)); img.convert("RGB").save(f"{V}/{name}.jpg", quality=95)
 scene("“NOVE DEDOS”?", "FALTOU RESPEITO", "FALTA ARGUMENTO, SOBRA OFENSA", (150, 20, 30), WHITE, "capa_A", "😡")
 scene("ELE ZOMBOU", "DO TRABALHADOR?", "OLHA A RESPOSTA DO LULA", BLUE, WHITE, "capa_B", "👷")
