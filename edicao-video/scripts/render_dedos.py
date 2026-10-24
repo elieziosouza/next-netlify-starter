@@ -10,7 +10,7 @@ M = importlib.util.module_from_spec(spec); spec.loader.exec_module(M); R = M.R
 import sfx
 BAR = R.BAR; W, H, FPS = R.W, R.H, R.FPS; CX = R.CX; clamp = R.clamp; ease_out = R.ease_out; ease_in = R.ease_in; ease_io = R.ease_io
 V = f"{S}/v60"; M.ME = f"{V}/raw.mp4"; M._ch.clear(); M._gr.clear(); CL = f"{S}/v59/cl.mp4"; BLUE = M.BLUE
-PARTS = [("cl", 38.0, 45.15, "cold"), ("cl", 38.0, 45.15, "rew", 0.5), ("cl", 5.30, 20.0, "clip"), ("cl", 27.62, 31.12, "clip"), ("cl", 46.15, 62.45, "clip"), ("cl", 62.95, 70.8, "clip"), ("me", 0.45, 7.10, "full"), ("me", 7.30, 10.05, "full"), ("me", 10.38, 12.70, "full"), ("me", 12.98, 15.55, "full")]
+PARTS = [("cl", 38.0, 45.15, "cold"), ("cl", 38.0, 45.15, "rew", 0.5), ("cl", 5.30, 20.0, "clip"), ("cl", 27.62, 31.12, "clip"), ("cl", 46.15, 62.45, "clip"), ("cl", 62.95, 70.8, "clip")]
 segs = []; acc = 0.0
 for src_, a, b, mode, *d in PARTS:
     dur = d[0] if d else b - a; segs.append(dict(src=src_, a=a, b=b, mode=mode, t0=acc, t1=acc + dur)); acc += dur
@@ -156,7 +156,7 @@ def main():
     for nm, p in (("me", M.ME), ("cl", CL)): subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", p, "-ar", "48000", "-ac", "2", f"{V}/{nm}48.wav"], check=True)
     src = {"me": R.readw(f"{V}/me48.wav"), "cl": R.readw(f"{V}/cl48.wav")}
     def rms(c): v = c[np.abs(c).max(1) > 0.01]; return float(np.sqrt((v ** 2).mean())) if len(v) else 1e-6
-    ref = {k: np.median([rms(src[k][int(s["a"] * SR):int(s["b"] * SR)]) for s in segs if s["src"] == k]) for k in src}
+    ref = {"me": rms(src["me"][int(0.45 * SR):int(15.55 * SR)]), "cl": np.median([rms(src["cl"][int(s["a"] * SR):int(s["b"] * SR)]) for s in segs if s["src"] == "cl" and s["mode"] != "rew"])}
     vt = np.zeros((n, 2), np.float32); f = int(0.012 * SR)
     for s in segs:
         if s["mode"] == "rew": continue
@@ -178,7 +178,7 @@ def main():
     for a, *_r in ICONS:
         ta = om("me", a)
         if ta is not None: ev += [(ta, sfx.click(), 0.45)]
-    ev += [(next(s["t0"] for s in segs if s["src"] == "me") - 0.1, sfx.whoosh(0.45), 0.26)]
+    
     sfx.build([e for e in ev if e[0] is not None and 0 <= e[0] < TOTAL - 0.9], TOTAL, f"{V}/sfx.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/song.wav", "-filter_complex",
                     "[1:a]highpass=f=80,acompressor=threshold=0.08:ratio=2.5:attack=8:release=200:makeup=1.6,asplit=2[vox][k2];[2:a]volume=0.8[sf];[3:a]volume=0.95[sg];"
