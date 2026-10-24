@@ -86,3 +86,23 @@ Ligados por padrão no `story_aaa.py` (`--simples` volta ao básico). Código em
 - **Pulso:** no tempo 3 de cada compasso, zoom de 3% e brilho rápido, longe dos cortes.
 - **Cinema:** brilho suave nos claros e granulação fina, em todos os quadros.
 - Tempo: ~3 min para 18 s (a máscara da pessoa roda a cada 2 quadros só enquanto o título está na tela).
+
+## Modo cinema / roteiro (24/10/2026, "edição avançadíssima, dinamismo e emoção"): `story_cinema.py`
+
+Padrão a partir de agora. Inspirado em filme de casamento/evento: o vídeo conta uma história em 4 atos, e trilha,
+imagem e efeitos seguem o mesmo arco (17 s a 120 BPM).
+
+1. **Abertura (8 tempos):** sai do preto, faixas de cinema (letterbox 210 px), 2 planos em câmera lenta (0,6x),
+   vazamento de luz entre eles, piano + som real da festa por baixo, título com letras subindo (atrás da pessoa).
+2. **Subida (4 tempos):** cortes acelerando 1, 1, ½, ½, ¼, ¼, ¼, ¼ tempo; zoom crescendo 10%; faixas apertam;
+   riser, caixa acelerando e meio tempo de silêncio.
+3. **Explosão (16 tempos):** flash branco, impacto e tremor de câmera; faixas abrem em 0,12 s; corte em toda batida
+   com pulso de zoom e brilho; cortes chicote (desfoque horizontal, direção alternada), zoom e luz; tela em 3 colunas
+   com divisória branca entrando uma a uma; stutter (repete 1/3 de tempo); rampas (lento e acelera para o corte).
+4. **Final (6 tempos):** faixas voltam, câmera lenta 0,7x, clique da foto e tela da marca (ou do título, na versão
+   do organizador).
+
+- Ordem: o 1º clipe abre e o último fecha (`clipe.mp4@0.2` fixa o início); os do meio entram em rodízio.
+- Trilha própria `trilha_cinema.py` (piano Am F C G, riser, explosão com impacto). Com `--musica`, a explosão é
+  colocada na maior subida de energia da faixa.
+- Vinheta leve, brilho de cinema e grão em tudo. Tempo: ~5 min para 17 s.
