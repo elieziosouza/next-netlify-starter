@@ -58,3 +58,14 @@ Na festa, entregar sempre as duas: `..._esouza.mp4` (com marca, para o Instagram
 
 Lettering de abertura no estilo storymaker de evento: nome curto em DM Serif 176 px, linha "70 ANOS" em Montserrat
 SemiBold 36 espaçado com filetes, e uma sombra difusa (sem bordas) atrás do texto para ler sobre flores e decoração.
+
+## Bastidores e música livre (24/10/2026)
+
+- **Bastidores ("eu fotografando"):** abrir com ele olhando ou sorrindo para a câmera e fechar com ele saindo de cena
+  andando com a câmera. Lettering `--pos baixo` (no peito) para nunca cobrir o rosto: no alto, a sombra do texto
+  escureceu a testa dele. Versão só dele (com marca); não precisa da versão do organizador.
+- **Fixar um trecho:** `clipe.mp4@0.1+3` começa em 0,1 s e dura ~3 s (arredondado na batida).
+- **Música livre:** `--musica faixa.mp3` (ver `musica.py`). Faixas do Kevin MacLeod no Wikimedia Commons, licença
+  CC BY 3.0, exigem crédito na legenda: `Música: "Nome da faixa", Kevin MacLeod (incompetech.com), CC BY 3.0`.
+  O upload.wikimedia.org limita IP compartilhado (429, retry-after 600): baixar uma faixa por vez, com intervalo.
+  Epidemic Sound e Pixabay estão bloqueados na rede da sessão; ele baixa e manda o arquivo.

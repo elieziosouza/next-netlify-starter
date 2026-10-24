@@ -6,7 +6,8 @@
 # Uso:
 #   python3 story_aaa.py saida.mp4 clipe1.mp4 [clipe2.mp4 ...] [--dur 16] [--estilo festa|romantico]
 #                        [--texto "Os detalhes"] [--sub "24.10.2026"] [--pos alto|baixo] [--som 0.15] [--sem-marca]
-# A ordem dos clipes na linha de comando é a ordem do vídeo.
+# A ordem dos clipes na linha de comando é a ordem do vídeo. "clipe.mp4@1.5" força o trecho a começar em 1,5 s
+# (ex.: o sorriso para a câmera na abertura); "clipe.mp4@1.5+4" também fixa a duração em ~4 s (arredondada na batida).
 import sys, os, subprocess, json, argparse, tempfile, wave, numpy as np, cv2
 from concurrent.futures import ThreadPoolExecutor
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
@@ -65,6 +66,9 @@ def escolhe(clipes, alvo):
     L = 4 * BEAT; tot_disp = sum(c['dur'] for c in clipes); out = []
     for c in clipes:
         nseg = max(1, int(round(max(L, alvo * c['dur'] / tot_disp) / L)))
+        if 'fix' in c:
+            t0, dd = c['fix']; dd = dd or nseg * L
+            out.append([c, t0, max(2 * BEAT, min(dd, c['dur'] - t0 - 0.05))]); continue
         if c['dur'] <= L * 1.2: out.append([c, 0.15, min(L, c['dur'] - 0.2)]); continue
         # um trecho contínuo por clipe (panorâmica não leva salto no meio do movimento)
         nseg = min(nseg, max(1, int((c['dur'] - 0.4) / L)))
@@ -81,7 +85,12 @@ def escolhe(clipes, alvo):
 
 clipes = []
 for p in a.clipes:
-    dur, w, h, ha = probe(p); c = dict(p=p, dur=dur, w=w, h=h, a=ha); c['nota'], c['af'] = analisa(p, ha); clipes.append(c)
+    fix = None
+    if '@' in p:
+        p, f = p.rsplit('@', 1); t0, _, dd = f.partition('+'); fix = (float(t0), float(dd) if dd else None)
+    dur, w, h, ha = probe(p); c = dict(p=p, dur=dur, w=w, h=h, a=ha); c['nota'], c['af'] = analisa(p, ha)
+    if fix: c['fix'] = fix
+    clipes.append(c)
 segs = escolhe(clipes, a.dur)
 TOT = sum(d for _, _, d in segs)
 print('trechos:', [(os.path.basename(c['p'])[-10:], round(t0, 2), round(d, 2)) for c, t0, d in segs], f'total {TOT:.2f}s', flush=True)
