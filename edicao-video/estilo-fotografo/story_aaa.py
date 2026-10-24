@@ -22,9 +22,14 @@ ap.add_argument('saida'); ap.add_argument('clipes', nargs='+')
 ap.add_argument('--dur', type=float, default=16); ap.add_argument('--estilo', default='festa')
 ap.add_argument('--texto', default=''); ap.add_argument('--sub', default=''); ap.add_argument('--pos', default='alto')
 ap.add_argument('--som', type=float, default=0.15); ap.add_argument('--sem-final', action='store_true')
-ap.add_argument('--sem-marca', action='store_true')   # versão para cliente/organizador: sem marca d'água; a tela final mostra o lettering
+ap.add_argument('--sem-marca', action='store_true')
+ap.add_argument('--musica', default='')   # faixa livre (mp3/wav): BPM detectado, melhor trecho, cortes na batida dela   # versão para cliente/organizador: sem marca d'água; a tela final mostra o lettering
 a = ap.parse_args()
-BPM = 120 if a.estilo == 'festa' else 84; BEAT = 60 / BPM
+BPM = 120 if a.estilo == 'festa' else 84
+if a.musica:
+    import musica; INFO = musica.analisa(a.musica); BPM = INFO['bpm']
+    print(f"música: {os.path.basename(a.musica)} {BPM:.1f} BPM", flush=True)
+BEAT = 60 / BPM
 TMP = tempfile.mkdtemp(prefix='aaa_')
 def run(cmd): subprocess.run(cmd, check=True)
 
@@ -176,11 +181,20 @@ def zoom_blur(fr, amt):
 ease = lambda u: u * u * (3 - 2 * u)
 
 # ---------------- áudio ----------------
-trilha = os.path.join(TMP, 'trilha.wav')
-run([sys.executable, os.path.join(AQUI, 'trilha_festa.py'), trilha, str(TOT + 12), a.estilo])
-with wave.open(trilha) as w_: mus = np.frombuffer(w_.readframes(w_.getnframes()), np.int16).reshape(-1, 2).astype(np.float32) / 32768
-off = int((8 * BEAT if a.estilo == 'festa' else 4 * BEAT) * SR); NS = int(TOT * SR)
-mix = mus[off:off + NS].copy() * 0.85
+NS = int(TOT * SR)
+if a.musica:
+    mus = np.frombuffer(subprocess.check_output(['ffmpeg', '-v', 'error', '-i', a.musica, '-ac', '2', '-ar', str(SR), '-f', 's16le', '-']), np.int16)
+    mus = mus.reshape(-1, 2).astype(np.float32) / 32768
+    t_ini = musica.melhor_trecho(INFO, TOT, a.estilo); off = int(round(t_ini * SR))
+    print(f'trecho da música: {t_ini:.2f}s a {t_ini + TOT:.2f}s', flush=True)
+    mix = np.pad(mus[off:off + NS], ((0, max(0, NS - len(mus[off:off + NS]))), (0, 0))).copy()
+    mix *= 0.20 / (np.sqrt((mix ** 2).mean()) + 1e-6)     # volume padronizado entre faixas diferentes
+else:
+    trilha = os.path.join(TMP, 'trilha.wav')
+    run([sys.executable, os.path.join(AQUI, 'trilha_festa.py'), trilha, str(TOT + 12), a.estilo])
+    with wave.open(trilha) as w_: mus = np.frombuffer(w_.readframes(w_.getnframes()), np.int16).reshape(-1, 2).astype(np.float32) / 32768
+    off = int((8 * BEAT if a.estilo == 'festa' else 4 * BEAT) * SR)
+    mix = mus[off:off + NS].copy() * 0.85
 amb = []
 for c, t0, d in segs:
     n = int(round(d * SR))
@@ -213,7 +227,7 @@ enc = subprocess.Popen(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_f
 NTOT = int(round(TOT * FPS)); gi = 0
 for k, ((c, t0, d), arq) in enumerate(zip(segs, prontos)):
     nf = int(round((sum(s[2] for s in segs[:k + 1])) * FPS)) - gi
-    dec = subprocess.Popen(['ffmpeg', '-v', 'error', '-i', arq, '-f', 'rawvideo', '-pix_fmt', 'bgr24', '-'], stdout=subprocess.PIPE)
+    dec = subprocess.Popen(['ffmpeg', '-v', 'quiet', '-i', arq, '-f', 'rawvideo', '-pix_fmt', 'bgr24', '-'], stdout=subprocess.PIPE)
     ult = None; z0, z1 = (1.0, 1.05) if k % 2 == 0 else (1.05, 1.0)   # aproximação / afastamento alternados
     for i in range(nf):
         b = dec.stdout.read(W * H * 3)
