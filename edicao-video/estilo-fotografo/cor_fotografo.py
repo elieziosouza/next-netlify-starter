@@ -48,11 +48,23 @@ def look(rgb, g, ev):
     y[..., 0] += 0.012 * w; y[..., 2] -= 0.012 * w
     return np.clip(y, 0, 1)
 
-def cube(caminho, g, ev, n=33):
+def look_filme(rgb, g, ev):
+    """Look de cinema por cima da luz natural: contraste mais firme, preto aveludado (matte), sombras levemente
+    frias, claros e pele quentes, saturação contida."""
+    y = look(rgb, g, ev)
+    L = (y @ [0.2126, 0.7152, 0.0722])[..., None]
+    y = L + (y - L) * 0.82                                   # saturação contida
+    s = y * y * (3 - 2 * y); y = y + 0.30 * (s - y)           # contraste em S
+    sh = np.clip(1 - L / 0.45, 0, 1); hi = np.clip((L - 0.55) / 0.45, 0, 1)
+    y = y + sh * np.array([-0.022, 0.004, 0.030]) + hi * np.array([0.022, 0.008, -0.022])
+    y = 0.045 + y * (0.965 - 0.045)                           # preto aveludado, branco sem estourar
+    return np.clip(y, 0, 1)
+
+def cube(caminho, g, ev, n=33, estilo='natural'):
     v = np.linspace(0, 1, n)
     b, gg, r = np.meshgrid(v, v, v, indexing='ij')   # .cube: R varia mais rápido
     rgb = np.stack([r, gg, b], -1).reshape(-1, 3)
-    out = look(rgb, g, ev)
+    out = look_filme(rgb, g, ev) if estilo == 'filme' else look(rgb, g, ev)
     with open(caminho, 'w') as f:
         f.write(f'LUT_3D_SIZE {n}\n')
         f.write('\n'.join(f'{a:.5f} {c:.5f} {d:.5f}' for a, c, d in out))

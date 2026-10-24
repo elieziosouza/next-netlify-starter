@@ -111,3 +111,25 @@ imagem e efeitos seguem o mesmo arco (17 s a 120 BPM).
   subida e explosão são distribuídos do começo ao fim dele, cada um no melhor ponto da sua fatia. O 2º vídeo fecha.
   Nos bastidores da Beth (30 s seguindo ele + 4 s saindo de cena) ficou melhor que misturar 7 vídeos curtos:
   história contínua em vez de pulos de lugar. Para mesa/decoração, vários clipes curtos continuam fazendo sentido.
+
+## Cinematográfico com 1 vídeo (24/10/2026, "queria cinematográfico, faça com apenas 1 vídeo"): `story_filme.py`
+
+Quando ele pede **cinematográfico**, é linguagem de filme, não de storymaker de festa: menos efeito, mais clima.
+
+```bash
+python3 edicao-video/estilo-fotografo/story_filme.py saida.mp4 "video.mp4@4.0" --texto "Bastidores" --sub "Beth · 70 anos"
+```
+
+- **5 planos longos em ordem** dentro do mesmo vídeo (4 · 3,5 · 3,5 · 3 · 4 s = 18 s), cada um no melhor ponto
+  (nítido, pouco tremor) da sua fatia. `@4.0` pula o começo (ele não quer abrir parado olhando para a câmera).
+- **Câmera lenta de verdade:** `minterpolate` (mci, 60 quadros) só nos trechos usados, em paralelo (~11 s de
+  processamento por segundo de fonte, por processo). Planos a 0,5x/0,6x; o 3º é **rampa** de 1x para 0,3x no
+  momento-chave, com **obturador** e o **ápice da trilha** (tímpano + violinos) caindo juntos.
+- **Cor de cinema** (`cor_fotografo.look_filme`): luz natural + saturação 82%, S mais firme, preto aveludado,
+  sombras levemente frias, claros e pele quentes.
+- **Faixas de cinema** de 230 px o vídeo todo; passagens pelo preto entre planos (corte seco do 2º para o 3º, para
+  manter a ação); empurrão lento alternado (6%); brilho nos claros, grão e vinheta mais marcada.
+- **Título tipo crédito:** Montserrat Medium 46 em caixa alta bem espaçada + linha menor, acima da faixa de baixo.
+- **Marca:** pequena dentro da faixa preta de baixo; no fim, tudo vai ao preto e a marca aparece no centro.
+- **Trilha** `trilha_filme.py`: 72 BPM, piano em arpejo + cordas crescendo, ápice, acorde maior com cauda longa.
+- Tempo: ~3 min para 18 s.
