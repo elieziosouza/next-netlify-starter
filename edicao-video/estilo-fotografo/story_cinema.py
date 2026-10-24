@@ -89,20 +89,56 @@ def plano(c, beats, tipo='', modo='acao', ini=None):
     c['usado'].append((t0, t0 + src)); return dict(c=c, t0=t0, beats=beats, tipo=tipo, src=src)
 
 abre, fecha = clipes[0], clipes[-1]
-meio = clipes[1:-1] if len(clipes) > 2 else clipes
-planos.append(plano(abre, 4, 'lenta', 'calma', abre['fix'] if abre['fix'] is not None else None))
-segundo = max(meio, key=lambda c: c['an']['nitidez'].max() - c['an']['trem'].mean())
-planos.append(plano(segundo, 4, 'lenta', 'calma'))
-rr = [0]
-def proximo():
-    c = meio[rr[0] % len(meio)]; rr[0] += 1; return c
-for bt in SUBIDA: planos.append(plano(proximo(), bt))
-for bt, tipo in EXPLOSAO:
-    if tipo == 'tres':
-        p = plano(proximo(), bt, 'tres'); p['extra'] = [plano(proximo(), bt), plano(proximo(), bt)]; planos.append(p)
-    else: planos.append(plano(proximo(), bt, tipo))
-planos.append(plano(fecha, OB, 'final', 'acao', fecha['fix']))
-print('planos:', [(os.path.basename(p['c']['p'])[-6:-4], p['beats'], p['tipo'] or '-') for p in planos], flush=True)
+SEQ = len(clipes) <= 2   # 1 ou 2 vídeos: conta a história em ordem cronológica dentro do vídeo principal
+
+def janela_entre(c, src, lo, hi, modo):
+    """Melhor início entre lo e hi (o trecho cabe inteiro antes do fim do clipe)."""
+    an = c['an']; af = an['af']; n = max(1, int(src * af)); hi = min(hi, c['dur'] - src - 0.05)
+    if hi <= lo: return max(0.0, min(lo, c['dur'] - src - 0.05))
+    melhor, t_m = -1e9, lo
+    for i in range(int(lo * af), int(hi * af) + 1):
+        s = an['nitidez'][i:i + n].mean() - 0.7 * an['trem'][i:i + n].mean() - 3 * an['escuro'][i:i + n].mean()
+        s += (0.8 * an['mov'][i:i + n].mean()) if modo == 'acao' else (-0.4 * an['mov'][i:i + n].mean())
+        if s > melhor: melhor, t_m = s, i / af
+    return t_m
+
+if SEQ:
+    prin = max(clipes, key=lambda c: c['dur'])
+    vel = {'lenta': 0.6, 'rampa': 1.15, 'stutter': 1 / 3, 'final': 0.7}
+    specs = [(4, 'lenta', 'calma')] + [(bt, '', 'acao') for bt in SUBIDA]
+    for bt, tipo in EXPLOSAO: specs += [(bt, tipo, 'acao')] + ([(bt, 'extra', 'acao')] * 2 if tipo == 'tres' else [])
+    p1 = plano(abre, 4, 'lenta', 'calma', abre['fix'])
+    ini = p1['t0'] + p1['src'] if abre is prin else 0.2
+    fim_prin = prin['dur'] - 0.2
+    if fecha is prin and len(clipes) == 1: fim_prin -= OB * B * 0.7 + 0.3
+    srcs = [bt * B * vel.get(tp, 1.0) + 0.1 for bt, tp, _ in specs]
+    folga = max(0.0, (fim_prin - ini - sum(srcs)) / len(specs)); cur = ini; seq = []
+    for (bt, tp, md), sr in zip(specs, srcs):
+        t0 = janela_entre(prin, sr, cur, cur + folga, md); cur = t0 + sr
+        seq.append(dict(c=prin, t0=t0, beats=bt, tipo='' if tp == 'extra' else tp, src=sr))
+    planos.append(p1)
+    for q in seq:
+        if q['tipo'] == '' and planos and planos[-1]['tipo'] == 'tres' and len(planos[-1].setdefault('extra', [])) < 2:
+            planos[-1]['extra'].append(q)
+        else: planos.append(q)
+    if fecha is prin and len(clipes) == 1:
+        sr = OB * B * 0.7 + 0.1; planos.append(dict(c=prin, t0=prin['dur'] - sr - 0.1, beats=OB, tipo='final', src=sr))
+    else: planos.append(plano(fecha, OB, 'final', 'acao', fecha['fix']))
+else:
+    meio = clipes[1:-1] if len(clipes) > 2 else clipes
+    planos.append(plano(abre, 4, 'lenta', 'calma', abre['fix'] if abre['fix'] is not None else None))
+    segundo = max(meio, key=lambda c: c['an']['nitidez'].max() - c['an']['trem'].mean())
+    planos.append(plano(segundo, 4, 'lenta', 'calma'))
+    rr = [0]
+    def proximo():
+        c = meio[rr[0] % len(meio)]; rr[0] += 1; return c
+    for bt in SUBIDA: planos.append(plano(proximo(), bt))
+    for bt, tipo in EXPLOSAO:
+        if tipo == 'tres':
+            p = plano(proximo(), bt, 'tres'); p['extra'] = [plano(proximo(), bt), plano(proximo(), bt)]; planos.append(p)
+        else: planos.append(plano(proximo(), bt, tipo))
+    planos.append(plano(fecha, OB, 'final', 'acao', fecha['fix']))
+print('planos:', [(os.path.basename(p['c']['p'])[-6:-4], round(p['t0'], 1), p['beats'], p['tipo'] or '-') for p in planos], flush=True)
 
 # tipo de cada corte k -> k+1
 NP = len(planos); CORTE = {}; i_sub = 2; i_exp = 2 + len(SUBIDA); i_fim = NP - 1

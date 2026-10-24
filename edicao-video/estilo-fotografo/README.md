@@ -106,3 +106,8 @@ imagem e efeitos seguem o mesmo arco (17 s a 120 BPM).
 - Trilha própria `trilha_cinema.py` (piano Am F C G, riser, explosão com impacto). Com `--musica`, a explosão é
   colocada na maior subida de energia da faixa.
 - Vinheta leve, brilho de cinema e grão em tudo. Tempo: ~5 min para 17 s.
+- **Com 1 ou 2 vídeos (24/10/2026, pedido dele):** se ele manda (ou escolhemos) um plano-sequência longo, o
+  `story_cinema.py` conta a história em ordem cronológica dentro do vídeo principal (o mais longo): os trechos de
+  subida e explosão são distribuídos do começo ao fim dele, cada um no melhor ponto da sua fatia. O 2º vídeo fecha.
+  Nos bastidores da Beth (30 s seguindo ele + 4 s saindo de cena) ficou melhor que misturar 7 vídeos curtos:
+  história contínua em vez de pulos de lugar. Para mesa/decoração, vários clipes curtos continuam fazendo sentido.
