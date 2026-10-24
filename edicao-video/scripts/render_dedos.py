@@ -10,7 +10,7 @@ M = importlib.util.module_from_spec(spec); spec.loader.exec_module(M); R = M.R
 import sfx
 BAR = R.BAR; W, H, FPS = R.W, R.H, R.FPS; CX = R.CX; clamp = R.clamp; ease_out = R.ease_out; ease_in = R.ease_in; ease_io = R.ease_io
 V = f"{S}/v60"; M.ME = f"{V}/raw.mp4"; M._ch.clear(); M._gr.clear(); CL = f"{S}/v59/cl.mp4"; BLUE = M.BLUE
-PARTS = [("cl", 14.88, 17.78, "cold"), ("cl", 5.30, 17.78, "rew", 0.5), ("cl", 5.30, 20.0, "clip"), ("me", 0.45, 7.10, "full"), ("me", 7.30, 10.05, "full"), ("me", 10.38, 12.70, "full"), ("me", 12.98, 15.55, "full")]
+PARTS = [("cl", 38.0, 45.15, "cold"), ("cl", 38.0, 45.15, "rew", 0.5), ("cl", 5.30, 20.0, "clip"), ("cl", 27.62, 31.12, "clip"), ("cl", 46.15, 62.45, "clip"), ("cl", 62.95, 70.8, "clip"), ("me", 0.45, 7.10, "full"), ("me", 7.30, 10.05, "full"), ("me", 10.38, 12.70, "full"), ("me", 12.98, 15.55, "full")]
 segs = []; acc = 0.0
 for src_, a, b, mode, *d in PARTS:
     dur = d[0] if d else b - a; segs.append(dict(src=src_, a=a, b=b, mode=mode, t0=acc, t1=acc + dur)); acc += dur
@@ -84,7 +84,7 @@ def frame_at(t):
         bgm, _ = M.graded(listen_x(tt))
         base = cv2.resize(cv2.GaussianBlur(cv2.resize(bgm, (108, 192)), (0, 0), 3), (W, H)).astype(np.float32) * 0.35
         frame = Image.fromarray(base.astype(np.uint8)).convert("RGBA")
-        kin = ease_out(tt / 0.35); zc = 1.0 + 0.03 * (0.5 - 0.5 * math.cos(2 * math.pi * tt / 7.0))
+        kin = ease_out(tt / 0.35); zc = (1.0 if i % 2 == 0 else 1.06) + 0.03 * (0.5 - 0.5 * math.cos(2 * math.pi * tt / 7.0))
         card = cl_frame(x)
         if zc > 1.001: card = cv2.warpAffine(card, np.float32([[zc, 0, CW / 2 * (1 - zc)], [0, zc, CH * 0.4 * (1 - zc)]]), (CW, CH), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
         if s["mode"] == "rew":                                         # rebobinando: tom frio e linhas
@@ -93,6 +93,11 @@ def frame_at(t):
         R.paste(frame, R.fade(ci, kin), CX - ci.width / 2, CY0 + 200 * (1 - kin), 0.65, 24, (10, 26))
         if s["mode"] == "cold":
             R.pill(frame, "LULA RESPONDE NO DEBATE", CX, 128, clamp(u / 0.25), fill=R.NAVY, size=30)
+            top_word(frame, "EU, DE NOVE DEDOS?", 262, R.GOLD_L, u, maxh=105)
+        elif s["a"] > 25:                                              # resto da resposta
+            R.pill(frame, "LULA RESPONDE NO DEBATE", CX, 128, 1.0, fill=R.NAVY, size=30)
+            for a_, b_, w_, c_ in ((27.62, 31.12, "CARTEIRA PROFISSIONAL", R.GOLD_L), (46.15, 50.4, "PEDIR DESCULPA", R.WHITE), (50.4, 62.45, "TRABALHADORES", R.GOLD_L), (62.95, 70.8, "“UM GRANFINO”", R.WHITE)):
+                if a_ <= x < b_: top_word(frame, w_, 262, c_, x - a_, maxh=105)
         elif s["mode"] == "rew":
             R.pill(frame, "◀◀  VOLTA PRO COMEÇO", CX, 128, 1.0, fill=BLUE, size=30)
         elif u < 3.4:                                                    # gancho
@@ -102,7 +107,7 @@ def frame_at(t):
             R.pill(frame, "AGORA OLHA A RESPOSTA DO LULA", CX, 128, clamp((u - 3.4) / 0.25), fill=R.NAVY, size=30)
             top_word(frame, "A RESPOSTA", 262, R.WHITE, u - 3.4, maxh=105)
         R.credit(frame, "Debate do 2º turno · TV Globo", CX, CY0 + CH + 30, kin, anchor="mm")
-        if x >= 14.9 and s["mode"] == "clip":
+        if 14.9 <= x < 20.5 and s["mode"] == "clip":
             kk = clamp((x - 14.9) / 0.25); txt = "LULA PERDEU O DEDO NUMA METALÚRGICA EM 1964"; sz = 32
             while R.MF("ExtraBold", sz).getlength(txt) + 50 > 820: sz -= 1
             R.pill(frame, txt, CX, 1665, kk, fill=BLUE, size=sz)
@@ -130,7 +135,7 @@ def frame_at(t):
     BAR.draw_bar(frame, clamp(t / END_IN), "canal", ease_out((t - 0.2) / 0.6), cta, 0.5 + 0.5 * math.sin(t * 5))
     R.draw_banners(frame, t)
     for j in range(1, len(segs)):
-        if segs[j]["mode"] != segs[j - 1]["mode"] and abs(t - segs[j]["t0"]) < 0.08:
+        if (segs[j]["mode"] != segs[j - 1]["mode"] or segs[j]["src"] == "cl") and abs(t - segs[j]["t0"]) < 0.08:
             frame = Image.blend(frame, Image.new("RGBA", frame.size, (255, 255, 255, 255)), (1 - abs(t - segs[j]["t0"]) / 0.08) * 0.35)
     if t >= END_IN: frame.alpha_composite(R.fade(R.end_card(t), clamp((t - END_IN) / 0.35)))
     return frame.convert("RGB")
@@ -165,7 +170,7 @@ def main():
     bed = R.readw(os.environ.get("BED", f"{S}/v52/tense.wav")); L = min(len(bed), n); tl = np.arange(L) / SR
     gain = (float(os.environ.get("BEDG", "0.15")) * np.clip(tl / 1.0, 0, 1) + 0.08 * np.clip((tl - (EDIT_END - 0.3)) / 0.5, 0, 1)) * np.clip(1 - (tl - (TOTAL - 1.6)) / 1.5, 0, 1)
     sg = np.zeros((n, 2), np.float32); sg[:L] = bed[:L] * gain[:, None]; R.writew(f"{V}/song.wav", sg)
-    ev = [(0.0, sfx.whoosh(0.4), 0.2), (0.05, sfx.thud(0.5), 0.4), (om("cl", 5.3) + 3.4, sfx.whoosh(0.35), 0.22), (segs[1]["t0"], sfx.whoosh(0.5), 0.35), (END_IN - 0.3, sfx.whoosh(0.6), 0.25)]
+    ev = [(0.0, sfx.whoosh(0.4), 0.2), (0.05, sfx.thud(0.5), 0.4), (om("cl", 5.3) + 3.4, sfx.whoosh(0.35), 0.22), (om("cl", 27.62), sfx.whoosh(0.3), 0.18), (om("cl", 46.15), sfx.whoosh(0.3), 0.18), (om("cl", 50.4), sfx.whoosh(0.3), 0.18), (om("cl", 62.95), sfx.whoosh(0.3), 0.18), (segs[1]["t0"], sfx.whoosh(0.5), 0.35), (END_IN - 0.3, sfx.whoosh(0.6), 0.25)]
     ev += [(om("cl", t0), sfx.click(), 0.45) for t0, *_r in CLIP_POPS] + [(om("cl", 14.9), sfx.click(), 0.45)]
     for a, b, w_, c_, shk in BIG:
         ta = om("me", a)
