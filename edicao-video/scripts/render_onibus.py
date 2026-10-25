@@ -114,21 +114,17 @@ def frame_at(t):
     if t >= END_IN: frame.alpha_composite(R.fade(R.end_card(t), clamp((t - END_IN) / 0.35)))
     return frame.convert("RGB")
 def capa(out):
-    img, _ = M.graded(30.5); TOPH = 760
-    base = NAVY_BG.copy(); fh = H - TOPH; src_ = img[290:1600]; fw = int(W * fh / src_.shape[0])
-    bgf = cv2.resize(cv2.GaussianBlur(cv2.resize(src_, (108, 131)), (0, 0), 3), (W, fh)); base[TOPH:] = bgf
-    fc = cv2.resize(src_, (fw, fh), interpolation=cv2.INTER_AREA); xo = (W - fw) // 2; base[TOPH:, xo:xo + fw] = fc
-    ph = IMG["ponto"]; sc = TOPH / ph.shape[0]; pw = int(ph.shape[1] * sc); pr = cv2.resize(ph, (pw, TOPH), interpolation=cv2.INTER_AREA)
-    x0 = (pw - W) // 2 - 60; base[:TOPH] = pr[:, x0:x0 + W]
-    fr = Image.fromarray(base).convert("RGBA")
-    g = np.zeros((TOPH, W, 4), np.uint8); g[..., :3] = (4, 14, 28); g[..., 3] = np.concatenate([np.linspace(150, 40, 260), np.linspace(40, 225, TOPH - 260)]).astype(np.uint8)[:, None]
-    fr.alpha_composite(Image.fromarray(g), (0, 0))
-    d = ImageDraw.Draw(fr); d.rectangle((0, TOPH - 3, W, TOPH + 3), fill=R.GD)
-    for txt, y, sz, col in (("ÔNIBUS NA GARAGEM", 520, 120, (255, 255, 255)), ("NO DIA DA ELEIÇÃO", 645, 104, R.GOLD_L)):
+    ph = IMG["ponto"]; sc = H / ph.shape[0]; pw = int(ph.shape[1] * sc)
+    bg = cv2.resize(ph, (pw, H), interpolation=cv2.INTER_LINEAR)[:, (pw - W) // 2:(pw - W) // 2 + W]
+    bg = (cv2.GaussianBlur(bg, (0, 0), 18).astype(np.float32) * 0.35 + np.array([2, 8, 18], np.float32) * 0.65).astype(np.uint8)
+    fr = Image.fromarray(bg).convert("RGBA"); d = ImageDraw.Draw(fr)
+    for txt, y, sz, col in (("ÔNIBUS NA GARAGEM", 300, 124, (255, 255, 255)), ("NO DIA DA ELEIÇÃO", 430, 108, R.GOLD_L)):
         f = R.BIGF(sz)
         while f.getlength(txt) > 880: sz -= 4; f = R.BIGF(sz)
         d.text((CX, y), txt, font=f, fill=col + (255,), anchor="mm", stroke_width=6, stroke_fill=R.NAVY + (255,))
-    R.pill(fr, "TRE-BA DETERMINOU A PRISÃO DO SECRETÁRIO", CX, TOPH + 4, 1.0, fill=(150, 20, 30), size=34)
+    ci = card("ponto", 900).rotate(-2, resample=Image.BICUBIC, expand=True); R.paste(fr, ci, CX - ci.width / 2, 540, 0.7, 26, (10, 26))
+    R.pill(fr, "TRE-BA DETERMINOU A PRISÃO DO SECRETÁRIO", CX, 1060, 1.0, fill=(150, 20, 30), size=34)
+    g1 = card("g1", 470).rotate(2, resample=Image.BICUBIC, expand=True); R.paste(fr, g1, CX - g1.width / 2, 1140, 0.7, 26, (10, 26))
     BAR.draw_bar(fr, 0.0, "canal"); fr.alpha_composite(R.top, (R.HDX, 0)); fr.convert("RGB").save(out, quality=95)
 def main():
     if MODE == "lib": return
