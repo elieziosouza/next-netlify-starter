@@ -37,12 +37,14 @@ def grade(img):
 yy, xx = np.mgrid[0:H, 0:W].astype(np.float32); VIG = (1 - 0.42 * np.clip(((xx - W / 2) / (W * 0.62)) ** 2 + ((yy - H / 2) / (H * 0.6)) ** 2, 0, 1) ** 1.4)[..., None]
 rng = np.random.default_rng(3); GRAIN = [rng.normal(0, 6, (H // 2, W // 2)).astype(np.float32) for _ in range(5)]
 _cache = {}
-def frames(f, a, n_sec, sp):
-    key = (f, a)
+def frames(f, a, n_sec, sp, w=None, h=None):
+    w = w or W; h = h or H; key = (f, a, w)
     if key not in _cache:
+        if len([k for k in _cache if isinstance(k, tuple)]) > 12:          # memória: descarta os trechos antigos
+            for k in [k for k in _cache if isinstance(k, tuple)][:6]: del _cache[k]
         p = subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{a:.3f}", "-t", f"{n_sec * sp + 0.3:.3f}", "-i", f"{S}/{f}", "-vf",
-                            f"fps=30,scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H}", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True).stdout
-        n = len(p) // (W * H * 3); _cache[key] = np.frombuffer(p[:n * W * H * 3], np.uint8).reshape(n, H, W, 3)
+                            f"fps=30,scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h}", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True).stdout
+        n = len(p) // (w * h * 3); _cache[key] = np.frombuffer(p[:n * w * h * 3], np.uint8).reshape(n, h, w, 3)
     return _cache[key]
 PHOTO = None
 def photo(u, d):
@@ -61,9 +63,9 @@ def shot_img(s, t):
         top = BARH + 8; ah = H - 2 * BARH - 16; gap = 8; cw = (W - 2 * 8 - (cols - 1) * gap) // cols; ch = (ah - (cols - 1) * gap) // cols
         out = np.zeros((H, W, 3), np.uint8)
         for k, it in enumerate(items):
-            f_, a_ = it.split("@"); fr = frames(f_, float(a_), s["d"], s["sp"]); im = fr[int(clamp(u * s["sp"] * FPS, 0, len(fr) - 1))]
-            r, c = divmod(k, cols); sc_ = max(cw / W, ch / H); rw, rh = int(W * sc_) + 2, int(H * sc_) + 2
-            cell = cv2.resize(im, (rw, rh), interpolation=cv2.INTER_AREA); oy = int((rh - ch) * 0.25); ox = (rw - cw) // 2; cell = cell[oy:oy + ch, ox:ox + cw]
+            f_, a_ = it.split("@"); r, c = divmod(k, cols); sc_ = max(cw / W, ch / H); rw, rh = (int(W * sc_) + 2) // 2 * 2, (int(H * sc_) + 2) // 2 * 2
+            fr = frames(f_, float(a_), s["d"], s["sp"], rw, rh); cell = fr[int(clamp(u * s["sp"] * FPS, 0, len(fr) - 1))]
+            oy = int((rh - ch) * 0.25); ox = (rw - cw) // 2; cell = cell[oy:oy + ch, ox:ox + cw]
             kin = eo(clamp((u - 0.12 * k) / 0.35)); x0 = 8 + c * (cw + gap); y0 = top + r * (ch + gap)
             out[y0:y0 + ch, x0:x0 + cw] = (cell.astype(np.float32) * kin).astype(np.uint8)
             if kin > 0.5: cv2.rectangle(out, (x0, y0), (x0 + cw - 1, y0 + ch - 1), (214, 182, 116), 2)
