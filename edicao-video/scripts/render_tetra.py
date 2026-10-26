@@ -11,7 +11,7 @@ sys.path.insert(0, f"{S}/work")
 import cor_fla, sfx
 BAR = R.BAR; W, H, FPS = R.W, R.H, R.FPS; CX = R.CX; clamp = R.clamp; eo = R.ease_out
 V = f"{S}/v69"
-PARTS = [(0.05, 6.55), (7.95, 9.60), (10.40, 11.85)]
+PARTS = [(0.05, 6.55), (7.95, 9.60), (10.40, 11.50)]
 segs = []; acc = 0.0
 for a, b in PARTS: segs.append(dict(src="me", a=a, b=b, t0=acc, t1=acc + b - a)); acc += b - a
 EDIT_END = acc; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
