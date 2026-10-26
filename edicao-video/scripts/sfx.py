@@ -133,3 +133,20 @@ def muu(dur=0.75, seed=13):
     env = np.minimum(1, t / 0.06) * np.minimum(1, (dur - t) / 0.18) ** 1.5
     out = out * env; out /= np.abs(out).max() + 1e-9
     return np.stack([out, out], 1)
+
+def riser(dur=1.8, seed=21):
+    """Riser do final (referência que o Eliezio gostou): ruído que abre do grave para o agudo + tom subindo, crescendo até cortar seco
+    no começo da tela final. Encaixar terminando exatamente no END_IN (ev: (END_IN - dur, riser(), 0.5)) e somar um thud leve no END_IN."""
+    n = int(dur * SR); t = np.arange(n) / SR; u = t / dur
+    rng = np.random.default_rng(seed); nz = rng.standard_normal(n).astype(np.float32)
+    out = np.zeros(n, np.float32); hop = 512; y_prev = 0.0
+    fc = 300 * (14000 / 300) ** (u ** 1.6)                                   # filtro abrindo
+    for i in range(0, n, hop):
+        a = 1 - np.exp(-2 * np.pi * fc[i] / SR); seg = nz[i:i + hop]; o = np.empty_like(seg)
+        for j in range(len(seg)): y_prev = y_prev + a * (seg[j] - y_prev); o[j] = y_prev
+        out[i:i + hop] = o
+    f0 = 180 * (1400 / 180) ** (u ** 1.3); ph = 2 * np.pi * np.cumsum(f0) / SR
+    tone = 0.35 * np.sin(ph) + 0.15 * np.sin(2 * ph)
+    env = u ** 2.2; env[-int(0.01 * SR):] *= np.linspace(1, 0, int(0.01 * SR))
+    x = (out / (np.abs(out).max() + 1e-6) * 0.7 + tone) * env
+    return np.stack([x, x], 1).astype(np.float32)

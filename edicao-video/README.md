@@ -302,3 +302,4 @@ Em vídeo de campanha, lembrar que o eleitor não pode pagar impulsionamento.
   5. **Filtro com intensidade crescente:** a cor do canal ganha intensidade aos poucos no clímax (ex.: mais contraste e tom dourado no fechamento).
   6. **Fade de áudio e vídeo com ponto exato:** saída suave marcada onde a fala termina, nunca em cima da última palavra.
   Tipografia da referência: palavra de destaque grande ao lado do rosto, com a frase menor em volta, mistura de fonte manuscrita e fonte reta (usar só em vídeos leves, com as cores da marca).
+- **26/10/2026 — riser no final (pedido do Eliezio, padrão a partir de agora):** `sfx.riser()` (1,8 s: ruído abrindo do grave para o agudo + tom subindo, crescendo) termina exatamente na entrada da tela final, com um `thud` leve no corte. Nunca em cima da última palavra: se a fala vai até o fim, o riser fica baixo (0,3) por baixo dela. Exemplo: `exemplos/riser_final.mp3`.
