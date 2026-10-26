@@ -11,11 +11,14 @@ sys.path.insert(0, f"{S}/work")
 import cor_fla, sfx
 BAR = R.BAR; W, H, FPS = R.W, R.H, R.FPS; CX = R.CX; clamp = R.clamp; eo = R.ease_out
 V = f"{S}/v69"
-PARTS = [(0.05, 6.55), (7.95, 9.60), (10.40, 11.50)]
+PARTS = [(0.05, 6.55, None), (7.95, 9.60, None), (10.40, 11.50, 4.75)]               # o último trecho (ele sorrindo) vai e volta enquanto a música toca
 segs = []; acc = 0.0
-for a, b in PARTS: segs.append(dict(src="me", a=a, b=b, t0=acc, t1=acc + b - a)); acc += b - a
+for a, b, d in PARTS:
+    dur = d or b - a; segs.append(dict(src="me", a=a, b=b, t0=acc, t1=acc + dur, loop=bool(d))); acc += dur
+FIN_IN = segs[1]["t1"]; MUS_IN = FIN_IN - 4.87                     # o primeiro "vai dar PT" da música cai logo depois do "bora, Lula!"
+R.LYR = [(4.87, 5.73, "VAI DAR PT"), (5.73, 6.73, "VAI DAR"), (6.73, 8.23, "VAI DAR PT"), (8.23, 9.43, "VAI DAR PT")]
 EDIT_END = acc; END_IN = EDIT_END + 0.05; TOTAL = END_IN + 3.0
-R.FIN_IN = EDIT_END; R.END_IN = END_IN; R.EDIT_END = EDIT_END; R.MUS_IN = 0.0
+R.FIN_IN = FIN_IN; R.END_IN = END_IN; R.EDIT_END = EDIT_END; R.MUS_IN = MUS_IN
 def seg_at(t):
     for i, s in enumerate(segs):
         if t < s["t1"]: return i
@@ -42,13 +45,16 @@ def src(x):
     a = _fr["a"]; return cv2.LUT(a[int(clamp(x * FPS, 0, len(a) - 1))], R.LUT)
 def frame_at(t):
     tt = min(t, EDIT_END - 1e-3); i = seg_at(tt); s = segs[i]; x = s["a"] + tt - s["t0"]
+    if s["loop"]:
+        Lp = s["b"] - s["a"]; p_ = ((tt - s["t0"]) * 0.6) % (2 * Lp); x = s["a"] + (p_ if p_ < Lp else 2 * Lp - p_)
     z = (1.0 if i % 2 == 0 else 1.04) + 0.03 * (0.5 - 0.5 * math.cos(2 * math.pi * tt / 7.0))
     fr = Image.fromarray(M.zoom(src(x), z, 540, 760)).convert("RGBA")
     g = np.zeros((560, W, 4), np.uint8); g[..., :3] = (4, 14, 28); g[..., 3] = np.linspace(0, 210, 560)[:, None].astype(np.uint8); fr.alpha_composite(Image.fromarray(g), (0, H - 560))
     for j, (a_, b_, w_) in enumerate(BIG):
         if a_ <= x < b_: lay, dx, y = M.big_layer(w_, R.GOLD_L, x - a_, b_ - a_, True, j); fr.alpha_composite(lay, (dx, y))
     M.caption(fr, tt, 1470, 52)
-    kc = clamp((tt - 0.5) / 0.4) * (1 - clamp((tt - (EDIT_END - 0.3)) / 0.3)); BAR.lower_card(fr, CARD[0], CARD[1], 1680, kc, fs=40)
+    kc = clamp((tt - 0.5) / 0.4) * (1 - clamp((tt - (FIN_IN - 0.2)) / 0.3)); BAR.lower_card(fr, CARD[0], CARD[1], 1680, kc, fs=40)
+    if tt >= FIN_IN - 0.1: R.lyrics(fr, tt)
     cta = clamp((t - segs[2]["t0"]) / 0.4) if t > segs[2]["t0"] else 0.0
     BAR.draw_bar(fr, clamp(t / END_IN), "canal", eo((t - 0.2) / 0.6), cta, 0.5 + 0.5 * math.sin(t * 5))
     R.draw_banners(fr, t)
@@ -80,11 +86,13 @@ def main():
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f"{V}/me.mp4", "-ar", "48000", "-ac", "2", f"{V}/me48.wav"], check=True)
     me = R.readw(f"{V}/me48.wav"); vt = np.zeros((n, 2), np.float32); f = int(0.012 * SR)
     for s in segs:
-        c = me[int(s["a"] * SR):int(s["b"] * SR)].copy(); c[:f] *= np.linspace(0, 1, f)[:, None]; c[-f:] *= np.linspace(1, 0, f)[:, None]
+        c = me[int(s["a"] * SR):int(s["b"] * SR)].copy()
+        if s["loop"]: c *= 0.6; c[:f] *= np.linspace(0, 1, f)[:, None]; c[-f:] *= np.linspace(1, 0, f)[:, None]
         o = int(s["t0"] * SR); vt[o:o + len(c)] += c[:n - o]
     R.writew(f"{V}/voice.wav", vt)
-    bed = R.readw(f"{S}/v49/bed.wav"); L = min(len(bed), n); tl = np.arange(L) / SR
-    gain = 0.22 * np.clip(tl / 0.5, 0, 1) * np.clip(1 - (tl - (TOTAL - 1.6)) / 1.5, 0, 1); sg = np.zeros((n, 2), np.float32); sg[:L] = bed[:L] * gain[:, None]
+    song = R.readw(f"{S}/v15/song_vox.wav"); o = int(MUS_IN * SR); Ls = min(len(song), n - o); tl = np.arange(Ls) / SR; lead = FIN_IN - MUS_IN
+    gain = np.where(tl < lead, 10 ** ((-20 + 14 * tl / lead) / 20), 1.0) * np.clip(1 - (tl - (TOTAL - MUS_IN - 1.6)) / 1.5, 0, 1)
+    sg = np.zeros((n, 2), np.float32); sg[o:o + Ls] = song[:Ls] * gain[:, None]
     R.writew(f"{V}/song.wav", sg)
     ev = [(0.0, sfx.whoosh(0.4), 0.2), (0.5, sfx.whoosh(0.35), 0.18)] + [(s["t0"] - 0.05, sfx.whoosh(0.3), 0.14) for s in segs[1:]] + [(END_IN - 0.3, sfx.whoosh(0.6), 0.22)]
     sfx.build(ev, TOTAL, f"{V}/sfx.wav")
