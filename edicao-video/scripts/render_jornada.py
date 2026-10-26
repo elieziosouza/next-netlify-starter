@@ -14,17 +14,17 @@ V = f"{S}/v71"; MUS = f"{V}/v2.mp4"
 BARH = 210                                                          # faixas pretas (cinema)
 # trechos: (arquivo, início na fonte, duração na tela, velocidade, capítulo)
 SHOTS = [("v71/d2.mp4", 0.5, 3.4, 0.5, None),
-         ("v61/intro_raw.mp4", 1.9, 2.6, 0.7, "A CAMPANHA"), ("v55/me.mp4", 2.6, 2.6, 0.7, None), ("v54/me.mp4", 6.0, 2.6, 0.7, None), ("v58/me.mp4", 3.4, 2.6, 0.7, None),
-         ("v60/raw.mp4", 2.2, 2.6, 0.7, "O DEBATE"), ("v59/cl.mp4", 14.9, 2.8, 0.7, None), ("v67/me.mp4", 5.5, 2.6, 0.7, None),
-         ("GAYER", 3.0, 4.4, 0.5, None),
-         ("v65/me.mp4", 5.8, 2.8, 0.7, "A VOTAÇÃO"), ("v53/me.mp4", 35.4, 2.6, 0.7, None),
-         ("v68/in.mp4", 3.6, 3.0, 0.7, "A NOITE"), ("v69/me.mp4", 5.6, 2.8, 0.7, None),
+         ("GRID:v61/intro_raw.mp4@1.9|v55/me.mp4@2.6|v54/me.mp4@6.0|v58/me.mp4@3.4", 0, 3.0, 0.7, "A CAMPANHA"), ("v59/cl.mp4", 14.9, 2.8, 0.7, None), ("v64/c1.mp4", 7.0, 2.6, 0.7, None),
+         ("GRID:v60/raw.mp4@2.2|v67/me.mp4@5.5|v51/in.mp4@2.6|v53/me.mp4@35.4", 0, 3.0, 0.7, "O DEBATE"), ("v64/c1.mp4", 12.8, 2.6, 0.7, None), ("v64/c2.mp4", 10.0, 2.6, 0.7, None),
+         ("GAYER", 24.0, 4.4, 1.0, None),
+         ("GRID:v65/me.mp4@5.8|v65/me.mp4@1.0|v67/me.mp4@1.6|v52/me.mp4@9.4", 0, 3.0, 0.7, "A VOTAÇÃO"), ("IMG:v67/ponto.webp", 0, 2.6, 1.0, None), ("IMG:v67/r7.jpg", 0, 2.6, 1.0, None),
+         ("v68/in.mp4", 0.6, 2.6, 0.7, "A NOITE"), ("v68/in.mp4", 3.8, 2.8, 0.7, None), ("GRID9:v61/intro_raw.mp4@2.5|v55/me.mp4@3.2|v54/me.mp4@6.6|v60/raw.mp4@2.8|v69/me.mp4@5.6|v67/me.mp4@6.0|v58/me.mp4@4.0|v65/me.mp4@6.2|v53/me.mp4@36.0", 0, 3.2, 0.7, None),
          ("FOTO", 0, 12.0, 1.0, None)]
 segs = []; acc = 0.0
 for f, a, d, sp, ch in SHOTS: segs.append(dict(f=f, a=a, d=d, sp=sp, ch=ch, t0=acc, t1=acc + d)); acc += d
 EDIT_END = acc; TOTAL = EDIT_END + 2.5; XF = 0.45
 MUS_A = 145.5 - EDIT_END                                           # a música termina junto com a foto
-TETRA = next(s for s in segs if s["f"] == "v69/me.mp4")
+TETRA = next(s for s in segs if s["f"].startswith("GRID9:"))
 GQ = ("\u201COs demônios do petismo saíram", "da catacumba do inferno.\u201D")
 GSEG = next(s for s in segs if s["f"] == "GAYER")
 GA_SRC = (24.40, 27.95)                                            # trecho no áudio do Poder360
@@ -55,7 +55,28 @@ def photo(u, d):
 def shot_img(s, t):
     u = t - s["t0"]
     if s["f"] == "FOTO": return photo(u, s["d"])
-    if s["f"] == "GAYER": s = dict(s, f="v71/d2.mp4")
+    if s["f"] == "GAYER": s = dict(s, f="v71/vio.mp4")
+    if s["f"].startswith("GRID"):                                   # vários vídeos dele na mesma tela
+        n9 = s["f"].startswith("GRID9:"); items = s["f"].split(":", 1)[1].split("|"); cols = 3 if n9 else 2
+        top = BARH + 8; ah = H - 2 * BARH - 16; gap = 8; cw = (W - 2 * 8 - (cols - 1) * gap) // cols; ch = (ah - (cols - 1) * gap) // cols
+        out = np.zeros((H, W, 3), np.uint8)
+        for k, it in enumerate(items):
+            f_, a_ = it.split("@"); fr = frames(f_, float(a_), s["d"], s["sp"]); im = fr[int(clamp(u * s["sp"] * FPS, 0, len(fr) - 1))]
+            r, c = divmod(k, cols); sc_ = max(cw / W, ch / H); rw, rh = int(W * sc_) + 2, int(H * sc_) + 2
+            cell = cv2.resize(im, (rw, rh), interpolation=cv2.INTER_AREA); oy = int((rh - ch) * 0.25); ox = (rw - cw) // 2; cell = cell[oy:oy + ch, ox:ox + cw]
+            kin = eo(clamp((u - 0.12 * k) / 0.35)); x0 = 8 + c * (cw + gap); y0 = top + r * (ch + gap)
+            out[y0:y0 + ch, x0:x0 + cw] = (cell.astype(np.float32) * kin).astype(np.uint8)
+            if kin > 0.5: cv2.rectangle(out, (x0, y0), (x0 + cw - 1, y0 + ch - 1), (214, 182, 116), 2)
+        return out
+    if s["f"].startswith("IMG:"):
+        key = s["f"]
+        if key not in _cache:
+            im = np.asarray(Image.open(f"{S}/{key[4:]}").convert("RGB"))
+            if key.endswith("r7.jpg"): im = im[95:505]
+            sc_ = max(W / im.shape[1], H / im.shape[0]) * 1.02; im = cv2.resize(im, (int(im.shape[1] * sc_), int(im.shape[0] * sc_)), interpolation=cv2.INTER_CUBIC)
+            y0 = (im.shape[0] - H) // 2; x0 = (im.shape[1] - W) // 2; _cache[key] = im[y0:y0 + H, x0:x0 + W]
+        img = _cache[key]; z = 1.03 + 0.07 * eio(clamp(u / s["d"])); M = np.float32([[z, 0, W / 2 * (1 - z)], [0, z, H / 2 * (1 - z)]])
+        return cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
     fr = frames(s["f"], s["a"], s["d"], s["sp"]); img = fr[int(clamp(u * s["sp"] * FPS, 0, len(fr) - 1))]
     z = 1.04 + 0.05 * eio(clamp(u / s["d"])); M = np.float32([[z, 0, W / 2 * (1 - z)], [0, z, H * 0.45 * (1 - z)]])
     return cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
@@ -70,7 +91,7 @@ def frame_at(t):
     if i + 1 < len(segs) and tt > s["t1"] - XF:                     # fusão para o próximo
         k = eio((tt - (s["t1"] - XF)) / XF); img = img * (1 - k) + shot_img(segs[i + 1], segs[i + 1]["t0"]).astype(np.float32) * k
     img = grade(img.astype(np.uint8)).astype(np.float32)
-    if s["f"] in ("v71/d2.mp4", "GAYER"): img *= 0.5
+    if s["f"] == "v71/d2.mp4": img *= 0.5
     if i == 0: img *= eo(tt / 1.2)
     img = img * VIG + cv2.resize(GRAIN[int(t * 12) % 5], (W, H))[..., None]
     if s is TETRA and tt - s["t0"] < 0.12: img = img + 70 * (1 - (tt - s["t0"]) / 0.12)
@@ -82,8 +103,10 @@ def frame_at(t):
         text(d, "OUTUBRO DE 2026", CX, 975, R.MF("Medium", 24), R.GOLD_L, al, track=8)
     if s is GSEG:                                                   # o áudio do Gayer, no meio
         u = tt - s["t0"]; al = clamp((u - 0.4) / 0.35) * (1 - clamp((u - (s["d"] - 0.4)) / 0.35))
-        text(d, GQ[0], CX, 880, R.SERIF(50), (240, 236, 228), al); text(d, GQ[1], CX, 950, R.SERIF(50), (240, 236, 228), al)
-        ka = al
+        text(d, "O ÁUDIO DA \u201CTROPA DO FLÁVIO\u201D", CX, BARH + 70, R.MF("SemiBold", 30), (235, 235, 235), al, track=6)
+        d.line((CX - 60, BARH + 105, CX + 60, BARH + 105), fill=R.GOLD + (int(255 * al),), width=2)
+        ka = 0.0
+        text(d, "Áudio: Gustavo Gayer (PL-GO), divulgado pelo Poder360", CX, H - BARH - 40, R.MF("Medium", 22), (200, 204, 212), al)
         text(d, "GUSTAVO GAYER (PL-GO)", CX, 1110, R.MF("SemiBold", 26), R.GOLD_L, ka, track=6)
         text(d, "Áudio divulgado pelo Poder360", CX, 1155, R.MF("Medium", 22), (170, 176, 186), ka)
         bars = 34
@@ -104,7 +127,7 @@ def frame_at(t):
         g = np.zeros((560, W, 4), np.uint8); g[..., 3] = (np.linspace(0, 200, 560) * clamp(u / 1.0)).astype(np.uint8)[:, None]; fr.alpha_composite(Image.fromarray(g), (0, H - BARH - 560))
         d = ImageDraw.Draw(fr)
         a1 = clamp((u - 1.2) / 0.8) * (1 - clamp((u - 6.2) / 0.6)); a2 = clamp((u - 6.8) / 0.8)
-        text(d, "Das catacumbas…", CX, H - BARH - 330, R.SERIF(78), (245, 240, 230), a1)
+        text(d, "Das ruas…", CX, H - BARH - 330, R.SERIF(78), (245, 240, 230), a1)
         text(d, "às urnas.", CX, H - BARH - 230, R.SERIF(96), R.GOLD_L, clamp((u - 2.6) / 0.8) * (1 - clamp((u - 6.2) / 0.6)))
         text(d, "25 · 10 · 2026", CX, H - BARH - 330, R.MF("SemiBold", 44), (245, 240, 230), a2, track=10)
         text(d, "O povo decidiu.", CX, H - BARH - 230, R.SERIF(92), R.GOLD_L, clamp((u - 7.8) / 0.8))
@@ -117,7 +140,7 @@ def capa(out):
     g = np.zeros((700, W, 4), np.uint8); g[..., 3] = np.linspace(0, 220, 700).astype(np.uint8)[:, None]; fr.alpha_composite(Image.fromarray(g), (0, H - 700))
     d = ImageDraw.Draw(fr)
     text(d, "A JORNADA", CX, 1460, R.MF("SemiBold", 40), (235, 235, 235), 1.0, track=14)
-    text(d, "Das catacumbas…", CX, 1580, R.SERIF(92), (245, 240, 230), 1.0)
+    text(d, "Das ruas…", CX, 1580, R.SERIF(92), (245, 240, 230), 1.0)
     text(d, "às urnas.", CX, 1700, R.SERIF(110), R.GOLD_L, 1.0)
     fr.alpha_composite(R.top, (R.HDX, 0)); fr.convert("RGB").save(out, quality=95)
 def main():
