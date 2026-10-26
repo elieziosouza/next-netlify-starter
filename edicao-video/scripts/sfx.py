@@ -134,19 +134,19 @@ def muu(dur=0.75, seed=13):
     out = out * env; out /= np.abs(out).max() + 1e-9
     return np.stack([out, out], 1)
 
-def riser(dur=1.8, seed=21):
-    """Riser do final (referência que o Eliezio gostou): ruído que abre do grave para o agudo + tom subindo, crescendo até cortar seco
-    no começo da tela final. Encaixar terminando exatamente no END_IN (ev: (END_IN - dur, riser(), 0.5)) e somar um thud leve no END_IN."""
-    n = int(dur * SR); t = np.arange(n) / SR; u = t / dur
-    rng = np.random.default_rng(seed); nz = rng.standard_normal(n).astype(np.float32)
-    out = np.zeros(n, np.float32); hop = 512; y_prev = 0.0
-    fc = 300 * (14000 / 300) ** (u ** 1.6)                                   # filtro abrindo
-    for i in range(0, n, hop):
-        a = 1 - np.exp(-2 * np.pi * fc[i] / SR); seg = nz[i:i + hop]; o = np.empty_like(seg)
-        for j in range(len(seg)): y_prev = y_prev + a * (seg[j] - y_prev); o[j] = y_prev
-        out[i:i + hop] = o
-    f0 = 180 * (1400 / 180) ** (u ** 1.3); ph = 2 * np.pi * np.cumsum(f0) / SR
-    tone = 0.35 * np.sin(ph) + 0.15 * np.sin(2 * ph)
-    env = u ** 2.2; env[-int(0.01 * SR):] *= np.linspace(1, 0, int(0.01 * SR))
-    x = (out / (np.abs(out).max() + 1e-6) * 0.7 + tone) * env
-    return np.stack([x, x], 1).astype(np.float32)
+def riser(dur=1.0, tail=0.7, seed=21):
+    """Riser do final, igual ao do vídeo de referência que o Eliezio gostou: brilho metálico (parciais agudas e desafinadas entre si,
+    1,8 a 12,7 kHz, medidas no áudio da referência) que cresce por ~1 s, corta no começo da tela final e deixa uma cauda curta.
+    Encaixe: ev (END_IN - dur, riser(), 0.5); o corte cai exatamente no END_IN."""
+    P = [(1799, 0), (2548, -2), (3364, -6), (4768, -6), (4889, -8), (6512, -8), (6901, -10), (8021, -3.5), (9031, -5.5), (9228, -8.5), (11542, -4), (12713, -9), (1517, -13), (2171, -14.5)]
+    rng = np.random.default_rng(seed); n = int((dur + tail) * SR); t = np.arange(n) / SR
+    x = np.zeros(n, np.float32)
+    for f, db in P:
+        a = 10 ** (db / 20); ph = rng.uniform(0, 2 * np.pi); vib = 1 + 0.00025 * np.sin(2 * np.pi * rng.uniform(4, 7) * t)
+        x += a * np.sin(2 * np.pi * f * vib * t + ph)
+    u = np.clip(t / dur, 0, 1); grow = 10 ** ((-20 + 20 * u ** 1.4) / 20)              # +20 dB até o corte
+    trem = 1 - 0.18 * (0.5 + 0.5 * np.sin(2 * np.pi * 11 * t))
+    after = np.where(t < dur, 1.0, 0.22 * np.exp(-(t - dur) / 0.2))                 # corte seco + cauda curta
+    env = grow * trem * after; env[:int(0.01 * SR)] *= np.linspace(0, 1, int(0.01 * SR))
+    x = x * env; x /= np.abs(x).max() + 1e-6
+    return np.stack([x * 0.9, x * 0.9], 1).astype(np.float32)
