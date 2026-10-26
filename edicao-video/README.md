@@ -294,3 +294,11 @@ Em vídeo de campanha, lembrar que o eleitor não pode pagar impulsionamento.
 - **26/10/2026:** "não esqueça da música vai dar PT" = a música original guardada em `$S/guardar/vai-dar-pt.mp3` / `$S/v15/song_vox.wav` (não procurar em banco de músicas nem pedir de novo). Usar `R.lyrics` com o primeiro "VAI DAR PT" (4,87 s da faixa) logo depois da última fala; se o vídeo for curto, o último trecho dele vai e volta em câmera lenta enquanto a música toca.
 - **26/10/2026:** reels cinematográfico "A jornada" (`render_jornada.py`): faixas pretas, cor de cinema, grão, câmera lenta, fusões, capítulos em letras espaçadas, áudio de terceiro só como citação creditada no meio, final em foto com zoom lento e a música terminando junto. **"Momentos que me favoreçam"**: montar uma grade de quadros por vídeo e usar só os trechos com olhos abertos, rosto firme e sorriso ou boca fechada.
 - **26/10/2026:** "nas minhas partes me mostre em vários vídeos na mesma tela" = mosaico (2×2 ou 3×3) de vídeos dele com moldura dourada fina, janelas entrando em sequência (`GRID:` no `render_jornada.py`). Áudio de terceiro citado: mostrar o próprio vídeo da fonte (ex.: card do Poder360), não só a frase.
+- **26/10/2026 — dicas de keyframe que o Eliezio gostou (vídeo de referência sobre CapCut), passam a ser usadas nos próximos vídeos:**
+  1. **Desfoque gradual:** o vídeo fica desfocado e vai ficando nítido (ou o contrário) nas trocas de assunto e na entrada de cards, em vez de corte seco.
+  2. **Opacidade gradual:** textos e cards aparecem e somem aos poucos, com início e fim escolhidos (não só fade padrão no começo e no fim).
+  3. **Zoom out para ganhar espaço:** afastar a imagem dele aos poucos para abrir espaço nas laterais e colocar palavra grande ou card ao lado, voltando depois.
+  4. **Vinheta animada:** a vinheta escurece as bordas nos momentos fortes (frase de impacto) e volta ao normal depois.
+  5. **Filtro com intensidade crescente:** a cor do canal ganha intensidade aos poucos no clímax (ex.: mais contraste e tom dourado no fechamento).
+  6. **Fade de áudio e vídeo com ponto exato:** saída suave marcada onde a fala termina, nunca em cima da última palavra.
+  Tipografia da referência: palavra de destaque grande ao lado do rosto, com a frase menor em volta, mistura de fonte manuscrita e fonte reta (usar só em vídeos leves, com as cores da marca).
