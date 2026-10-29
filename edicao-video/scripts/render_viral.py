@@ -60,7 +60,7 @@ BG = Image.fromarray(np.clip(BG, 0, 255).astype(np.uint8)).convert("RGBA"); del 
 hd = ImageDraw.Draw(BG); hd.rounded_rectangle((300, 70, 780, 130), 30, fill=WHITE + (255,)); hd.text((540, 100), "ENGLISH CLASS · Teacher Eliezio", font=MF("ExtraBold", 24), fill=INK + (255,), anchor="mm")
 # ---------------------------------------------------------------- avatar (1 sorrindo, 2 desconfiado, 7 surpreso, 8 piscando)
 AV = [Image.open(f"{S}/v77/av3d_{k}.png").convert("RGBA").resize((360, 360), Image.LANCZOS) for k in range(1, 9)]
-EXPR = [(0, 7), (0.8, 1), (7.8, 8), (9.0, 1)]
+EXPR = [(0, 1)]
 AMP = None
 def amp_at(t):
     i = int(t * 100); return float(AMP[i]) if 0 <= i < len(AMP) else 0.0
@@ -110,7 +110,15 @@ CFG = {
              ("I really appreciate it.", "eu agradeço muito."), ("I owe you one!", "fico te devendo essa!")]),
   "isare": dict(kind="teste", t1="TESTE RÁPIDO:", t2="IS OU ARE?", rows=[("The kids ___ happy.", "ARE"), ("My mom ___ at home.", "IS"), ("There ___ two cars.", "ARE")]),
 }
-C = CFG[VIRAL]
+VOZ = {  # q = quando o básico/frase aparece (fala), a = quando a resposta é falada
+  "basico": dict(q=[2.46, 4.37, 6.70, 8.77, 10.81], a=[3.40, 5.44, 7.66, 9.69, 11.77], dur=13.2),
+  "very": dict(q=[1.83, 4.04, 6.41, 8.62, 11.01], a=[2.79, 5.01, 7.50, 9.85, 12.25], dur=13.2),
+  "brasileiro": dict(q=[1.27, 6.04, 9.03, 11.64, 13.86], a=[4.21, 7.77, 10.25, 12.75, 15.35], dur=16.64),
+  "obrigado": dict(q=[3.46, 4.60, 6.41], dur=7.44),
+  "isare": dict(q=[2.82, 6.11, 9.44], a=[5.18, 8.44, 11.74], pins=[4.95, 8.25, 11.60], gap=1.2, dur=13.92),
+}
+C = CFG[VIRAL]; VZ = VOZ[VIRAL]; PINS = VZ.get("pins", []); GAP = VZ.get("gap", 0.0)
+def f(t): return t + GAP * sum(1 for p in PINS if p < t)
 RED_X = (226, 60, 60); OKG = (46, 184, 92)
 def header(fr, t):
     f1 = ANTON(110 if len(C["t1"]) < 15 else 92); put(fr, txt(C["t1"], f1, WHITE, 7), 540, 250, 1, 0.9 + 0.1 * bo(t / 0.35))
@@ -119,20 +127,20 @@ def troca(fr, t):
     d = ImageDraw.Draw(fr)
     d.text((300, 545), C["ha"], font=MF("ExtraBold", 34), fill=(255, 140, 140, 255), anchor="mm"); d.text((780, 545), C["hb"], font=MF("ExtraBold", 34), fill=(140, 230, 160, 255), anchor="mm")
     for i, (bad, good, pt) in enumerate(C["rows"]):
-        ta = 0.7 + i * 0.75; y = 640 + i * 148
+        ta = VZ["q"][i]; tb = VZ["a"][i]; y = 640 + i * 148
         if t < ta: continue
-        u = bo((t - ta) / 0.3, 2); g = clamp((t - ta - 0.25) / 0.3); fs = 40 if len(bad) < 14 else 32
+        u = bo((t - ta) / 0.3, 2); g = clamp((t - (tb - 0.25)) / 0.3); fs = 40 if len(bad) < 14 else 32
         lb = chip(bad, (70, 40, 50), (255, 190, 190), fs, 22, 22); put(fr, lb, 290, y, 1, 0.6 + 0.4 * u)
         if g > 0:
             ImageDraw.Draw(fr).line((290 - lb.width / 2 + 14, y, 290 - lb.width / 2 + 14 + (lb.width - 28) * g, y), fill=RED_X + (255,), width=6)
             put(fr, txt("→", MF("ExtraBold", 54), YEL), 540, y, g)
-        if t > ta + 0.35:
-            v = bo((t - ta - 0.35) / 0.3, 2.2); put(fr, chip(good, OKG, WHITE, 44 if len(good) < 13 else 34, 24, 22), 790, y, 1, 0.5 + 0.5 * v)
-            put(fr, txt(pt, MF("SemiBold", 24), (200, 214, 240), 2), 540, y + 52, clamp((t - ta - 0.5) / 0.3))
+        if t > tb:
+            v = bo((t - tb) / 0.3, 2.2); put(fr, chip(good, OKG, WHITE, 44 if len(good) < 13 else 34, 24, 22), 790, y, 1, 0.5 + 0.5 * v)
+            put(fr, txt(pt, MF("SemiBold", 24), (200, 214, 240), 2), 540, y + 52, clamp((t - tb - 0.15) / 0.3))
 def lista(fr, t):
     put(fr, txt(C["sub"], MF("ExtraBold", 38), (200, 214, 240), 3), 540, 520, clamp((t - 0.4) / 0.3))
     for i, (en_, pt) in enumerate(C["rows"]):
-        ta = 0.9 + i * 1.1; y = 700 + i * 210
+        ta = VZ["q"][i]; y = 700 + i * 210
         if t < ta: continue
         u = bo((t - ta) / 0.35, 2)
         put(fr, chip(str(i + 1), YEL, INK, 50, 26, 40), 150, y, 1, 0.5 + 0.5 * u)
@@ -140,49 +148,62 @@ def lista(fr, t):
         put(fr, txt(pt, MF("SemiBold", 30), (200, 214, 240), 2), 590, y + 70, clamp((t - ta - 0.3) / 0.3))
 def teste(fr, t):
     for i, (sent, ans) in enumerate(C["rows"]):
-        ta = 0.8 + i * 2.2; rv = ta + 1.4; y = 620 + i * 240
+        ta = f(VZ["q"][i]); rv = f(VZ["pins"][i]) + GAP - 0.05; y = 620 + i * 240
         if t < ta: continue
         u = bo((t - ta) / 0.3, 2); shown = sent.replace("___", ans if t >= rv else "___")
         put(fr, txt(shown, MF("ExtraBold", 54), WHITE, 4), 540, y, 1, 0.7 + 0.3 * u)
         for j, opt in enumerate(("IS", "ARE")):
             ok = opt == ans; c = (OKG if ok else (70, 80, 100)) if t >= rv else (90, 104, 136)
             put(fr, chip(opt, c, WHITE, 44, 28, 22), 440 + j * 200, y + 85, 1 if (t < rv or ok) else 0.45, (1 + 0.08 * bo((t - rv) / 0.3, 3) - 0.08) if t >= rv and ok else 1)
-        if ta + 0.4 <= t < rv:   # contadorzinho de 1 s
-            n_ = 1; put(fr, txt("⏱", MF("ExtraBold", 10), YEL), 0, 0, 0)
-            ImageDraw.Draw(fr).arc((850, y + 50, 920, y + 120), -90, -90 + 360 * (1 - (t - ta - 0.4) / 1.0), fill=YEL + (255,), width=8)
+        p0 = f(VZ["pins"][i])
+        if p0 <= t < rv:   # contadorzinho do tempo de pensar
+            ImageDraw.Draw(fr).arc((850, y + 50, 920, y + 120), -90, -90 + 360 * (1 - (t - p0) / GAP), fill=YEL + (255,), width=8)
         if t >= rv: put(fr, emoji("✅", 56), 885, y + 85, 1, 0.5 + 0.5 * bo((t - rv) / 0.3, 2))
 def frame_at(t):
     fr = BG.copy(); header(fr, t)
     {"troca": troca, "lista": lista, "teste": teste}[C["kind"]](fr, t)
     if t > T_SALVA: put(fr, chip("SALVA PRA REVISAR" if C["kind"] != "teste" else "QUANTAS VOCÊ ACERTOU? COMENTA!", YEL, INK, 38 if C["kind"] != "teste" else 32), 540, 1370, 1, (0.6 + 0.4 * bo((t - T_SALVA) / 0.35, 2.2)) * (1 + 0.03 * math.sin(t * 6)))
     if t > T_SIGA: put(fr, chip("SIGA @teachereliezio", WHITE, INK, 38), 540, 1450, 1, 0.6 + 0.4 * bo((t - T_SIGA) / 0.35, 2.2))
-    avatar(fr, t); progress(fr, t); return fr.convert("RGB")
-T_SALVA = {"troca": 5.0, "lista": 4.6, "teste": 7.6}[C["kind"]]; T_SIGA = T_SALVA + 1.8
-TOTAL = {"troca": 10.5, "lista": 9.5, "teste": 10.5}[C["kind"]]; VO_LEN = TOTAL
+    avatar(fr, min(t, VO_LEN - 0.01)); progress(fr, t); return fr.convert("RGB")
+VO_LEN = f(VZ["dur"]); T_SALVA = VO_LEN - 0.4; T_SIGA = VO_LEN + 0.5; TOTAL = VO_LEN + 2.3
 def progress(fr, t):
     d = ImageDraw.Draw(fr); d.rounded_rectangle((60, 1880, 1020, 1892), 6, fill=(60, 84, 128, 255)); d.rounded_rectangle((60, 1880, 60 + 960 * clamp(t / TOTAL), 1892), 6, fill=YEL + (255,))
 def capa(out): frame_at(TOTAL - 0.3).save(out, quality=95)
+def build_voice():
+    SR = 48000; subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f"{V}/vo_orig.mp3", "-ar", "48000", "-ac", "2", f"{V}/o48.wav"], check=True)
+    w = wave.open(f"{V}/o48.wav"); x = np.frombuffer(w.readframes(w.getnframes()), np.int16).reshape(-1, 2); parts = []; prev = 0
+    for p_ in PINS: parts += [x[prev:int(p_ * SR)], np.zeros((int(GAP * SR), 2), np.int16)]; prev = int(p_ * SR)
+    y = np.concatenate(parts + [x[prev:]]); o = wave.open(f"{V}/vo48.wav", "wb"); o.setnchannels(2); o.setsampwidth(2); o.setframerate(SR); o.writeframes(y.tobytes()); o.close()
 def load_amp():
     global AMP
-    AMP = np.zeros(int(TOTAL * 100) + 10)
+    if not os.path.exists(f"{V}/vo48.wav"): build_voice()
+    tmp = f"{V}/a16_{os.getpid()}.wav"; subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f"{V}/vo48.wav", "-ar", "16000", "-ac", "1", tmp], check=True)
+    w = wave.open(tmp); a = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768; os.remove(tmp)
+    hop = 160; n = len(a) // hop; e = np.sqrt((a[:n * hop].reshape(n, hop) ** 2).mean(1)); e = np.clip(e / (np.percentile(e, 95) + 1e-6), 0, 1.2)
+    sm = np.zeros_like(e); z = 0
+    for i, v_ in enumerate(e): z = max(v_, z * 0.86); sm[i] = z
+    AMP = np.clip(sm, 0, 1)
 def audio(vout):
     SR = 48000; n = int(TOTAL * SR)
     def readw(p):
         w = wave.open(p); x = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768; return x.reshape(-1, w.getnchannels())
     def writew(p, x):
         w = wave.open(p, "wb"); w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes((np.clip(x, -1, 1) * 32767).astype(np.int16).tobytes()); w.close()
+    vo = readw(f"{V}/vo48.wav"); vt = np.zeros((n, 2), np.float32); vt[:min(len(vo), n)] = vo[:n]; writew(f"{V}/voice.wav", vt)
     bed = readw(f"{S}/v49/bed.wav"); loop = bed
     while len(loop) < n: loop = np.concatenate([loop, bed])
-    tl = np.arange(n) / SR; gain = 0.30 * np.clip(tl / 0.2, 0, 1) * np.clip((TOTAL - tl) / 0.4, 0, 1)
+    tl = np.arange(n) / SR; gain = 0.09 * np.clip(tl / 0.2, 0, 1) * np.clip((TOTAL - tl) / 0.4, 0, 1)
     writew(f"{V}/song.wav", loop[:n] * gain[:, None])
     ding = readw(f"{S}/v81/ding.wav"); k_ = C["kind"]
-    if k_ == "troca": ev = [(0.7 + i * 0.75 + 0.25, sfx.click(seed=i), 0.25) for i in range(5)] + [(0.7 + i * 0.75 + 0.35, sfx.thud(0.25), 0.12) for i in range(5)]
-    elif k_ == "lista": ev = [(0.9 + i * 1.1, sfx.thud(0.3), 0.18) for i in range(3)] + [(0.9 + i * 1.1, sfx.click(seed=i), 0.2) for i in range(3)]
-    else: ev = [(0.8 + i * 2.2, sfx.click(seed=i), 0.2) for i in range(3)] + [(0.8 + i * 2.2 + 1.4, ding, 0.35) for i in range(3)]
-    ev += [(0.05, sfx.whoosh(0.4), 0.18), (T_SALVA, sfx.click(seed=9), 0.2), (T_SIGA, sfx.click(seed=10), 0.2)]
+    if k_ == "troca": ev = [(VZ["a"][i] - 0.25, sfx.click(seed=i), 0.18) for i in range(5)]
+    elif k_ == "lista": ev = [(VZ["q"][i], sfx.thud(0.3), 0.14) for i in range(3)]
+    else: ev = [(f(VZ["pins"][i]) + GAP - 0.05, ding, 0.3) for i in range(3)] + [(f(VZ["pins"][i]) + k2 * 0.4, sfx.click(seed=k2), 0.15) for i in range(3) for k2 in range(3)]
+    ev += [(0.05, sfx.whoosh(0.4), 0.15), (T_SALVA, sfx.click(seed=9), 0.18), (T_SIGA, sfx.click(seed=10), 0.18)]
     sfx.build(ev, TOTAL, f"{V}/sfx.wav")
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/sfx.wav", "-i", f"{V}/song.wav", "-filter_complex",
-                    f"[1:a][2:a]amix=inputs=2:normalize=0:duration=longest,atrim=0:{TOTAL:.2f},loudnorm=I=-14:TP=-1.5:LRA=11,alimiter=limit=0.89:level=false[a]",
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/song.wav", "-filter_complex",
+                    "[1:a]highpass=f=70,acompressor=threshold=0.1:ratio=2.2:attack=8:release=200:makeup=1.4,asplit=2[vox][k2];[2:a]volume=0.8[sf];[3:a]volume=1.0[sg];"
+                    "[sg][k2]sidechaincompress=threshold=0.03:ratio=5:attack=20:release=400[sgd];"
+                    f"[vox][sf][sgd]amix=inputs=3:normalize=0:duration=longest,atrim=0:{TOTAL:.2f},loudnorm=I=-14:TP=-1.5:LRA=11,alimiter=limit=0.89:level=false[a]",
                     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", OUTFILE], check=True)
 def main():
     load_amp()
