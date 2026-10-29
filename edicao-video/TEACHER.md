@@ -11,7 +11,7 @@ outra abertura.
 - Abertura: capa + zoom lento + riser + clarão (`scripts/finaliza_teacher.sh`). Nunca o glitch do canal de opinião.
 
 ## Roteiro (ElevenLabs, voz do Eliezio, modelo Eleven v4)
-1. Gancho nos 2 primeiros segundos: uma pergunta ou um erro comum.
+1. Abertura fixa: "Hello! Today: <tema>." e, logo depois, o gancho (uma pergunta ou um erro comum).
 2. Resposta falada do desafio do vídeo anterior (desde o Present Perfect).
 3. Regra e exemplos: inglês primeiro, depois português. Números escritos por extenso em inglês.
 4. Quiz com contador: pergunta, silêncio de 3 a 5 s aberto na edição (círculo, 3-2-1, tique-taque, música abaixa),
