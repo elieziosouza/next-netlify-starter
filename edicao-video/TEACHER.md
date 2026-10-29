@@ -24,6 +24,7 @@ outra abertura.
 - Primeiro bloco: título com 4 hashtags na mesma linha, pronto para copiar.
 - Depois: descrição e hashtags, cada um no seu bloco.
 - Marcar a aula como feita no controle: https://claude.ai/artifact/1S2ouhHbcGgVcEsuUpJwq4
+- Publicar o vídeo e a capa na página de vídeos do canal (novo no topo, com título + hashtags para copiar): https://claude.ai/artifact/Br8ebANZH1TaR4wNAv7RwE
 
 ## Scripts
 - `render_short_present_continuous.py` (Short com exercício e CTAs), `render_short_comparative.py`, `render_aula_datas_vo.py` (quiz com
