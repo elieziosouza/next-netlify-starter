@@ -164,6 +164,7 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
   - **Fala de terceiros:** termo forte dito por campanha, jornal ou político fica atribuído na tela (selo "peça da campanha", "segundo a CNN") e, se preciso, com a ressalva ("o PM é réu; o júri não aconteceu").
   - **Sempre o outro lado:** a resposta ou negativa do citado aparece no vídeo ou na legenda.
   - **Opinião como opinião:** "eu acho", "pra mim", pergunta retórica, crítica à atuação pública. Nada sobre vida íntima, família sem relação com o fato, aparência ou xingamento.
+  - **Opinião só quando o Eliezio pedir (29/10/2026):** nos vídeos com narração escrita por mim, o padrão é explicar o fato sem opinião. "Na minha opinião" entra só se ele pedir.
   - **Números e datas** só conferidos em mais de um veículo, com fonte na legenda; sem número na dúvida.
   - **Montagem honesta:** não cortar fala de modo a mudar o sentido; não usar imagem fora de contexto; sem IA imitando voz ou rosto de ninguém.
   - **Crianças e vítimas:** sem foto de vítima menor na capa; tom respeitoso.
