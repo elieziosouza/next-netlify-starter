@@ -164,13 +164,11 @@ def phone_icon(col=GREEN):
 
 # ---------- elementos fixos ----------
 TOPLAB = text_img("IMÓVEL NA PLANTA · SÃO PAULO", F("Montserrat-SemiBold", 25), INK + (150,), spacing=5)
-HANDLE = text_img("@eliezio.corretordeimoveis", F("Montserrat-Medium", 26), INK + (140,))
 def chrome(c, t):
     a = smooth(t / 0.6) * (1 - smooth((t - SC_FIM[0]) / 0.4))
     put(c, TOPLAB, W / 2, 128, a)
     d = ImageDraw.Draw(c, "RGBA"); lw = 300 * smooth(t / 0.9)
     if lw > 1: d.line([(W / 2 - lw, 168), (W / 2 + lw, 168)], fill=INK + (int(60 * a),), width=2)
-    put(c, HANDLE, W / 2, 1812, a)
     d.line([(90, 1860), (W - 90, 1860)], fill=INK + (28,), width=4)
     d.line([(90, 1860), (90 + (W - 180) * clamp(t / DUR), 1860)], fill=GREEN + (230,), width=4)
 
@@ -298,29 +296,67 @@ def sc_vale(c, t):
         d = ImageDraw.Draw(c, "RGBA"); p = ease_out((t - v0 - 0.3) / 0.4)
         if p > 0: d.line([(W / 2 - 380 * p, 1135), (W / 2 + 380 * p, 1135)], fill=INK + (200,), width=4)
 
-FOTO = Image.open(KIT / "assets" / "corretor" / "eliezio_recorte.png").convert("RGBA")   # recorte da foto do Eliezio (sem fundo)
+# ---------- Eliezio em círculo (foto com o fundo original) ----------
+def make_avatar(n=600):
+    im = Image.open(KIT / "assets" / "corretor" / "eliezio_foto.jpg").convert("RGB").crop((175, 60, 775, 660)).resize((n, n), Image.LANCZOS)
+    m = Image.new("L", (n * 4, n * 4), 0); ImageDraw.Draw(m).ellipse([0, 0, n * 4 - 1, n * 4 - 1], fill=255)
+    out = im.convert("RGBA"); out.putalpha(m.resize((n, n), Image.LANCZOS)); return out
+AVATAR = make_avatar()
+_pcm = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", VOICE, "-f", "s16le", "-ac", "1", "-ar", "16000", "-"], capture_output=True).stdout
+_pcm = np.frombuffer(_pcm, np.int16).astype(np.float32) / 32768
+_env = np.array([np.sqrt(np.mean(_pcm[i:i + 533] ** 2)) for i in range(0, len(_pcm), 533)])   # um valor por quadro (16000/30)
+_env = np.convolve(_env, np.ones(3) / 3, "same"); _env = np.clip(_env / (np.percentile(_env, 95) + 1e-6), 0, 1)
+def voice_level(t):
+    i = int((t - LEAD) * FPS); return float(_env[i]) if 0 <= i < len(_env) else 0.0
+
+CORNER = (172, 1672, 224); CENTER = (W / 2, 830, 420)
+TAG = [(text_img("Corretor Eliezio", F("Montserrat-Bold", 36), INK + (255,)), 0),
+       (text_img("CRECI-SP 209.709", F("Montserrat-SemiBold", 24), INK + (150,), spacing=3), 44),
+       (text_img("@eliezio.corretordeimoveis", F("Montserrat-SemiBold", 25), GREEN + (255,)), 84)]
+def avatar(c, t):
+    t0 = SC_FIM[0]; m = smooth((t - t0 - 0.05) / 0.9)
+    cx = CORNER[0] + (CENTER[0] - CORNER[0]) * m; cy = CORNER[1] + (CENTER[1] - CORNER[1]) * m; d = CORNER[2] + (CENTER[2] - CORNER[2]) * m
+    e = clamp((t - 0.35) / 0.5)
+    if e <= 0: return
+    d *= 0.55 + 0.45 * back(e); lv = voice_level(t) * (1 - m * 0.6); R = d / 2
+    S = int(d + 140); lay = Image.new("RGBA", (S, S), (0, 0, 0, 0)); o = S / 2; dr = ImageDraw.Draw(lay)
+    # sombra
+    sh = Image.new("RGBA", (S, S), (0, 0, 0, 0)); ImageDraw.Draw(sh).ellipse([o - R, o - R + 12, o + R, o + R + 12], fill=(0, 0, 0, 90))
+    lay.alpha_composite(sh.filter(ImageFilter.GaussianBlur(14)))
+    # brilho verde que pulsa com a voz
+    if lv > 0.05:
+        g = Image.new("RGBA", (S, S), (0, 0, 0, 0)); rg = R + 10 + 16 * lv
+        ImageDraw.Draw(g).ellipse([o - rg, o - rg, o + rg, o + rg], fill=GREEN + (int(150 * lv),)); lay.alpha_composite(g.filter(ImageFilter.GaussianBlur(10)))
+    # anel tracejado girando devagar
+    dr = ImageDraw.Draw(lay); rr = R + 22; rot = t * 18
+    for k in range(24):
+        a0 = rot + k * 15; dr.arc([o - rr, o - rr, o + rr, o + rr], a0, a0 + 7, fill=INK + (90,), width=2)
+    # aro verde, aro branco e a foto
+    dr.ellipse([o - R - 11, o - R - 11, o + R + 11, o + R + 11], outline=GREEN + (255,), width=5)
+    dr.ellipse([o - R - 4, o - R - 4, o + R + 4, o + R + 4], fill=(255, 255, 255, 255))
+    ph = AVATAR.resize((int(d), int(d)), Image.LANCZOS); lay.alpha_composite(ph, (int(o - d / 2), int(o - d / 2)))
+    al = clamp(e * 2); put(c, lay, cx, cy, al)
+    # etiqueta com nome, CRECI e @ ao lado do círculo
+    ta = clamp((t - 0.7) / 0.45) * (1 - smooth((t - t0) / 0.35))
+    if ta > 0:
+        for im, dy in TAG:
+            put(c, im, CORNER[0] + CORNER[2] / 2 + 52 - 18 * (1 - ease_out(ta)), CORNER[1] - 44 + dy, ta, (1 - ta) * 8, anchor="l")
+
 def sc_fim(c, t):
     t0, t1 = SC_FIM
-    # foto entra subindo de baixo, com sombra suave; topo da cabeça sempre com folga
-    p = ease_out((t - t0 - 0.2) / 0.8)
-    if p > 0:
-        sh = Image.new("RGBA", FOTO.size, (0, 0, 0, 255)); sh.putalpha(FOTO.getchannel("A").point(lambda v: int(v * 0.35 * p)))
-        y = 960 + 140 * (1 - p)
-        sh = sh.filter(ImageFilter.GaussianBlur(18)); c.paste(sh, (int(W / 2 - FOTO.width / 2 + 14), int(y + 10)), sh)
-        put(c, FOTO, W / 2, y + FOTO.height / 2, p, (1 - p) * 10)
-    big(c, t, "qualquer dúvida,", "me chama.", t0 + 0.05, DUR, y=350, size=180)
+    big(c, t, "qualquer dúvida,", "me chama.", t0 + 0.05, DUR, y=330, size=180)
     s = t0 + 0.8; d = ImageDraw.Draw(c, "RGBA")
     lw = 300 * ease_out((t - s) / 0.5)
-    if lw > 1: d.line([(W / 2 - lw, 505), (W / 2 + lw, 505)], fill=GREEN + (255,), width=4)
-    show(c, t, text_img("Corretor Eliezio", F("DMSerifDisplay-Regular", 84), INK + (255,)), W / 2, 590, s + 0.1, DUR)
-    show(c, t, text_img("CRECI-SP 209.709", F("Montserrat-SemiBold", 34), INK + (170,), spacing=5), W / 2, 675, s + 0.25, DUR)
+    if lw > 1: d.line([(W / 2 - lw, 1112), (W / 2 + lw, 1112)], fill=GREEN + (255,), width=4)
+    show(c, t, text_img("Corretor Eliezio", F("DMSerifDisplay-Regular", 84), INK + (255,)), W / 2, 1195, s + 0.1, DUR)
+    show(c, t, text_img("CRECI-SP 209.709", F("Montserrat-SemiBold", 34), INK + (170,), spacing=5), W / 2, 1280, s + 0.25, DUR)
     al, bl, dy = life(t, s + 0.45, DUR)
     if al > 0:
         tel = text_img("(11) 94087-3190", F("Montserrat-ExtraBold", 68), GREEN + (255,))
-        put(c, phone_icon(), W / 2 - tel.width / 2 - 10, 785 + dy, al, bl)
-        put(c, tel, W / 2 + 35, 785 + dy, al, bl)
-    show(c, t, text_img("eliezioimoveis.com.br  ·  ezbrokers.com.br", F("Montserrat-SemiBold", 32), INK + (210,)), W / 2, 880, s + 0.65, DUR)
-    show(c, t, text_img("@eliezio.corretordeimoveis  ·  @ezbrokers", F("Montserrat-SemiBold", 32), (255, 255, 255, 235), shadow=0.5), W / 2, 1790, s + 0.9, DUR)
+        put(c, phone_icon(), W / 2 - tel.width / 2 - 10, 1390 + dy, al, bl)
+        put(c, tel, W / 2 + 35, 1390 + dy, al, bl)
+    show(c, t, text_img("eliezioimoveis.com.br  ·  ezbrokers.com.br", F("Montserrat-SemiBold", 32), INK + (210,)), W / 2, 1490, s + 0.65, DUR)
+    show(c, t, text_img("@eliezio.corretordeimoveis  ·  @ezbrokers", F("Montserrat-SemiBold", 32), INK + (150,)), W / 2, 1555, s + 0.8, DUR)
 
 SCENES = [(SC_HOOK, sc_hook), (SC_TRES, sc_tres), (SC_PRECO, sc_preco), (SC_TEMPO, sc_tempo), (SC_ENTREGA, sc_entrega), (SC_VALE, sc_vale), (SC_FIM, sc_fim)]
 
@@ -333,14 +369,14 @@ def caption(c, t):
             im = text_img(w, CAP_FONT, INK + (255,)); p = ease_out((t - a + 0.02) / 0.12)
             pad = Image.new("RGBA", (im.width + 20, im.height), (0, 0, 0, 0)); pad.alpha_composite(im, (10, 0))
             d = ImageDraw.Draw(c, "RGBA"); bw = im.width - 30
-            d.rounded_rectangle([W / 2 - bw / 2 - 26, 1585 - 50, W / 2 + bw / 2 + 26, 1585 + 50], 50, fill=(255, 255, 255, int(200 * p)))
-            put(c, im, W / 2, 1585, p, (1 - p) * 6); return
+            d.rounded_rectangle([W / 2 - bw / 2 - 26, 1470 - 50, W / 2 + bw / 2 + 26, 1470 + 50], 50, fill=(255, 255, 255, int(200 * p)))
+            put(c, im, W / 2, 1470, p, (1 - p) * 6); return
 
 def frame(t):
     c = BGIMG.copy()
     for (a, b), fn in SCENES:
         if a - 0.05 <= t <= b + 0.35: fn(c, t)
-    chrome(c, t); caption(c, t)
+    chrome(c, t); caption(c, t); avatar(c, t)
     arr = np.asarray(c)
     for tb in BLUR_AT:                               # transição com desfoque (0,5 s)
         x = (t - tb) / 0.25
