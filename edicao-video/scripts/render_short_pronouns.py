@@ -1,4 +1,4 @@
-"""Short 9:16 (1080x1920): Pronomes (subject pronouns) em ~56 s (semana 1, básico). Narração bilíngue gerada pelo conector do
+"""Short 9:16 (1080x1920): Pronomes (subject pronouns), versão sem desafio para o próximo vídeo (semana 1, básico). Narração bilíngue gerada pelo conector do
 ElevenLabs (voz do Eliezio, v4), com o silêncio do contador do quiz aberto entre "He or she?" e "She!". Abertura fixa "Hello! Today",
 resposta do desafio anterior (HAD), os 7 pronomes, he/she, it, quiz (SHE) e desafio final para os comentários."""
 import sys, os, math, re, subprocess, wave
@@ -9,8 +9,13 @@ sys.path.insert(0, f"{S}/work")
 import sfx
 V = f"{S}/v91"; FD = f"{S}/fontdl"; EMOJI = "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf"
 W, H, FPS = 1080, 1920, 30
-PIN, GAP = 37.03, 5.6   # no silêncio entre "He or she?" (até 36,85) e "She!" (37,22), conferido ouvindo o trecho
-def f(t): return t + (GAP if t > PIN else 0)
+# sem desafio para o próximo vídeo: corta a resposta do desafio anterior (6,10-11,55) e o desafio final vira um 2º quiz com resposta
+CUT = (6.10, 11.55)
+PINS, GAP = [37.03, 46.00], 5.6   # contadores: entre "He or she?" (36,85) e "She!" (37,22); depois de "He, she or it?" (45,83), antes de "Responde" (46,18)
+PIN = PINS[0]
+def f(t):
+    cut = (CUT[1] - CUT[0]) if t >= CUT[1] else max(0.0, t - CUT[0])
+    return t - cut + GAP * sum(1 for p in PINS if p < t)
 VO_LEN = f(49.55); TOTAL = VO_LEN + 1.2
 NAVY = (12, 28, 58); INK = (16, 22, 36); WHITE = (255, 255, 255); YEL = (255, 214, 64); YEL_D = (64, 48, 0)
 C_AM = (236, 84, 84); C_IS = (64, 150, 255); C_ARE = (52, 190, 110); C_HE = (64, 150, 255); C_SHE = (236, 84, 140); C_IT = (52, 190, 110); GREEN = (46, 184, 92); C_ING = (255, 214, 64); MUTED = (180, 196, 224); RED_B = (220, 40, 40)
@@ -54,7 +59,6 @@ def emoji(ch, size):
     return _emo[key]
 # ---------------------------------------------------------------- falas (tempos da fala original; f() abre o contador)
 SEG = [("en", 0.05, 2.52, "Hello! Today: pronouns."), ("pt", 2.91, 5.89, "Você sabe quando usar he, she e it?"),
-       ("pt", 6.31, 8.76, "Mas antes, a resposta do último desafio:"), ("en", 9.15, 11.34, "If I HAD known, I would have called you."),
        ("en", 11.75, 15.64, "I, you, he, she, it, we, they."), ("pt", 16.06, 21.67, "Eu, você, ele, ela, it para coisas e animais, nós e eles."),
        ("en", 22.01, 25.12, "He is for a man. She is for a woman."), ("en", 25.53, 28.96, "It is for things and animals. The dog? It!"),
        ("pt", 29.35, 31.26, "It é para coisas e animais."),
@@ -95,7 +99,7 @@ BG = Image.fromarray(np.clip(BG, 0, 255).astype(np.uint8)).convert("RGBA"); del 
 hd = ImageDraw.Draw(BG); hd.rounded_rectangle((300, 70, 780, 130), 30, fill=WHITE + (255,)); hd.text((540, 100), "ENGLISH CLASS · Teacher Eliezio", font=MF("ExtraBold", 24), fill=INK + (255,), anchor="mm")
 # ---------------------------------------------------------------- avatar (1 sorrindo, 2 desconfiado, 7 surpreso, 8 piscando)
 AV = [Image.open(f"{S}/v77/av3d_{k}.png").convert("RGBA").resize((360, 360), Image.LANCZOS) for k in range(1, 9)]
-EXPR = [(0, 1), (2.9, 2), (6.2, 1), (9.6, 8), (10.6, 1), (PIN + 0.1, 2), (PIN + 5.3, 7), (f(38.6), 1), (f(40.3), 2), (f(46.2), 8), (f(47.5), 1)]
+EXPR = [(0, 1), (2.9, 2), (f(11.6), 1), (f(PINS[0]) + 0.1, 2), (f(PINS[0]) + 5.3, 7), (f(38.6), 1), (f(40.3), 2), (f(PINS[1]) + 5.3, 7), (f(46.4), 8), (f(47.5), 1)]
 AMP = None
 def amp_at(t):
     i = int(t * 100); return float(AMP[i]) if 0 <= i < len(AMP) else 0.0
@@ -133,7 +137,8 @@ def pop(fr, im, x, y, t, a, k, shadow=True):
     if t < a: return
     (sput if shadow else put)(fr, im, x, y, k, 0.5 + 0.5 * bo((t - a) / 0.35, 2.2))
 # ---------------------------------------------------------------- cenas (área de cima: y 170-1150; tempos da fala original via f())
-QZ = (PIN + 0.3, PIN + 0.3 + 5.0)   # começo do contador e revelação
+QZ = (f(PINS[0]) + 0.3, f(PINS[0]) + 5.3)   # 1º quiz: começo do contador e revelação
+QZ2 = (f(PINS[1]) + 0.3, f(PINS[1]) + 5.3)  # 2º quiz (o antigo desafio)
 PRON = [("I", "🙋", "eu", 11.8), ("YOU", "🫵", "você", 12.4), ("HE", "👨", "ele", 13.0), ("SHE", "👩", "ela", 13.5), ("IT", "🐶", "coisa / animal", 14.2), ("WE", "👫", "nós", 14.7), ("THEY", "👥", "eles / elas", 15.2)]
 PC = {"HE": C_HE, "SHE": C_SHE, "IT": C_IT}
 def T(a): return f(a)
@@ -212,24 +217,35 @@ def quiz(fr, t):
         d.arc((150 - R_, 150 - R_, 150 + R_, 150 + R_), -90, -90 + 360 * (1 - u), fill=col + (255,), width=16)
         put(fr, lay, 540, 1100, k); put(fr, txt(str(n_), ANTON(115), col, 5), 540, 1100, k, 1 + 0.25 * (1 - eo(fz / 0.3)))
     if t >= rv + 0.3: put(fr, chip("MÃE = MULHER → SHE", C_SHE, WHITE, 42), 540, 1100, env(t, rv + 0.3, b), 0.7 + 0.3 * bo((t - rv - 0.3) / 0.3))
+def ring(fr, t, c0, y):
+    u = (t - c0) / 5.0; n_ = int(5.0 - (t - c0)) + 1; fz = (t - c0) % 1; R_ = 100
+    lay = Image.new("RGBA", (300, 300), (0, 0, 0, 0)); d = ImageDraw.Draw(lay); col = YEL if n_ > 2 else C_AM
+    d.ellipse((150 - R_, 150 - R_, 150 + R_, 150 + R_), fill=(8, 18, 40, 230)); d.ellipse((150 - R_, 150 - R_, 150 + R_, 150 + R_), outline=(60, 84, 128, 255), width=16)
+    d.arc((150 - R_, 150 - R_, 150 + R_, 150 + R_), -90, -90 + 360 * (1 - u), fill=col + (255,), width=16)
+    put(fr, lay, 540, y); put(fr, txt(str(n_), ANTON(115), col, 5), 540, y, 1, 1 + 0.25 * (1 - eo(fz / 0.3)))
 def challenge(fr, t):
-    k = env(t, T(40.1), TOTAL, 0.3, 0.01)
+    k = env(t, T(40.1), TOTAL, 0.3, 0.01); c0, rv = QZ2
     if k <= 0: return
     put(fr, txt("CHALLENGE!", ANTON(130), YEL, 7), 540, 320, k, 0.9 + 0.1 * bo((t - T(40.1)) / 0.4))
     put(fr, emoji("🚗", 100), 540, 470, k)
     put(fr, txt("The car is red.", MF("ExtraBold", 66), WHITE, 4), 540, 600, k); put(fr, txt("___ is new.", MF("ExtraBold", 66), WHITE, 4), 540, 700, k)
-    for i, (w_, a) in enumerate([("HE", 44.3), ("SHE", 44.7), ("IT", 45.2)]):
-        pop(fr, chip(w_, (90, 104, 136), WHITE, 60, 38, 26).rotate(3 * math.sin(t * 4 + i), Image.BICUBIC, expand=True), 240 + i * 300, 850, t, T(a), k)   # mesma cor: não entrega
-    if t > T(46.2):
-        put(fr, chip("RESPONDE NOS COMENTÁRIOS", RED_B, WHITE, 44), 540, 980, k, (0.6 + 0.4 * bo((t - T(46.2)) / 0.35, 2.2)) * (1 + 0.03 * math.sin(t * 6)))
-        put(fr, emoji("👇", 64), 540, 1060 + 6 * math.sin(t * 6), k)
-    if t > T(47.4): put(fr, chip("SIGA @teachereliezio", WHITE, INK, 40), 540, 1140, k, (0.6 + 0.4 * bo((t - T(47.4)) / 0.35, 2.2)) * (1 + 0.04 * math.sin(t * 5)))
-    if t > T(48.4): put(fr, chip("SALVA PRA REVISAR DEPOIS", YEL, INK, 34), 540, 1215, k, 0.6 + 0.4 * bo((t - T(48.4)) / 0.35, 2.2))
+    for i, (w_, a, ok) in enumerate([("HE", 44.3, False), ("SHE", 44.7, False), ("IT", 45.2, True)]):
+        if t < T(a): continue
+        rvd = t >= rv; c = (GREEN if ok else (70, 80, 100)) if rvd else (90, 104, 136)   # mesma cor até a revelação
+        im = chip(w_, c, WHITE, 60, 38, 26); sc = 0.5 + 0.5 * bo((t - T(a)) / 0.35, 2.2)
+        if rvd and ok: sc *= 1 + 0.08 * bo((t - rv) / 0.3, 3) - 0.08 + 0.03 * math.sin(t * 6)
+        put(fr, im, 240 + i * 300, 850, k * (0.5 if rvd and not ok else 1), sc)
+        if rvd: put(fr, emoji("✅" if ok else "❌", 56), 240 + i * 300, 770, k, 0.5 + 0.5 * bo((t - rv) / 0.3, 2))
+    if c0 <= t < rv: ring(fr, t, c0, 1060)
+    if t >= rv + 0.3: put(fr, chip("CARRO = COISA → IT", C_IT, WHITE, 42), 540, 990, env(t, rv + 0.3, TOTAL, 0.3, 0.01), 0.7 + 0.3 * bo((t - rv - 0.3) / 0.3))
+    if t > T(46.4): put(fr, chip("COMENTA SE ACERTOU 👇" if False else "COMENTA SE VOCÊ ACERTOU", RED_B, WHITE, 40), 540, 1080, k, (0.6 + 0.4 * bo((t - T(46.4)) / 0.35, 2.2)) * (1 + 0.03 * math.sin(t * 6)))
+    if t > T(47.4): put(fr, chip("SIGA @teachereliezio", WHITE, INK, 40), 540, 1160, k, (0.6 + 0.4 * bo((t - T(47.4)) / 0.35, 2.2)) * (1 + 0.04 * math.sin(t * 5)))
+    if t > T(48.4): put(fr, chip("SALVA PRA REVISAR DEPOIS", YEL, INK, 34), 540, 1230, k, 0.6 + 0.4 * bo((t - T(48.4)) / 0.35, 2.2))
 def captions(fr, t):
     for p in PAIRS:
         if not (p["en"][1] - 0.05 <= t < p["t1"]): continue
         a, b = p["en"][1], p["en"][2]; kin = eo((t - a) / 0.25)
-        y = 1300 if p["en"][1] < T(40.1) else 1340
+        y = 1300 if p["en"][1] < T(40.1) else 1335
         neutral = p["en"][3].startswith(("Quiz", "Challenge"))
         if neutral: HLW_SAVE = dict(HLW); HLW.clear()
         im = karaoke(p["en"][3], a, b, t, MF("ExtraBold", 54) if p["en"][0] == "en" else MF("Bold", 48), 960, WHITE if p["en"][0] == "en" else (255, 230, 150), hl=p["en"][0] == "en")
@@ -242,7 +258,7 @@ def captions(fr, t):
 def progress(fr, t):
     d = ImageDraw.Draw(fr); d.rounded_rectangle((60, 1880, 1020, 1892), 6, fill=(60, 84, 128, 255)); d.rounded_rectangle((60, 1880, 60 + 960 * clamp(t / TOTAL), 1892), 6, fill=YEL + (255,))
 def frame_at(t):
-    fr = BG.copy(); hook(fr, t); prev(fr, t); plist(fr, t); heshe(fr, t); itscene(fr, t); quiz(fr, t); challenge(fr, t)
+    fr = BG.copy(); hook(fr, t); plist(fr, t); heshe(fr, t); itscene(fr, t); quiz(fr, t); challenge(fr, t)
     if t < VO_LEN: captions(fr, t)
     avatar(fr, min(t, VO_LEN - 0.01)); progress(fr, t); return fr.convert("RGB")
 def capa(out):
@@ -272,13 +288,14 @@ def audio(vout):
     while len(loop) < n:
         rr = np.linspace(0, 1, xf)[:, None]; loop[-xf:] = loop[-xf:] * (1 - rr) + bed[:xf] * rr; loop = np.concatenate([loop, bed[xf:]])
     tl = np.arange(n) / SR; gain = 0.07 * np.clip(tl / 0.5, 0, 1) * np.clip(1 - (tl - (TOTAL - 1.2)) / 1.1, 0, 1)
-    gain *= 1 - 0.5 * np.clip((tl - QZ[0] + 0.3) / 0.3, 0, 1) * np.clip((QZ[1] + 0.4 - tl) / 0.3, 0, 1)
+    for q_ in (QZ, QZ2): gain *= 1 - 0.5 * np.clip((tl - q_[0] + 0.3) / 0.3, 0, 1) * np.clip((q_[1] + 0.4 - tl) / 0.3, 0, 1)
     writew(f"{V}/voice.wav", vt); writew(f"{V}/song.wav", loop[:n] * gain[:, None])
     ding = readw(f"{S}/v81/ding.wav"); c0, rv = QZ
-    ev = [(0.1, sfx.whoosh(0.4), 0.15)] + [(f(a) - 0.15, sfx.whoosh(0.4), 0.12) for a in (6.2, 11.6, 21.85, 25.45, 31.5, 40.1)]
+    ev = [(0.1, sfx.whoosh(0.4), 0.15)] + [(f(a) - 0.15, sfx.whoosh(0.4), 0.12) for a in (11.6, 21.85, 25.45, 31.5, 40.1)]
     ev += [(f(a), sfx.click(seed=i), 0.16) for i, a in enumerate((3.2, 3.7, 4.3, 11.8, 12.4, 13.0, 13.5, 14.2, 14.7, 15.2, 22.0, 23.7, 25.9, 26.8, 35.95, 36.25, 44.3, 44.7, 45.2))]
-    ev += [(f(9.6), sfx.thud(0.35), 0.2), (f(10.0), ding, 0.35), (f(28.55), sfx.thud(0.3), 0.18)]
-    ev += [(c0 + k_, sfx.click(seed=30 + k_), 0.3) for k_ in range(5)] + [(rv, ding, 0.45), (f(46.2), sfx.thud(0.35), 0.18), (f(47.4), sfx.thud(0.35), 0.18)]
+    ev += [(f(28.55), sfx.thud(0.3), 0.18)]
+    for q_ in (QZ, QZ2): ev += [(q_[0] + k_, sfx.click(seed=30 + k_), 0.3) for k_ in range(5)] + [(q_[1], ding, 0.45)]
+    ev += [(f(46.4), sfx.thud(0.35), 0.18), (f(47.4), sfx.thud(0.35), 0.18)]
     sfx.build(ev, TOTAL, f"{V}/sfx.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/song.wav", "-filter_complex",
                     "[1:a]highpass=f=70,acompressor=threshold=0.1:ratio=2.2:attack=8:release=200:makeup=1.4,asplit=2[vox][k2];[2:a]volume=0.8[sf];[3:a]volume=1.0[sg];"

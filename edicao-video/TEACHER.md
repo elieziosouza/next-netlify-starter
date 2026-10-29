@@ -12,12 +12,13 @@ outra abertura.
 
 ## Roteiro (ElevenLabs, voz do Eliezio, modelo Eleven v4)
 1. Abertura fixa: "Hello! Today: <tema>." e, logo depois, o gancho (uma pergunta ou um erro comum).
-2. Resposta falada do desafio do vídeo anterior (desde o Present Perfect).
+2. Nada de ligar um vídeo ao outro: sem "resposta do último desafio" e sem pergunta para o próximo vídeo.
 3. Regra e exemplos: inglês primeiro, depois português. Números escritos por extenso em inglês.
 4. Quiz com contador: pergunta, silêncio de 3 a 5 s aberto na edição (círculo, 3-2-1, tique-taque, música abaixa),
    "ding" e a resposta certa em verde com ✅, a errada apagada com ❌.
-5. Desafio final sem resposta, falado e na tela, para responder nos comentários.
-6. Pedido falado para seguir e salvar; na tela "RESPONDE NOS COMENTÁRIOS", "SIGA @teachereliezio" e "SALVA PRA REVISAR".
+5. Toda pergunta é respondida no próprio vídeo, no formato quiz com contador (pode ter 2 quizzes). Opções na mesma cor até a
+   revelação, e nenhum emoji ou cor na legenda que entregue a resposta. Conferir ouvindo onde a pergunta termina e a resposta começa.
+6. Pedido falado para comentar se acertou, seguir e salvar; na tela "COMENTA SE VOCÊ ACERTOU", "SIGA @teachereliezio" e "SALVA PRA REVISAR".
 
 ## Entrega
 - Primeiro bloco: título com 4 hashtags na mesma linha, pronto para copiar.
