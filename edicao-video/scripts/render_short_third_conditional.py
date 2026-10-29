@@ -1,7 +1,7 @@
 """Short 9:16 (1080x1920): Third Conditional em ~51 s (semana 1, avançado). Narração bilíngue (ElevenLabs, voz do Eliezio), com o
 silêncio do contador do quiz aberto na edição (entre a pergunta e "Would have!"). Abertura fixa "Hello! Today", resposta do desafio
 anterior (HAVE), quando usar, fórmula, exemplo, quiz com contador e desafio final, com pedido para seguir e salvar."""
-import sys, math, re, subprocess, wave
+import sys, os, math, re, subprocess, wave
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 S = sys.argv[1]; OUTFILE = sys.argv[2]; MODE = sys.argv[3] if len(sys.argv) > 3 else "full"
@@ -259,8 +259,9 @@ def capa(out):
     avatar(fr, 0.0); fr.convert("RGB").save(out, quality=95)
 def load_amp():
     global AMP
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f"{V}/vo.mp3", "-ar", "16000", "-ac", "1", f"{V}/vo16.wav"], check=True)
-    w = wave.open(f"{V}/vo16.wav"); a = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768
+    tmp = f"{V}/vo16_{os.getpid()}.wav"   # um arquivo por processo: as 4 partes rodam juntas
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f"{V}/vo.mp3", "-ar", "16000", "-ac", "1", tmp], check=True)
+    w = wave.open(tmp); os.remove(tmp) if False else None; a = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768
     hop = 160; n = len(a) // hop; e = np.sqrt((a[:n * hop].reshape(n, hop) ** 2).mean(1)); e = np.clip(e / (np.percentile(e, 95) + 1e-6), 0, 1.2)
     sm = np.zeros_like(e); z = 0
     for i, v in enumerate(e): z = max(v, z * 0.86); sm[i] = z
