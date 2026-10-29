@@ -9,6 +9,7 @@ outra abertura.
 - Fundo azul-marinho com grade, cabeçalho "ENGLISH CLASS · Teacher Eliezio", amarelo (255, 214, 64) como destaque.
 - Legenda karaokê: inglês em branco com a palavra falada em amarelo, português embaixo em amarelo-claro.
 - Abertura: capa + zoom lento + riser baixo (volume 0,25) + clarão (`scripts/finaliza_teacher.sh`). Nunca o glitch do canal de opinião.
+- A capa vai SEMPRE fixada no início de todo vídeo, inclusive nos virais de 10 s.
 
 ## Roteiro (ElevenLabs, voz do Eliezio, modelo Eleven v4)
 1. Abertura fixa: "Hello! Today: <tema>." e, logo depois, o gancho (uma pergunta ou um erro comum).
