@@ -3,6 +3,7 @@
 Canal de corretor · Eliezio Imóveis / EZ Brokers
 Formato: Reels vertical 9:16, **até 59 s** · Estilo: lettering editorial do corretor
 CTA final dos dois vídeos: **"Qualquer dúvida, me chama."**
+Assinatura na tela final e na legenda: **Corretor Eliezio · CRECI-SP 209.709 · Tel. (11) 94087-3190**
 
 **Identidade dos dois vídeos**
 - Palavra gigante em DM Serif Display atrás da sua cabeça, com a palavra pequena em Montserrat no canto.
@@ -25,7 +26,7 @@ CTA final dos dois vídeos: **"Qualquer dúvida, me chama."**
 | 0:16–0:24 | Segundo, o tempo. A obra leva de dois a quatro anos. Se você precisa mudar agora, não é pra você. | Transição com desfoque → palavra gigante **tempo**. Linha do tempo até um ícone de chave. | Swoosh + tic-tac baixinho |
 | 0:24–0:37 | Terceiro, a entrega. As parcelas são corrigidas pelo I.N.C.C., o saldo vai pro financiamento com os juros daquele momento, e ainda tem I.T.B.I., registro e condomínio. | Transição com desfoque → palavra gigante **entrega**. Destaque verde **INCC**. Checklist: ITBI 3% · Registro · Condomínio. | Swoosh + caneta riscando em cada item |
 | 0:37–0:45 | Se você não tem pressa e planeja a entrega desde o começo, vale muito a pena. | Destaque verde **VALE A PENA** em ExtraBold Italic. | Riser + batida no "vale" |
-| 0:45–0:50 | Qualquer dúvida, me chama. | Tela final: WhatsApp (11) 97111-8620 · eliezioimoveis.com.br · @eliezio.corretordeimoveis · @ezbrokers. | Música sobe e fecha com "ding" |
+| 0:45–0:50 | Qualquer dúvida, me chama. | Tela final: **Corretor Eliezio** · CRECI-SP 209.709 · Tel. (11) 94087-3190 · eliezioimoveis.com.br · @eliezio.corretordeimoveis · @ezbrokers. | Música sobe e fecha com "ding" |
 
 ### Texto para o ElevenLabs (vídeo 1)
 
@@ -57,7 +58,7 @@ Qualquer dúvida, me chama.
 | 0:25–0:33 | Quatro: o quadro-resumo, com preço, parcelas, correção e data de entrega. | Desfoque → **04**. Formulário preenchendo linha por linha. | Swoosh + digitação a cada linha |
 | 0:33–0:46 | Cinco: o prazo. A lei aceita até cento e oitenta dias de atraso. Passou disso, você tem direito a indenização ou à devolução do que pagou. | Desfoque → **05**. Calendário com páginas voando, para no "+180 dias" em verde. | Swoosh + páginas virando + ding |
 | 0:46–0:50 | Salva esse vídeo pra ler o contrato com calma. | Ícone de "salvar" animado, em verde. | Pop |
-| 0:50–0:55 | Qualquer dúvida, me chama. | Tela final: WhatsApp (11) 97111-8620 · eliezioimoveis.com.br · @eliezio.corretordeimoveis · @ezbrokers. | Música sobe e fecha com "ding" |
+| 0:50–0:55 | Qualquer dúvida, me chama. | Tela final: **Corretor Eliezio** · CRECI-SP 209.709 · Tel. (11) 94087-3190 · eliezioimoveis.com.br · @eliezio.corretordeimoveis · @ezbrokers. | Música sobe e fecha com "ding" |
 
 ### Texto para o ElevenLabs (vídeo 2)
 
@@ -96,12 +97,12 @@ Qualquer dúvida, me chama.
 
 **Vídeo 1**
 - Título: Vale a pena comprar na planta em SP?
-- Legenda: Preço, tempo e as contas da entrega. Os três pontos que decidem se a planta é pra você. Qualquer dúvida, me chama no WhatsApp (11) 97111-8620.
+- Legenda: Preço, tempo e as contas da entrega. Os três pontos que decidem se a planta é pra você. Qualquer dúvida, me chama: (11) 94087-3190. Corretor Eliezio, CRECI-SP 209.709.
 - Hashtags: #imovelnaplanta #apartamentonaplanta #lancamentosp #saopaulo #primeiroimovel #corretordeimoveis #ezbrokers
 
 **Vídeo 2**
 - Título: 5 pontos no contrato antes de comprar na planta
-- Legenda: Registro, patrimônio de afetação, multa de distrato, quadro-resumo e prazo de entrega. Salva pra consultar depois. Qualquer dúvida, me chama no WhatsApp (11) 97111-8620.
+- Legenda: Registro, patrimônio de afetação, multa de distrato, quadro-resumo e prazo de entrega. Salva pra consultar depois. Qualquer dúvida, me chama: (11) 94087-3190. Corretor Eliezio, CRECI-SP 209.709.
 - Hashtags: #imovelnaplanta #contratodecompra #distrato #lancamentosp #saopaulo #corretordeimoveis #ezbrokers
 
 ## Capa (escolher uma antes de fechar)
