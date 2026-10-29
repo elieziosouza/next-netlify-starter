@@ -9,7 +9,7 @@ sys.path.insert(0, f"{S}/work")
 import sfx
 V = f"{S}/v89"; FD = f"{S}/fontdl"; EMOJI = "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf"
 W, H, FPS = 1080, 1920, 30
-PIN, GAP = 35.55, 5.6
+PIN, GAP = 34.68, 5.6   # no silêncio entre a pergunta (até 34,51) e a resposta "Has!" (34,86)
 def f(t): return t + (GAP if t > PIN else 0)
 VO_LEN = f(47.07); TOTAL = VO_LEN + 1.2
 NAVY = (12, 28, 58); INK = (16, 22, 36); WHITE = (255, 255, 255); YEL = (255, 214, 64); YEL_D = (64, 48, 0)
@@ -59,7 +59,7 @@ SEG = [("en", 0.09, 2.74, "Hello! Today: present perfect."), ("en", 3.11, 5.98, 
        ("en", 17.76, 19.09, "I have visited Rio."), ("pt", 19.40, 20.57, "Eu já visitei o Rio."),
        ("en", 20.94, 22.58, "She has finished her homework."), ("pt", 22.82, 24.23, "Ela já terminou a lição."),
        ("en", 24.64, 26.97, "Use it when the time is not important."), ("pt", 27.22, 29.69, "Usamos quando não importa quando aconteceu."),
-       ("en", 30.10, 35.42, "Quiz! He ___ seen this movie. Have or has?"), ("pt", 35.69, 38.37, "Has! Com he, she e it, usamos has."),
+       ("en", 30.10, 34.51, "Quiz! He ___ seen this movie. Have or has?"), ("pt", 34.86, 38.37, "Has! Com he, she e it, usamos has."),
        ("en", 38.72, 43.39, "Challenge: I ___ never eaten sushi. Have or has?"), ("pt", 43.68, 47.07, "Responde nos comentários, me segue e salva pra revisar!")]
 SEG = [(lg, f(a), f(b), tx) for lg, a, b, tx in SEG]
 PAIRS = []
@@ -96,7 +96,7 @@ BG = Image.fromarray(np.clip(BG, 0, 255).astype(np.uint8)).convert("RGBA"); del 
 hd = ImageDraw.Draw(BG); hd.rounded_rectangle((300, 70, 780, 130), 30, fill=WHITE + (255,)); hd.text((540, 100), "ENGLISH CLASS · Teacher Eliezio", font=MF("ExtraBold", 24), fill=INK + (255,), anchor="mm")
 # ---------------------------------------------------------------- avatar (1 sorrindo, 2 desconfiado, 7 surpreso, 8 piscando)
 AV = [Image.open(f"{S}/v77/av3d_{k}.png").convert("RGBA").resize((360, 360), Image.LANCZOS) for k in range(1, 9)]
-EXPR = [(0, 1), (3.1, 2), (6.3, 1), (9.2, 8), (10.2, 1), (35.6, 2), (40.85, 7), (f(36.7), 1), (f(38.7), 2), (f(43.7), 8), (f(45.0), 1)]
+EXPR = [(0, 1), (3.1, 2), (6.3, 1), (9.2, 8), (10.2, 1), (34.7, 2), (PIN + 5.3, 7), (f(36.7), 1), (f(38.7), 2), (f(43.7), 8), (f(45.0), 1)]
 AMP = None
 def amp_at(t):
     i = int(t * 100); return float(AMP[i]) if 0 <= i < len(AMP) else 0.0
