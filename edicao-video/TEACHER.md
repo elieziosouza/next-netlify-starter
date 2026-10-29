@@ -8,7 +8,7 @@ outra abertura.
 - Avatar 3D do professor embaixo (`v77/av3d_1..8.png`), reagindo: 1 sorrindo, 2 desconfiado/pensando, 7 surpreso, 8 piscando.
 - Fundo azul-marinho com grade, cabeçalho "ENGLISH CLASS · Teacher Eliezio", amarelo (255, 214, 64) como destaque.
 - Legenda karaokê: inglês em branco com a palavra falada em amarelo, português embaixo em amarelo-claro.
-- Abertura: capa + zoom lento + riser + clarão (`scripts/finaliza_teacher.sh`). Nunca o glitch do canal de opinião.
+- Abertura: capa + zoom lento + riser baixo (volume 0,25) + clarão (`scripts/finaliza_teacher.sh`). Nunca o glitch do canal de opinião.
 
 ## Roteiro (ElevenLabs, voz do Eliezio, modelo Eleven v4)
 1. Abertura fixa: "Hello! Today: <tema>." e, logo depois, o gancho (uma pergunta ou um erro comum).
