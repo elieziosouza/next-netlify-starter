@@ -30,3 +30,5 @@ Nunca cortar o rosto nem o topo da cabeça do Eliezio (vídeo, janelinha, capa, 
 Ao entregar cada vídeo, termine sempre com título (opções), legenda do post, hashtags e título para Shorts (seção 7.1 do README).
 
 Quando o Eliezio aprovar uma melhoria, atualize o README (seções 1 a 6 e o histórico) e faça commit.
+
+Voz no ElevenLabs: usar sempre a voz clonada "Eliezio Souza" (voice_id njASsAgVyTCHG8OdIeWh). Gerar uma versão só (generations_count 1, nunca 2 ou mais). Antes de gerar, rodar com estimate_only, informar ao Eliezio quantos créditos vai custar e só gerar depois que ele aprovar.
