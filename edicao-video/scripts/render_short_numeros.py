@@ -182,6 +182,7 @@ def quiz(fr, t):
     qa = T(30.8) if qi == 0 else T(34.43); qk = k * (env(t, qa - 0.05, T(34.35), 0.25, 0.2) if qi == 0 else 1)
     put(fr, txt(f"PERGUNTA {qi + 1} DE 2", MF("ExtraBold", 40), MUTED), 540, 400, qk)
     if t < rv: put(fr, emoji("🎧", 130), 540, 540, qk, (0.6 + 0.4 * bo((t - qa) / 0.35, 2)) * (1 + 0.05 * math.sin(t * 7)))
+    okc = [i for i, (_, ok) in enumerate(opts) if ok][0]; confetti(fr, t, rv, 540, 720 + okc * 150)   # por trás dos cartões
     for i, (s_, ok) in enumerate(opts):
         ta = qa + 0.25 + i * 0.3
         if t < ta: continue
@@ -198,6 +199,21 @@ def quiz(fr, t):
     if t >= rv + 0.2:
         tip = stressword("", "FIF", "ty", C_TY, 84) if qi == 0 else stressword("four", "TEEN", "", C_TEEN, 84)
         put(fr, tip, 540, 1060, qk, 0.7 + 0.3 * bo((t - rv - 0.2) / 0.3))
+_CR = np.random.default_rng(21)
+CONF = [dict(a=_CR.uniform(-math.pi * 0.95, -math.pi * 0.05), v=_CR.uniform(700, 1500), w=_CR.uniform(12, 24), ph=_CR.uniform(0, 6.28), sp=_CR.uniform(5, 11),
+             col=[YEL, GREEN, (64, 150, 255), (236, 84, 84), WHITE, (180, 120, 255)][int(_CR.integers(0, 6))]) for _ in range(90)]
+def confetti(fr, t, t0, x0, y0):
+    """explosão de confete saindo da alternativa certa na revelação (cai com gravidade e some em 1,8 s)"""
+    u = t - t0
+    if not 0 <= u < 1.8: return
+    lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay); al = int(255 * clamp((1.8 - u) / 0.5))
+    for c in CONF:
+        x = x0 + math.cos(c["a"]) * c["v"] * u * 0.55 + 18 * math.sin(u * 3 + c["ph"]); y = y0 + math.sin(c["a"]) * c["v"] * u + 1500 * u * u
+        if not (-40 < x < W + 40 and -40 < y < H + 40): continue
+        ww = c["w"] * abs(math.cos(u * c["sp"] + c["ph"])) + 3; hh = c["w"] * 0.45; ang = u * c["sp"] * 40 + c["ph"] * 57
+        pc = Image.new("RGBA", (int(ww) + 2, int(hh) + 2), c["col"] + (al,)).rotate(ang, expand=True)
+        lay.alpha_composite(pc, (int(x - pc.width / 2), int(y - pc.height / 2)))
+    fr.alpha_composite(lay)
 def challenge(fr, t):
     k = env(t, T(38.2), TOTAL, 0.3, 0.01)
     if k <= 0: return
@@ -258,7 +274,7 @@ def audio(vout):
     ding = readw(f"{S}/v81/ding.wav")
     ev = [(f(a) - 0.15, sfx.whoosh(0.4), 0.12) for a in (3.9, 9.5, 17.0, 24.3, 29.7, 38.2)]
     ev += [(f(a), sfx.click(seed=i), 0.16) for i, a in enumerate((3.95, 4.9, 12.05, 12.75, 13.45, 19.75, 20.35, 20.95, 24.4, 25.25, 26.05))]
-    for q_ in QZ: ev += [(q_[0] + k_, sfx.click(seed=30 + k_), 0.3) for k_ in range(3)] + [(q_[1], ding, 0.45)]
+    for q_ in QZ: ev += [(q_[0] + k_, sfx.click(seed=30 + k_), 0.3) for k_ in range(3)] + [(q_[1], ding, 0.45)] + [(q_[1] + 0.02, sfx.paper(0.35), 0.22)]
     ev += [(f(38.3), sfx.thud(0.35), 0.18)]
     sfx.build(ev, TOTAL, f"{V}/sfx.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/song.wav", "-filter_complex",

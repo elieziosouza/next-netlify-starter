@@ -16,7 +16,8 @@ outra abertura.
 2. Nada de ligar um vídeo ao outro: sem "resposta do último desafio" e sem pergunta para o próximo vídeo.
 3. Regra e exemplos: inglês primeiro, depois português. Números escritos por extenso em inglês.
 4. Quiz com contador: pergunta, silêncio de 3 a 5 s aberto na edição (círculo, 3-2-1, tique-taque, música abaixa),
-   "ding" e a resposta certa em verde com ✅, a errada apagada com ❌.
+   "ding" e a resposta certa em verde com ✅, a errada apagada com ❌, com explosão de confete saindo da alternativa certa
+   (por trás dos cartões, para não cobrir o texto) e som leve de papel junto com o "ding" (pedido de 30/10/2026).
 5. Toda pergunta é respondida no próprio vídeo, no formato quiz com contador (pode ter 2 quizzes). Opções na mesma cor até a
    revelação, e nenhum emoji ou cor na legenda que entregue a resposta. Conferir ouvindo onde a pergunta termina e a resposta começa.
 6. Pedido falado para comentar se acertou, seguir e salvar; na tela "COMENTA SE VOCÊ ACERTOU", "SIGA @teachereliezio" e "SALVA PRA REVISAR".
