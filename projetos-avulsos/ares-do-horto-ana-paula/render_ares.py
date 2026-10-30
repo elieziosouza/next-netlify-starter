@@ -326,7 +326,7 @@ def mux(video):
     ev += [(S3 + 3.3 + i * 0.45, sfx.click(seed=i), 0.07) for i in range(5)] + [(S4 + 0.8 + i * 0.3, sfx.click(seed=10 + i), 0.06) for i in range(4)]
     sfx.build(ev, TOTAL, f"{HERE}/sfx.wav")
     vd = int(VO_OFF * 1000)
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", video, "-i", f"{HERE}/music.wav", "-i", f"{HERE}/sfx.wav", "-i", f"{HERE}/narracao.mp3", "-filter_complex",
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", video, "-i", f"{HERE}/music.wav", "-i", f"{HERE}/sfx.wav", "-i", f"{HERE}/narracao_edit.wav", "-filter_complex",
                     f"[3:a]aresample=48000,aformat=channel_layouts=stereo,adelay={vd}|{vd},highpass=f=75,acompressor=threshold=0.12:ratio=2.5:attack=6:release=180:makeup=1.6,"
                     f"equalizer=f=3200:t=q:w=1.2:g=2,asplit=2[vo][key];[1:a]volume=0.55[m0];[m0][key]sidechaincompress=threshold=0.04:ratio=6:attack=25:release=450[m];[2:a]volume=0.6[s];"
                     f"[vo][m][s]amix=inputs=3:normalize=0,atrim=0:{TOTAL},afade=t=out:st={TOTAL - 1.2}:d=1.2,loudnorm=I=-14:TP=-1.5:LRA=11[a]",
