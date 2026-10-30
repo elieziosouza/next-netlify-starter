@@ -137,8 +137,8 @@ def card(fr, img, x, y, r=36, a=1.0):
     m = _RM[k] if a >= 0.999 else _RM[k].point(lambda v: int(v * a)); fr.paste(img, (int(x), int(y)), m)
 
 # ---------- cenas ----------
-S1, S2, S3, S4, S5 = 0.0, 4.35, 9.2, 14.7, 20.6
-VO_OFF = 0.3
+S1, S2, S3, S4, S5 = 0.0, 4.25, 8.6, 14.0, 22.8
+VO_OFF = 0.2; VO_TEMPO = 1.04
 def life(t, a, b, fo=0.35): return clamp((b - t) / fo) if t < b else 0.0
 def sc1(fr, d, t):
     a = life(t, S1, S2)
@@ -219,7 +219,7 @@ def sc4(fr, d, t):
         ims = [timg(n, INTER(500, 26), GREEN if n != "e muito mais" else CREAM) for n in row]; ws = [im.width + 36 for im in ims]
         x = 540 - (sum(ws) + 12 * (len(ws) - 1)) / 2; y = 1532 + r_ * 62
         for n, im, w_ in zip(row, ims, ws):
-            p = (u - 0.9 - k * 0.12) / 0.4; k += 1
+            p = (u - 2.0 - k * 0.6) / 0.4; k += 1
             if p > 0:
                 ov = Image.new("RGBA", (int(w_), 50), (0, 0, 0, 0)); od = ImageDraw.Draw(ov)
                 if n == "e muito mais": od.rounded_rectangle((0, 0, w_ - 1, 49), 25, fill=GREEN + (255,))
@@ -338,8 +338,8 @@ def mux(video):
     ev += [(S3 + 3.3 + i * 0.45, sfx.click(seed=i), 0.07) for i in range(5)] + [(S4 + 0.8 + i * 0.3, sfx.click(seed=10 + i), 0.06) for i in range(4)]
     sfx.build(ev, TOTAL, f"{HERE}/sfx.wav")
     vd = int(VO_OFF * 1000)
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", video, "-i", f"{HERE}/music.wav", "-i", f"{HERE}/sfx.wav", "-i", f"{HERE}/narracao.mp3", "-filter_complex",
-                    f"[3:a]aresample=48000,aformat=channel_layouts=stereo,adelay={vd}|{vd},highpass=f=75,acompressor=threshold=0.12:ratio=2.5:attack=6:release=180:makeup=1.6,"
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", video, "-i", f"{HERE}/music.wav", "-i", f"{HERE}/sfx.wav", "-i", f"{HERE}/narracao_v2.mp3", "-filter_complex",
+                    f"[3:a]aresample=48000,aformat=channel_layouts=stereo,atempo={VO_TEMPO},adelay={vd}|{vd},highpass=f=75,acompressor=threshold=0.12:ratio=2.5:attack=6:release=180:makeup=1.6,"
                     f"equalizer=f=3200:t=q:w=1.2:g=2,asplit=2[vo][key];[1:a]volume=0.55[m0];[m0][key]sidechaincompress=threshold=0.04:ratio=6:attack=25:release=450[m];[2:a]volume=0.6[s];"
                     f"[vo][m][s]amix=inputs=3:normalize=0,atrim=0:{TOTAL},afade=t=out:st={TOTAL - 1.2}:d=1.2,loudnorm=I=-14:TP=-1.5:LRA=11[a]",
                     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", OUT], check=True)
