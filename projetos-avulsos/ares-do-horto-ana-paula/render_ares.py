@@ -11,7 +11,7 @@ FD = "/tmp/claude-0/-home-user-next-netlify-starter/698dd744-d40f-5d96-b9e9-7202
 sys.path.insert(0, "/home/user/next-netlify-starter/edicao-video/scripts")
 OUT = sys.argv[1]; MODE = sys.argv[2] if len(sys.argv) > 2 else "frames:1"
 W, H, FPS, TOTAL = 1080, 1920, 30, 30.0
-BG = (244, 241, 234); INK = (30, 38, 34); GREEN = (38, 74, 58); SAGE = (148, 172, 150); MUTED = (120, 128, 122); CREAM = (244, 238, 224); WARM = (196, 164, 126)
+BG = (244, 241, 234); INK = (30, 38, 34); GREEN = (38, 74, 58); SAGE = (148, 172, 150); MUTED = (120, 128, 122); CREAM = (244, 238, 224); WARM = (196, 164, 126); GOLD = (190, 160, 108)
 def SERIF(s): return ImageFont.truetype(f"{FD}/DMSerifDisplay-Regular.ttf", s)
 def INTER(w, s): return ImageFont.truetype(f"{FD}/Inter-{w}.ttf", s)
 def clamp(x, a=0.0, b=1.0): return max(a, min(b, x))
@@ -137,7 +137,8 @@ def card(fr, img, x, y, r=36, a=1.0):
     m = _RM[k] if a >= 0.999 else _RM[k].point(lambda v: int(v * a)); fr.paste(img, (int(x), int(y)), m)
 
 # ---------- cenas ----------
-S1, S2, S3, S4, S5 = 0.0, 4.4, 8.2, 16.4, 23.4
+S1, S2, S3, S4, S5 = 0.0, 4.35, 9.2, 14.7, 20.6
+VO_OFF = 0.3
 def life(t, a, b, fo=0.35): return clamp((b - t) / fo) if t < b else 0.0
 def sc1(fr, d, t):
     a = life(t, S1, S2)
@@ -149,7 +150,7 @@ def sc1(fr, d, t):
     reveal(fr, timg("PLANO&PLANO APRESENTA", INTER(500, 26), MUTED, 7), 540, 1250, (t - 0.5) / 0.6, a)
     reveal(fr, timg("Ares do Horto", SERIF(150), INK), 540, 1295, (t - 0.8) / 0.7, a)
     w = 240 * eio((t - 1.5) / 0.6)
-    if w > 1: hline(d, 540 - w / 2, 540 + w / 2, 1520, SAGE + (int(255 * a),), 3)
+    if w > 1: hline(d, 540 - w / 2, 540 + w / 2, 1520, GOLD + (int(255 * a),), 3)
     reveal(fr, timg("Viva perto do verde.", INTER(400, 46), GREEN), 540, 1550, (t - 1.8) / 0.6, a)
 def sc2(fr, d, t):
     u = t - S2; a = clamp(u / 0.35) * life(t, S2, S3)
@@ -169,20 +170,21 @@ def sc2(fr, d, t):
     reveal(fr, timg("LOCALIZAÇÃO", INTER(600, 26), GREEN, 8), 540, 1140, (u - 0.7) / 0.5, a)
     reveal(fr, timg("Horto do Ipê", SERIF(130), INK), 540, 1190, (u - 0.9) / 0.6, a)
     reveal(fr, timg("Zona Sul · São Paulo", INTER(400, 46), MUTED), 540, 1370, (u - 1.2) / 0.6, a)
+    reveal(fr, timg("Estrada do Campo Limpo, 1501", INTER(500, 32), GREEN, 1), 540, 1450, (u - 1.5) / 0.6, a)
 def sc3(fr, d, t):
     u = t - S3; a = clamp(u / 0.4) * life(t, S3, S4, 0.45)
     if a <= 0: return
     reveal(fr, timg("PLANTA ILUSTRATIVA", INTER(600, 26), GREEN, 8), 540, 215, (u - 0.2) / 0.5, a)
     reveal(fr, timg("2 dormitórios", SERIF(124), INK), 540, 262, (u - 0.35) / 0.6, a)
     reveal(fr, timg("com varanda", INTER(400, 44), MUTED), 540, 420, (u - 0.55) / 0.6, a)
-    D = S4 - S3; E = [0.0, 150.0, 300.0]; df, dw = eio((u - 0.9) / 1.1), eio((u - 1.6) / 1.1); up = eio((u - (D - 1.2)) / 1.0)
+    D = S4 - S3; E = [0.0, 150.0, 300.0]; df, dw = eio((u - 0.5) / 0.9), eio((u - 1.0) / 0.9); up = 0.0
     offs = [0.0, E[1] * (1 - df + 0.6 * up), E[2] * (1 - dw + 0.6 * up)]
     yaw = math.radians(-28 + 22 * eio(u / D)); pitch = math.radians(42 + 10 * eio(u / D)); k = 0.62 + 0.05 * eo(u / 2.5)
     top = 460; im = plan3d(yaw, pitch, k, offs)
     fr.alpha_composite(alpha(im, a), (0, top))
     T = (540, 600 + top); cp = math.cos(pitch)
     for i, (name, x, y) in enumerate(ROOMS):
-        pu = (u - 3.0 - i * 0.32) / 0.4; la = a * clamp(pu) * (1 - eio((u - (D - 1.4)) / 0.4))
+        pu = (u - 2.1 - i * 0.24) / 0.35; la = a * clamp(pu)
         if la <= 0: continue
         px, py = plan_point(x, y, yaw, pitch, k, T, offs[1] + 16 * k * cp + 1)
         ov = Image.new("RGBA", (W, H), (0, 0, 0, 0)); od = ImageDraw.Draw(ov); ly = py - 60 * eo(pu)
@@ -191,15 +193,15 @@ def sc3(fr, d, t):
         tx = timg(name, INTER(600, 28), CREAM); pw = tx.width + 30
         od.rounded_rectangle((px - pw / 2, ly - 46, px + pw / 2, ly), 23, fill=GREEN + (255,)); ov.alpha_composite(tx, (int(px - tx.width / 2), int(ly - 44)))
         fr.alpha_composite(alpha(ov, la))
-    reveal(fr, timg("Sala e cozinha integradas", INTER(400, 44), INK), 540, 1640, (u - 5.2) / 0.6, a)
-    reveal(fr, timg("Opções com e sem varanda", INTER(400, 40), MUTED), 540, 1700, (u - 5.4) / 0.6, a)
+    reveal(fr, timg("Sala e cozinha integradas", INTER(400, 44), INK), 540, 1500, (u - 3.3) / 0.6, a)
+    reveal(fr, timg("Opções com e sem varanda", INTER(400, 40), MUTED), 540, 1558, (u - 3.5) / 0.6, a)
 CARDS = [("piscina", "Piscinas adulto e infantil", 0.55), ("academia", "Academia", 0.5), ("portaria", "Portaria", 0.62)]
 def sc4(fr, d, t):
     u = t - S4; a = clamp(u / 0.4) * life(t, S4, S5)
     if a <= 0: return
     reveal(fr, timg("LAZER E CONFORTO", INTER(600, 26), GREEN, 8), 540, 215, (u - 0.1) / 0.5, a)
     reveal(fr, timg("Para viver bem", SERIF(110), INK), 540, 258, (u - 0.25) / 0.6, a)
-    seg = (S5 - S4) / 3; bw, bh, y0 = 940, 1120, 450
+    seg = (S5 - S4) / 3; bw, bh, y0 = 940, 1060, 450
     for i, (name, label, cxf) in enumerate(CARDS):
         st = i * seg - (0.0 if i == 0 else 0.45); p = (u - st) / 0.6
         if p <= 0: continue
@@ -211,11 +213,11 @@ def sc4(fr, d, t):
         if la > 0:
             ov = Image.new("RGBA", (cw, 64), (0, 0, 0, 0)); ImageDraw.Draw(ov).rounded_rectangle((0, 0, cw - 1, 63), 32, fill=(250, 248, 243, 240)); ov.alpha_composite(tx, (22, 8))
             put(fr, ov, x + 34, y0 + bh - 98, la, "l")
-    reveal(fr, timg("Playground  ·  Pet place  ·  Churrasqueira", INTER(400, 36), MUTED), 540, 1640, (u - 1.0) / 0.6, a)
+    reveal(fr, timg("Playground  ·  Pet place  ·  Churrasqueira", INTER(400, 36), MUTED), 540, 1548, (u - 1.0) / 0.6, a)
 _AP = {}
 def ana(d_):
     if d_ not in _AP:
-        im = Image.open(f"{AS}/ana_paula.jpg").convert("RGB").crop((50, 330, 890, 1170)).resize((d_, d_), Image.LANCZOS)
+        im = Image.open(f"{AS}/ana_paula.jpg").convert("RGB").crop((60, 250, 1060, 1250)).resize((d_, d_), Image.LANCZOS)
         m = Image.new("L", (d_ * 4, d_ * 4), 0); ImageDraw.Draw(m).ellipse((0, 0, d_ * 4 - 1, d_ * 4 - 1), fill=255); _AP[d_] = (im, m.resize((d_, d_), Image.LANCZOS))
     return _AP[d_]
 def sc5(fr, d, t):
@@ -226,12 +228,12 @@ def sc5(fr, d, t):
     pu = (u - 0.7) / 0.7
     if pu > 0:
         D = 340; s_ = 0.85 + 0.15 * bo(pu); dd = int(D * s_); im, m = ana(dd); a_ = clamp(pu * 1.8)
-        ring = int(dd + 16); d.ellipse((540 - ring / 2, 560 - ring / 2, 540 + ring / 2, 560 + ring / 2), outline=SAGE, width=3) if a_ > 0.5 else None
+        ring = int(dd + 16); d.ellipse((540 - ring / 2, 560 - ring / 2, 540 + ring / 2, 560 + ring / 2), outline=GOLD, width=3) if a_ > 0.5 else None
         fr.paste(im, (540 - dd // 2, 560 - dd // 2), m.point(lambda v: int(v * a_)))
     reveal(fr, timg("Ana Paula", SERIF(150), CREAM), 540, 760, (u - 1.0) / 0.7)
     reveal(fr, timg("Corretora de Imóveis", INTER(400, 46), CREAM), 540, 960, (u - 1.2) / 0.6)
     w = 220 * eio((u - 1.4) / 0.6)
-    if w > 1: hline(d, 540 - w / 2, 540 + w / 2, 1045, SAGE, 3)
+    if w > 1: hline(d, 540 - w / 2, 540 + w / 2, 1045, GOLD, 3)
     reveal(fr, timg("CRECI-SP 201.926", INTER(600, 40), SAGE, 2), 540, 1070, (u - 1.5) / 0.6)
     pu = (u - 2.0) / 0.6
     if pu > 0:
@@ -246,14 +248,32 @@ def sc5(fr, d, t):
     reveal(fr, timg("Imagens e planta meramente ilustrativas. Informações sujeitas a alteração.", INTER(400, 22), SAGE), 540, 1790, (u - 3.0) / 0.6)
 def chrome(fr, d, t):
     a = clamp((t - S2 + 0.1) / 0.5) * life(t, S2, S5 + 0.3, 0.4)
-    if a <= 0: return
-    put(fr, timg("ARES DO HORTO", INTER(600, 22), INK, 6), 72, 92, a, "l"); im = timg("PLANO&PLANO", INTER(500, 22), MUTED, 6); put(fr, im, W - 72 - im.width, 92, a, "l")
-    hline(d, 72, W - 72, 140, (210, 204, 192, int(255 * a)), 2)
-    im = timg("Ana Paula  ·  CRECI-SP 201.926  ·  (11) 97246-9161", INTER(500, 24), MUTED, 1); put(fr, im, 540, 1835, a)
+    if a > 0:
+        put(fr, timg("ARES DO HORTO", INTER(600, 22), INK, 6), 72, 92, a, "l"); im = timg("PLANO&PLANO", INTER(500, 22), MUTED, 6); put(fr, im, W - 72 - im.width, 92, a, "l")
+        hline(d, 72, W - 72, 140, (210, 204, 192, int(255 * a)), 2)
+    # marca d'água da corretora: foto em círculo no canto inferior + nome, CRECI e telefone
+    wa = clamp((t - 0.8) / 0.6) * life(t, 0, S5 + 0.2, 0.4)
+    if wa <= 0: return
+    D = 128; im, m = ana(D); x0, y0 = 72, 1700
+    d.ellipse((x0 - 5, y0 - 5, x0 + D + 5, y0 + D + 5), outline=GOLD + (int(255 * wa),), width=2)
+    fr.paste(im, (x0, y0), m.point(lambda v: int(v * wa)))
+    tx = 72 + D + 26
+    put(fr, timg("Ana Paula", INTER(600, 30), INK), tx, y0 + 14, wa, "l")
+    put(fr, timg("Corretora  ·  CRECI-SP 201.926", INTER(400, 22), MUTED, 1), tx, y0 + 56, wa, "l")
+    put(fr, timg("(11) 97246-9161", INTER(600, 24), GREEN, 1), tx, y0 + 86, wa, "l")
+_VIG = None
+def finish(img, t):
+    global _VIG
+    if _VIG is None:
+        yy, xx = np.mgrid[0:H, 0:W]; r = np.sqrt(((xx - W / 2) / (W * 0.62)) ** 2 + ((yy - H / 2) / (H * 0.62)) ** 2)
+        _VIG = (1 - 0.16 * np.clip(r - 0.55, 0, 1) ** 1.6)[..., None].astype(np.float32)
+    a = np.asarray(img).astype(np.float32) * _VIG
+    rng = np.random.default_rng(int(t * FPS)); a += rng.normal(0, 2.2, (H // 2, W // 2, 1)).repeat(2, 0).repeat(2, 1)
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
 def frame_at(t):
     fr = Image.new("RGBA", (W, H), BG + (255,)); d = ImageDraw.Draw(fr)
     sc1(fr, d, t); sc2(fr, d, t); sc3(fr, d, t); sc4(fr, d, t); chrome(fr, d, t); sc5(fr, d, t)
-    return fr.convert("RGB")
+    return finish(fr.convert("RGB"), t)
 
 # ---------- trilha própria (F maior, 100 BPM) ----------
 def music(path):
@@ -283,7 +303,7 @@ def music(path):
             for off in (0, 1.5 * beat):
                 m_ = int(1.2 * SR); tk = np.arange(m_) / SR; f = midi(root - 12)
                 add(int((t0 + off) * SR), (np.sin(2 * np.pi * f * tk) + 0.2 * np.sin(4 * np.pi * f * tk)) * np.exp(-tk * 2.2) * np.clip(tk / 0.01, 0, 1), 0, 0.11)
-        if 8.2 <= t0 < 23.4:   # batida macia e chocalho
+        if S3 - 1.0 <= t0 < S5:   # batida macia e chocalho
             rng = np.random.default_rng(b)
             for k in range(4):
                 tk = np.arange(int(0.4 * SR)) / SR
@@ -305,8 +325,11 @@ def mux(video):
           (S2 + 1.05, sfx.thud(0.4), 0.18), (S3 + 1.0, sfx.thud(0.4), 0.12), (S3 + 1.8, sfx.thud(0.4), 0.12)]
     ev += [(S3 + 3.3 + i * 0.45, sfx.click(seed=i), 0.07) for i in range(5)] + [(S4 + 0.8 + i * 0.3, sfx.click(seed=10 + i), 0.06) for i in range(4)]
     sfx.build(ev, TOTAL, f"{HERE}/sfx.wav")
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", video, "-i", f"{HERE}/music.wav", "-i", f"{HERE}/sfx.wav", "-filter_complex",
-                    f"[1:a]volume=1.0[m];[2:a]volume=0.9[s];[m][s]amix=inputs=2:normalize=0,atrim=0:{TOTAL},afade=t=out:st={TOTAL - 1.2}:d=1.2,loudnorm=I=-14:TP=-1.5:LRA=11[a]",
+    vd = int(VO_OFF * 1000)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", video, "-i", f"{HERE}/music.wav", "-i", f"{HERE}/sfx.wav", "-i", f"{HERE}/narracao.mp3", "-filter_complex",
+                    f"[3:a]aresample=48000,aformat=channel_layouts=stereo,adelay={vd}|{vd},highpass=f=75,acompressor=threshold=0.12:ratio=2.5:attack=6:release=180:makeup=1.6,"
+                    f"equalizer=f=3200:t=q:w=1.2:g=2,asplit=2[vo][key];[1:a]volume=0.55[m0];[m0][key]sidechaincompress=threshold=0.04:ratio=6:attack=25:release=450[m];[2:a]volume=0.6[s];"
+                    f"[vo][m][s]amix=inputs=3:normalize=0,atrim=0:{TOTAL},afade=t=out:st={TOTAL - 1.2}:d=1.2,loudnorm=I=-14:TP=-1.5:LRA=11[a]",
                     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", OUT], check=True)
 def main():
     if MODE.startswith("frames"):
