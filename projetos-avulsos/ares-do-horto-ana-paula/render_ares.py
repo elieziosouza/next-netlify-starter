@@ -213,7 +213,19 @@ def sc4(fr, d, t):
         if la > 0:
             ov = Image.new("RGBA", (cw, 64), (0, 0, 0, 0)); ImageDraw.Draw(ov).rounded_rectangle((0, 0, cw - 1, 63), 32, fill=(250, 248, 243, 240)); ov.alpha_composite(tx, (22, 8))
             put(fr, ov, x + 34, y0 + bh - 98, la, "l")
-    reveal(fr, timg("Playground  ·  Pet place  ·  Churrasqueira", INTER(400, 36), MUTED), 540, 1548, (u - 1.0) / 0.6, a)
+    rows = [["Playground", "Pet place", "Churrasqueira", "Redário"], ["Lounge", "Espaço delivery", "e muito mais"]]
+    k = 0
+    for r_, row in enumerate(rows):
+        ims = [timg(n, INTER(500, 26), GREEN if n != "e muito mais" else CREAM) for n in row]; ws = [im.width + 36 for im in ims]
+        x = 540 - (sum(ws) + 12 * (len(ws) - 1)) / 2; y = 1532 + r_ * 62
+        for n, im, w_ in zip(row, ims, ws):
+            p = (u - 0.9 - k * 0.12) / 0.4; k += 1
+            if p > 0:
+                ov = Image.new("RGBA", (int(w_), 50), (0, 0, 0, 0)); od = ImageDraw.Draw(ov)
+                if n == "e muito mais": od.rounded_rectangle((0, 0, w_ - 1, 49), 25, fill=GREEN + (255,))
+                else: od.rounded_rectangle((0, 0, w_ - 1, 49), 25, fill=(250, 248, 243, 255), outline=(214, 206, 190, 255), width=2)
+                ov.alpha_composite(im, (18, 6)); put(fr, ov, x, y + 10 * (1 - eo(p)), a * clamp(p * 1.5), "l")
+            x += w_ + 12
 _AP = {}
 def ana(d_):
     if d_ not in _AP:
