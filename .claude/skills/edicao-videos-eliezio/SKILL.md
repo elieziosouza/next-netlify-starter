@@ -23,7 +23,7 @@ Material pronto:
 
 Todo vídeo sai com três opções de capa impactante (A e B com o rosto dele, C sem o rosto) (`edicao-video/scripts/capa.py`, seção 7 do README). Antes de fechar o vídeo, mostre as duas e espere o Eliezio escolher qual vai embutida no início.
 
-Todo vídeo começa com a capa escolhida e a assinatura glitch, numa etapa só: `edicao-video/scripts/embutir_capa.py VIDEO CAPA SAIDA`. O glitch fica só sobre a capa e nunca em cima da fala inicial.
+Todo vídeo é feito para rodar em loop (desde 30/10/2026): começa com a capa escolhida parada e muda por 0,5 s, sem glitch e sem som de abertura (`edicao-video/scripts/finaliza.sh VIDEO CAPA SAIDA`), e termina 0,3 a 0,5 s depois da última palavra, com o "SIGA PARA MAIS" entrando por cima da última frase, sem tela final parada, sem riser e sem whoosh. O glitch antigo só volta com `GLITCH=1`, se ele pedir.
 
 Nunca cortar o rosto nem o topo da cabeça do Eliezio (vídeo, janelinha, capa, transições). Conferir em quadros soltos antes do render.
 

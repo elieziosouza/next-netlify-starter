@@ -165,7 +165,10 @@ def frame_at(t):
     if t > T_SALVA: put(fr, chip("SALVA PRA REVISAR" if C["kind"] != "teste" else "QUANTAS VOCÊ ACERTOU? COMENTA!", YEL, INK, 38 if C["kind"] != "teste" else 32), 540, 1370, 1, (0.6 + 0.4 * bo((t - T_SALVA) / 0.35, 2.2)) * (1 + 0.03 * math.sin(t * 6)))
     if t > T_SIGA: put(fr, chip("SIGA @teachereliezio", WHITE, INK, 38), 540, 1450, 1, 0.6 + 0.4 * bo((t - T_SIGA) / 0.35, 2.2))
     avatar(fr, min(t, VO_LEN - 0.01)); progress(fr, t); return fr.convert("RGB")
-VO_LEN = f(VZ["dur"]); T_SALVA = VO_LEN - 0.4; T_SIGA = VO_LEN + 0.5; TOTAL = VO_LEN + 2.3
+# loop: as chamadas entram durante a última frase e o vídeo acaba logo depois da voz, sem tela parada
+VO_LEN = f(VZ["dur"]); TOTAL = VO_LEN + 0.35
+T_LAST = f(VZ["pins"][-1]) + GAP if C["kind"] == "teste" else f(VZ["a"][-1] if C["kind"] == "troca" else VZ["q"][-1])
+T_SALVA = max(T_LAST + 0.25, VO_LEN - 1.6); T_SIGA = max(T_SALVA + 0.5, VO_LEN - 0.8)
 def progress(fr, t):
     d = ImageDraw.Draw(fr); d.rounded_rectangle((60, 1880, 1020, 1892), 6, fill=(60, 84, 128, 255)); d.rounded_rectangle((60, 1880, 60 + 960 * clamp(t / TOTAL), 1892), 6, fill=YEL + (255,))
 def capa(out): frame_at(TOTAL - 0.3).save(out, quality=95)
@@ -198,7 +201,7 @@ def audio(vout):
     if k_ == "troca": ev = [(VZ["a"][i] - 0.25, sfx.click(seed=i), 0.18) for i in range(5)]
     elif k_ == "lista": ev = [(VZ["q"][i], sfx.thud(0.3), 0.14) for i in range(3)]
     else: ev = [(f(VZ["pins"][i]) + GAP - 0.05, ding, 0.3) for i in range(3)] + [(f(VZ["pins"][i]) + k2 * 0.4, sfx.click(seed=k2), 0.15) for i in range(3) for k2 in range(3)]
-    ev += [(0.05, sfx.whoosh(0.4), 0.15), (T_SALVA, sfx.click(seed=9), 0.18), (T_SIGA, sfx.click(seed=10), 0.18)]
+    ev += [(T_SALVA, sfx.click(seed=9), 0.18), (T_SIGA, sfx.click(seed=10), 0.18)]
     sfx.build(ev, TOTAL, f"{V}/sfx.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vout, "-i", f"{V}/voice.wav", "-i", f"{V}/sfx.wav", "-i", f"{V}/song.wav", "-filter_complex",
                     "[1:a]highpass=f=70,acompressor=threshold=0.1:ratio=2.2:attack=8:release=200:makeup=1.4,asplit=2[vox][k2];[2:a]volume=0.8[sf];[3:a]volume=1.0[sg];"

@@ -8,7 +8,7 @@ outra abertura.
 - Avatar 3D do professor embaixo (`v77/av3d_1..8.png`), reagindo: 1 sorrindo, 2 desconfiado/pensando, 7 surpreso, 8 piscando.
 - Fundo azul-marinho com grade, cabeçalho "ENGLISH CLASS · Teacher Eliezio", amarelo (255, 214, 64) como destaque.
 - Legenda karaokê: inglês em branco com a palavra falada em amarelo, português embaixo em amarelo-claro.
-- Abertura: capa + zoom lento + riser baixo (volume 0,25) + clarão (`scripts/finaliza_teacher.sh`). Nunca o glitch do canal de opinião.
+- **Feito para rodar em loop (30/10/2026):** sem riser e sem som de abertura. A capa fica parada e muda por 0,5 s e entra com zoom curto (`scripts/finaliza_teacher.sh`). As chamadas (SALVA, SIGA, COMENTA) entram durante a última frase, depois da última resposta, e o vídeo acaba 0,35 s depois da voz, sem tela parada no fim. Assim o fim emenda no começo e a pessoa assiste de novo. Nunca o glitch do canal de opinião.
 - A capa vai SEMPRE fixada no início de todo vídeo, inclusive nos virais de 10 s.
 
 ## Roteiro (ElevenLabs, voz do Eliezio, modelo Eleven v4)

@@ -1,5 +1,5 @@
 #!/bin/bash
-# finaliza.sh VIDEO_EDITADO CAPA SAIDA: capa+glitch, loudnorm -14 LUFS em duas passagens e x264 em duas passagens (cabe em ~13,8 MB)
+# finaliza.sh VIDEO_EDITADO CAPA SAIDA: capa muda de 0,5 s (loop; GLITCH=1 volta o glitch), loudnorm -14 LUFS em duas passagens e x264 em duas passagens (cabe em ~13,8 MB)
 set -e
 IN=$1; CAPA=$2; OUT=$3; T=$(mktemp -d)
 python3 /home/user/next-netlify-starter/edicao-video/scripts/embutir_capa.py "$IN" "$CAPA" $T/cc.mp4

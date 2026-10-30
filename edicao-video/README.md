@@ -49,7 +49,7 @@ Cada vídeo novo deve seguir este guia e, quando algo for melhorado, o guia é a
 | Rodapé | `minitop.make_minifooter`: linha fina de progresso (dourada sobre trilho branco a 18%) e "OPINIÃO • ATUALIDADES • REAÇÕES" em 23 px, com ATUALIDADES em dourado |
 | Artes antigas | `assets/topo.jpg` e `assets/rodape.jpg` (com nome e botões) ficam guardadas, mas **não são mais usadas** |
 | Correção de cor | **Padrão desde 11/10/2026: "Cinema azul e dourado"** (`scripts/grading.py`, função `cinema`): sombras puxadas para o azul-marinho, luzes e pele levemente quentes, fundo menos saturado, verde forte contido, pele protegida por máscara, curva em S com ombro que segura os claros e clareza leve no rosto. Aplicar nas fontes com `grading.Fast(grading.cinema, 'lut_cinema.npy')` (tabela 256³, ~20 ms por quadro). Alternativa para denúncias pesadas: `investig` (documentário). **Desde 12/10/2026 a pele também é corrigida** (`cinema_skin`: menos laranja, brilho da careca contido, sombras do rosto abertas) e os claros da pele são segurados (luz forte de frente). **Não usar `face_light` positivo no vídeo**: o Eliezio achou a luz no rosto forte demais (12/10/2026). Padrão agora: `grading.tame_face(img, 239, 380)` (ombro suave nos claros + exposição 18% menor na região do rosto, uniforme). Não baixar a luz pela máscara de pele: deixa manchas cinzas na testa. Vinheta 24% e granulação suave por cima. |
-| Tela final | 3 s: fundo azul, "SIGA PARA MAIS" (ExtraBold 50), filete dourado e a linha das redes. **Sem o nome** |
+| Tela final | **Desde 30/10/2026, sem tela parada (loop):** "SIGA PARA MAIS" (ExtraBold 50), filete dourado e a linha das redes entram por cima da última frase; o vídeo termina 0,3 a 0,5 s depois da última palavra. **Sem o nome** |
 
 Exemplos aprovados em `exemplos/`.
 
@@ -180,10 +180,15 @@ Em casos contra pessoas, o painel sempre traz a linha "Fulano nega as acusaçõe
 - **Voz dele x áudio de terceiros (19/10/2026):** a voz do Eliezio fica **3 a 4 dB acima** do trecho do debate/reportagem (medir cada trecho com ebur128). No mesmo nível ele achou a voz baixa, porque o áudio de TV vem muito comprimido.
 - Música: trilha própria (`music.py`, 96 BPM, tom menor), com volume 0,30 e **ducking** automático quando a voz entra.
 - Efeitos (`sfx.py`): "whoosh" curto na troca de layout e de painel, "tic" em itens de lista, batida grave em carimbo. Todos baixos.
-- **Finalização sem cortar o áudio:** a tela final só começa 0,4 s depois da última palavra. Um riser de 2 s (tom subindo com ruído) cresce por baixo das últimas frases, depois vem um whoosh e uma batida grave na entrada da tela final.
+- **Vídeo em loop (padrão desde 30/10/2026, pedido do Eliezio):** nada de tela final parada nem de riser, whoosh ou batida no fim. O "SIGA PARA MAIS" e as redes entram por cima da última frase, e o vídeo termina 0,3 a 0,5 s depois da última palavra (sem cortar a palavra), com a música saindo em 0,4 s. Assim o fim emenda na capa e o vídeo recomeça sem a pessoa perceber.
+- *(Antigo, até 29/10/2026:* tela final 0,4 s depois da última palavra, com riser de 2 s, whoosh e batida grave.)
 - Conferir no final: duração do áudio igual à do vídeo, -15 LUFS, pico abaixo de -1 dBTP.
 
-## 6.1 Assinatura de abertura: glitch (marca registrada, obrigatória)
+## 6.1 Abertura: capa muda de 0,5 s, para loop (padrão desde 30/10/2026)
+
+Pedido do Eliezio em 30/10/2026: **mesma estratégia do Teacher, para o vídeo rodar em loop**. Sem glitch e sem som na abertura: a capa fica parada 0,5 s (avanço leve de 2%), se dissolve em 0,15 s e a fala começa em 0,35 s. `embutir_capa.py` e `finaliza.sh` já fazem assim. A abertura com glitch abaixo fica guardada: só com `GLITCH=1` no ambiente, se ele pedir.
+
+### Antiga assinatura glitch (até 29/10/2026)
 
 Pedido do Eliezio em 11/10/2026: **todo vídeo começa com o efeito glitch**. Em 12/10/2026 ele pediu: **o glitch nunca fica em cima da fala inicial**. Por isso a capa e o glitch são feitos juntos, numa etapa só:
 
@@ -254,7 +259,7 @@ Em vídeo de campanha, lembrar que o eleitor não pode pagar impulsionamento.
 5. Testar quadros soltos (`frames:t1,t2,...`) antes de renderizar o vídeo inteiro.
 6. Gerar as duas capas com `capa.py`, mostrar ao Eliezio e **esperar ele escolher**.
 7. Render final a 30 fps, com a capa escolhida embutida no início.
-8. Aplicar a assinatura glitch (`glitch_intro.py`) como última etapa. Para entregar no celular, gerar cópias de ~13 MB (1080p, duas passagens com ~1,6 Mbps) e publicar numa página privada com botão "Baixar vídeo", porque o app nem sempre salva vídeo direto.
+8. Embutir a capa com `finaliza.sh` (capa muda de 0,5 s, sem glitch, para loop) como última etapa. Para entregar no celular, gerar cópias de ~13 MB (1080p, duas passagens com ~1,6 Mbps) e publicar numa página privada com botão "Baixar vídeo", porque o app nem sempre salva vídeo direto.
 
 ## 9. Histórico
 

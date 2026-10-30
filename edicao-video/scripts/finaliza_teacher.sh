@@ -1,5 +1,5 @@
 #!/bin/bash
-# finaliza_teacher.sh VIDEO_EDITADO CAPA SAIDA: capa+riser (canal Teacher Eliezio), loudnorm -14 LUFS e x264 em duas passagens
+# finaliza_teacher.sh VIDEO_EDITADO CAPA SAIDA: capa muda de 0,5 s, sem riser, para loop (canal Teacher Eliezio), loudnorm -14 LUFS e x264 em duas passagens
 set -e
 IN=$1; CAPA=$2; OUT=$3; T=$(mktemp -d)
 python3 /home/user/next-netlify-starter/edicao-video/scripts/embutir_capa_teacher.py "$IN" "$CAPA" $T/cc.mp4
