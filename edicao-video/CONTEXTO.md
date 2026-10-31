@@ -43,6 +43,10 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 - Parte 1 (preparando a conta) com roteiro pronto, 781 créditos, esperando aprovação. Parte 2: sacola, teste e primeira live.
 - Melhor ainda se ele gravar a tela do celular fazendo o caminho; senão, telas genéricas com aviso "ilustração".
 
+## EM ANDAMENTO: vídeo horizontal (16:9, ~4 min) "A história do Silvio Santos"
+- Roteiro aprovado (gancho + 8 capítulos + fecho), voz gerada e cobrada (2.853 créditos): flow ElevenLabs `zLpIxN8h3GyFGAANn3F1`, sessão `CCy9uiFdJOXbNEFjipdw`. Se a sessão cair, baixar com `creative_get_flow_run_status` (não gerar de novo).
+- Visual: motion graphics no estilo do canal (marinho e dourado), sem trechos de TV; capa horizontal com 2 opções para ele escolher.
+
 ## Projeto avulso (fora dos canais)
 - Comercial Ares do Horto para a corretora Ana Paula: `../projetos-avulsos/ares-do-horto-ana-paula/`, página https://claude.ai/artifact/LGuzdi6rUbFbUE8EgFspe7. Falta só o número do registro da incorporação no rodapé, se ela mandar.
 
