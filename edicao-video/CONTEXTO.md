@@ -46,7 +46,7 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 ## Feito: "A história do Silvio Santos" (31/10/2026)
 - `scripts/render_silvio.py`: horizontal 16:9 (YouTube/Facebook, 3 min 19 s), vertical 9:16 com o horizontal no meio e fundo de fotos e fatos (TikTok) e vertical em 2 partes cortadas no capítulo 5 (Instagram/Kwai). Miniatura (modo `thumb`): 1948 em porta-retrato P&B ➜ foto colorida recortada.
 - Fotos enviadas por ele (reprodução) em `silvio/fotos/` do scratchpad. O Wikimedia bloqueia downloads deste servidor (erro 429). Voz: 2.853 créditos.
-- Arquivos entregues direto no chat (o horizontal tem 26 MB, acima do limite de 16 MB das páginas).
+- Página de download: https://claude.ai/artifact/RouJNg7RyjUCWkCFj7DLg8 (arquivos acima de 16 MB vão em 2 pedaços .mp4 e a página junta na hora de baixar). Miniaturas v2: modo `thumb2:1` (vermelho, "A BILIONÁRIO", Forbes confirma) e `thumb2:2` (azul).
 
 ## Projeto avulso (fora dos canais)
 - Comercial Ares do Horto para a corretora Ana Paula: `../projetos-avulsos/ares-do-horto-ana-paula/`, página https://claude.ai/artifact/LGuzdi6rUbFbUE8EgFspe7. Falta só o número do registro da incorporação no rodapé, se ela mandar.
