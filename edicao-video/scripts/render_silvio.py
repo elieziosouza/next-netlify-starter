@@ -124,6 +124,49 @@ def brasil(size=520):
     for r in rings: d.polygon([(10 + (x - x0) * sc, 10 + (y1 - y) * sc) for x, y in r], fill=NAVY2 + (255,), outline=GOLD + (255,))
     _ch[k] = im; return im
 
+
+# ---------------------------------------------------------------- fotos reais (Wikimedia Commons; domínio público ou CC BY com crédito)
+FOT = f"{V}/fotos"
+PHOTOS = [  # (início, fim) na fala original, arquivo, legenda, crédito
+    (12.3, 15.0, "s1959", "Senor Abravanel, 1959", "Revista do Rádio · domínio público"),
+    (15.07, 17.3, "s2019", "Silvio Santos, 2019", "Palácio do Planalto · CC BY 2.0"),
+    (18.4, 25.8, "s1959", "Silvio jovem, 1959", "Revista do Rádio · domínio público"),
+    (60.1, 66.0, "r1956", "Rádio Nacional de São Paulo, 1956", "domínio público"),
+    (66.3, 73.2, "n1957", "Com Manoel de Nóbrega, 1957", "domínio público"),
+    (89.4, 96.9, "f1960", "No ar em 1960", "Radiolândia · domínio público"),
+    (97.0, 101.6, "a1964", "Silvio em 1964", "Arquivo Nacional · domínio público"),
+    (112.6, 116.9, "tt", "Com Tony Tornado", "Arquivo Nacional · domínio público"),
+    (149.3, 160.4, "s2010", "Silvio em 2010", "Wikimedia Commons · CC BY 3.0 BR"),
+    (160.7, 166.6, "s2018", "Silvio em 2018", "Palácio do Planalto · CC BY 2.0"),
+    (166.7, 173.5, "s2019", "Aos 88 anos, em 2019", "Palácio do Planalto · CC BY 2.0"),
+]
+_ph = {}
+def photo_img(key):
+    if key not in _ph:
+        pth = f"{FOT}/{key}.jpg"
+        _ph[key] = Image.open(pth).convert("RGB") if os.path.exists(pth) else None
+    return _ph[key]
+def photo_card(key, t, a, b, cap, cred, maxw=640, maxh=700):
+    """porta-retrato com borda clara, leve giro e zoom lento (Ken Burns), legenda e crédito"""
+    im = photo_img(key)
+    if im is None: return None
+    sc = min(maxw / im.width, maxh / im.height); w, h = int(im.width * sc), int(im.height * sc)
+    z = 1.0 + 0.06 * clamp((t - a) / max(1, b - a)); cw, ch = im.width / z, im.height / z
+    crop = im.crop((int((im.width - cw) / 2), int((im.height - ch) * 0.35), int((im.width + cw) / 2), int((im.height - ch) * 0.35 + ch))).resize((w, h), Image.BICUBIC)
+    pad, capH = 16, 92; card = Image.new("RGBA", (w + 2 * pad, h + pad + capH), (0, 0, 0, 0)); dd = ImageDraw.Draw(card)
+    dd.rounded_rectangle((0, 0, card.width - 1, card.height - 1), 10, fill=(246, 242, 232, 255)); card.paste(crop, (pad, pad))
+    dd.text((card.width / 2, h + pad + 30), cap, font=MF("ExtraBold", 28), fill=(24, 28, 36, 255), anchor="mm")
+    dd.text((card.width / 2, h + pad + 66), "Foto: " + cred, font=MF("SemiBold", 18), fill=(110, 116, 128, 255), anchor="mm")
+    sh = Image.new("RGBA", (card.width + 80, card.height + 80), (0, 0, 0, 0)); ImageDraw.Draw(sh).rounded_rectangle((40, 52, card.width + 40, card.height + 52), 14, fill=(0, 0, 0, 150))
+    sh = sh.filter(ImageFilter.GaussianBlur(18)); sh.alpha_composite(card, (40, 40)); return sh
+def photo_state(t):
+    """(fator 0-1 de quanto a foto está na tela, dados da foto ativa)"""
+    for a, b, key, cap, cred in PHOTOS:
+        A, B = T(a), T(b)
+        if A - 0.01 <= t <= B + 0.45 and photo_img(key) is not None:
+            return clamp((t - A) / 0.5) * clamp((B + 0.45 - t) / 0.45), (a, b, key, cap, cred)
+    return 0.0, None
+
 # ---------------------------------------------------------------- cenas (tempos da fala original via T())
 CX, CY = W // 2, 470
 def scenes(fr, t):
@@ -326,14 +369,98 @@ def particles(fr, t):
     for x0, y0, v, r, ph in PART:
         y = (y0 - v * t) % (H + 40) - 20; x = x0 + 20 * math.sin(t * 0.3 + ph); al = int(70 + 50 * math.sin(t * 1.1 + ph))
         d.ellipse((x - r, y - r, x + r, y + r), fill=GOLD_L + (al,))
-def frame_at(t, smooth_year=True):
+def frame_at(t, smooth_year=True, with_captions=True):
     global _yr_s
     if not smooth_year: _yr_s = None
-    fr = BG.copy(); particles(fr, t); scenes(fr, t)
+    fr = BG.copy(); particles(fr, t)
+    pf, ph = photo_state(t); e = eio(pf)
+    if e <= 0.001: scenes(fr, t)
+    else:
+        lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); scenes(lay, t)
+        sc = 1 - 0.38 * e; lw, lh = int(W * sc), int(H * sc); lay = lay.resize((lw, lh), Image.BICUBIC)
+        cx = W / 2 - (W * 0.22) * e; fr.alpha_composite(lay, (int(cx - lw / 2), int(CY - CY * sc)))
+        a, b, key, cap, cred = ph; card = photo_card(key, t, T(a), T(b), cap, cred)
+        if card is not None:
+            ang = -3 + 1.5 * math.sin(t * 0.4); card = card.rotate(ang, Image.BICUBIC, expand=True)
+            put(fr, card, W * 0.74 + 120 * (1 - e), CY + 10, pf)
     g = np.zeros((300, W, 4), np.uint8); g[..., :3] = (3, 10, 22); g[..., 3] = np.linspace(0, 200, 300)[:, None].astype(np.uint8); fr.alpha_composite(Image.fromarray(g), (0, H - 300))
-    captions(fr, t); chrome(fr, t)
+    if with_captions: captions(fr, t)
+    chrome(fr, t)
     a = np.asarray(fr.convert("RGB")).astype(np.float32) * VIG
     return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+
+# ---------------------------------------------------------------- versão 9:16 (TikTok, Instagram, Kwai): vídeo horizontal no meio + fundo com fotos e fatos
+VW, VH = 1080, 1920; VY = 660; VHH = int(VW * H / W)   # o horizontal ocupa 1080x608 a partir de y=660
+FACTS = [(0, "DE CAMELÔ A DONO DO SBT", "1930–2024"), (17.4, "Nasceu Senor Abravanel, na Lapa (RJ)", "1930"), (41.0, "Paraquedista, locutor e a ideia da barca", "1948"),
+         (66.1, "Assume o Baú da Felicidade", "ANOS 50"), (85.8, "Estreia o Programa Silvio Santos", "1963"), (105.5, "Entra no ar o SBT", "1981"),
+         (116.95, "Candidatura barrada pelo TSE", "1989"), (138.95, "Sequestro da filha e crise no banco", "2001 · 2010"), (160.55, "Morre aos 93 anos, em São Paulo", "2024"),
+         (173.55, "A voz, a coragem e a teimosia", "LEGADO")]
+STRIP = [("s1959", "1959"), ("r1956", "1956"), ("f1960", "1960"), ("s2010", "2010"), ("s2019", "2019")]
+_vbg = None
+def vbg():
+    global _vbg
+    if _vbg is not None: return _vbg
+    yy, xx = np.mgrid[0:VH, 0:VW].astype(np.float32)
+    a = np.array(NAVY, np.float32) + np.array([16, 30, 60], np.float32) * np.clip(1 - np.sqrt(((xx - VW / 2) / VW) ** 2 + ((yy - VH * 0.45) / VH) ** 2) * 1.4, 0, 1)[..., None]
+    a[::60, :] += 4; a[:, ::60] += 4; bg = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)).convert("RGBA"); d = ImageDraw.Draw(bg)
+    put(bg, txt("A HISTÓRIA DE", MF("ExtraBold", 40), MUTED, 3), VW / 2, 130); put(bg, txt("SILVIO SANTOS", ANTON(150), GOLD_L, 8), VW / 2, 250)
+    x = 40; tw = (VW - 80 - 4 * 16) / 5
+    for key, yr in STRIP:   # faixa de fotos de várias épocas
+        im = photo_img(key)
+        if im is not None:
+            th = 250; sc = max(tw / im.width, th / im.height); r = im.resize((int(im.width * sc) + 1, int(im.height * sc) + 1)); cx0 = (r.width - tw) / 2
+            r = r.crop((int(cx0), 0, int(cx0 + tw), th)); card = Image.new("RGBA", (int(tw) + 8, th + 48), (246, 242, 232, 255)); card.paste(r, (4, 4))
+            ImageDraw.Draw(card).text((card.width / 2, th + 26), yr, font=MF("ExtraBold", 24), fill=(24, 28, 36, 255), anchor="mm"); bg.alpha_composite(card, (int(x), 360))
+        x += tw + 16
+    d.rounded_rectangle((0, VY - 6, VW - 1, VY + VHH + 6), 0, outline=GOLD + (255,), width=6)
+    put(bg, txt("fotos: Wikimedia Commons (domínio público e CC BY)", MF("SemiBold", 18), MUTED, 1), VW / 2, 640)
+    _vbg = bg; return bg
+def vframe_at(t):
+    fr = vbg().copy(); hz = frame_at(t, with_captions=False).resize((VW, VHH), Image.LANCZOS); fr.paste(hz, (0, VY))
+    raw = t - PAUSE * sum(1 for c in CH if f(c[0]) <= t)
+    fact = [x for x in FACTS if raw >= x[0] - 0.001][-1]; k0 = [f(x[0]) - (PAUSE if x[0] else 0) for x in FACTS if raw >= x[0] - 0.001][-1]
+    kk = clamp((t - k0) / 0.5)
+    put(fr, txt(fact[2], ANTON(110), GOLD_L, 6), VW / 2, 1400, kk, 0.85 + 0.15 * bo((t - k0) / 0.45))
+    put(fr, txt(fact[1], MF("ExtraBold", 40), WHITE, 3), VW / 2, 1500, kk)
+    for a, b, s_ in CAP:   # legenda grande
+        if a - 0.05 <= raw < b + 0.25:
+            fnt = MF("Bold", 46); words = s_.split(); lines = [[]]
+            for w_ in words:
+                if lines[-1] and fnt.getlength(" ".join(lines[-1] + [w_])) > 940: lines.append([])
+                lines[-1].append(w_)
+            al = clamp((raw - a + 0.05) / 0.2) * clamp((b + 0.25 - raw) / 0.2)
+            for i, ln in enumerate(lines): put(fr, txt(" ".join(ln), fnt, WHITE, 4, (0, 0, 0)), VW / 2, 1660 + i * 60, al)
+            break
+    put(fr, chip("SIGA @eliezio.souza78", GOLD, 30, NAVY), VW / 2, 1855, clamp((t - 1) / 0.5))
+    return fr.convert("RGB")
+
+
+def cutout(key, target_h):
+    """recorte da pessoa (U2Net) com borda suave; volta RGBA na altura pedida"""
+    import cv2
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); from segment_person import PersonSeg
+    im = photo_img(key); rgb = np.asarray(im); m = PersonSeg(os.path.expanduser("~/.cache/edicao-video/seg/u2net_human_seg.onnx"))(rgb)
+    m = cv2.GaussianBlur(np.clip((m - 0.35) / 0.3, 0, 1), (0, 0), 2.0)
+    rgba = np.dstack([rgb, (m * 255).astype(np.uint8)]); out = Image.fromarray(rgba, "RGBA"); bb = out.getchannel("A").point(lambda v: 255 if v > 40 else 0).getbbox()
+    out = out.crop(bb); sc = target_h / out.height; return out.resize((int(out.width * sc), int(target_h)), Image.LANCZOS)
+def thumbnail(out):
+    """miniatura do YouTube 1280x720: jovem (1959, P&B) e maduro (2019, cor), rostos grandes, 4 palavras"""
+    TW, TH = 1280, 720; fr = Image.new("RGBA", (TW, TH), NAVY + (255,)); d = ImageDraw.Draw(fr)
+    for i in range(24):   # raios dourados atrás
+        a0 = i * 15; d.pieslice((TW * 0.62 - 1400, TH * 0.55 - 1400, TW * 0.62 + 1400, TH * 0.55 + 1400), a0, a0 + 6, fill=(30, 52, 96, 255))
+    glow = Image.new("RGBA", (TW, TH), (0, 0, 0, 0)); ImageDraw.Draw(glow).ellipse((TW * 0.62 - 330, TH * 0.55 - 330, TW * 0.62 + 330, TH * 0.55 + 330), fill=GOLD + (120,))
+    fr.alpha_composite(glow.filter(ImageFilter.GaussianBlur(90)))
+    old = cutout("s2019", 760); young = cutout("s1959", 560).convert("LA").convert("RGBA")
+    yA = cutout("s1959", 560).getchannel("A"); young.putalpha(yA)
+    def rim(im, col, r=10):
+        a = im.getchannel("A").filter(ImageFilter.MaxFilter(r * 2 + 1)); halo = Image.new("RGBA", im.size, col + (0,)); halo.putalpha(a); return halo
+    fr.alpha_composite(rim(young, WHITE, 6), (40, TH - young.height)); fr.alpha_composite(young, (40, TH - young.height))
+    ox = int(TW * 0.62 - old.width / 2); fr.alpha_composite(rim(old, GOLD_L, 8), (ox, TH - old.height + 40)); fr.alpha_composite(old, (ox, TH - old.height + 40))
+    put(fr, txt("DE CAMELÔ", ANTON(118), WHITE, 9, (0, 0, 0)), 300, 95); put(fr, txt("1959", ANTON(64), GOLD_L, 6, (0, 0, 0)), 150, TH - 60)
+    put(fr, txt("A DONO DO SBT", ANTON(118), GOLD_L, 9, (0, 0, 0)), TW - 330, 95); put(fr, txt("➜", ANTON(150), GOLD, 8, (0, 0, 0)), 520, 380)
+    put(fr, chip("A HISTÓRIA REAL", RED, 40), TW - 230, TH - 70)
+    fr.convert("RGB").save(out, quality=95)
+
 def capa(out, var="A"):
     fr = BG.copy(); global _yr_s
     if var == "A":
@@ -374,13 +501,24 @@ def audio(vout):
                     f"[vox][sf][sgd]amix=inputs=3:normalize=0:duration=longest,atrim=0:{TOTAL:.2f},loudnorm=I=-14:TP=-1.5:LRA=11[a]",
                     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", OUTFILE], check=True)
 def main():
+    if MODE == "thumb": thumbnail(OUTFILE); return
     if MODE.startswith("capa"): capa(OUTFILE, MODE.split(":")[1] if ":" in MODE else "A"); return
     if MODE.startswith("one:"): frame_at(float(MODE[4:]), False).save(OUTFILE, quality=92); return
     if MODE.startswith("frames"):
         ts = [float(v) for v in MODE.split(":")[1].split(",")]; outs = [frame_at(x, False).resize((640, 360), Image.LANCZOS) for x in ts]
         cols = 3; rows = math.ceil(len(outs) / cols); sh = Image.new("RGB", (640 * cols, 360 * rows))
         [sh.paste(o, ((i % cols) * 640, (i // cols) * 360)) for i, o in enumerate(outs)]; sh.save(OUTFILE, quality=88); return
+    if MODE.startswith("vframes"):
+        ts = [float(v) for v in MODE.split(":")[1].split(",")]; outs = [vframe_at(x).resize((360, 640), Image.LANCZOS) for x in ts]
+        sh = Image.new("RGB", (360 * len(outs), 640)); [sh.paste(o, (i * 360, 0)) for i, o in enumerate(outs)]; sh.save(OUTFILE, quality=88); return
     NF = int(round(TOTAL * FPS))
+    if MODE.startswith("vpart"):
+        i, nparts = map(int, MODE.split(":")[1:]); a, b = NF * i // nparts, NF * (i + 1) // nparts
+        enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{VW}x{VH}", "-r", str(FPS), "-i", "-",
+                                "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p", OUTFILE], stdin=subprocess.PIPE)
+        for k in range(max(0, a - 60), a): frame_at(k / FPS)
+        for k in range(a, b): enc.stdin.write(vframe_at(k / FPS).tobytes())
+        enc.stdin.close(); enc.wait(); print("part done", i); return
     if MODE.startswith("part"):
         i, nparts = map(int, MODE.split(":")[1:]); a, b = NF * i // nparts, NF * (i + 1) // nparts
         enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
