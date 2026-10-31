@@ -343,7 +343,7 @@ def capa(out, var="A"):
         put(fr, txt("SILVIO SANTOS", ANTON(200), WHITE, 9), CX, 230); put(fr, txt("DE CAMELÔ A DONO DE UMA TV", ANTON(90), GOLD_L, 6), CX, 830)
         put(fr, stamp("A HISTÓRIA COMPLETA", RED, 64, -5), CX, 980)
     else:
-        put(fr, txt("ELE VENDIA NA RUA", ANTON(130), WHITE, 7), CX, 250); put(fr, txt("AOS 14 ANOS…", ANTON(130), GOLD_L, 7), CX, 410)
+        put(fr, txt("ELE VENDIA NA RUA", ANTON(130), WHITE, 7), CX, 250); put(fr, txt("AINDA ADOLESCENTE…", ANTON(130), GOLD_L, 7), CX, 410)
         put(fr, medal("📺", 280), CX - 330, 680); put(fr, txt("DEPOIS COMPROU", ANTON(84), WHITE, 5), CX + 230, 620); put(fr, txt("UMA TV INTEIRA", ANTON(100), GOLD_L, 6), CX + 230, 740)
         put(fr, chip("A HISTÓRIA DE SILVIO SANTOS", RED, 50), CX, 960)
     fr.convert("RGB").save(out, quality=95)
