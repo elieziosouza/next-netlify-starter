@@ -468,6 +468,39 @@ def thumbnail(out):
     put(fr, chip("A HISTÓRIA REAL", RED, 40), TW - 230, TH - 70)
     fr.convert("RGB").save(out, quality=95)
 
+
+def thumbnail2(out, var="1"):
+    """miniatura v2: rosto grande à direita, foto de 1948 inclinada, título num bloco só embaixo à esquerda"""
+    TW, TH = 1280, 720
+    if var == "1":   # vermelho e amarelo, alto contraste
+        yy, xx = np.mgrid[0:TH, 0:TW].astype(np.float32); r = np.clip(np.sqrt(((xx - 900) / TW) ** 2 + ((yy - 300) / TH) ** 2) * 1.6, 0, 1)[..., None]
+        bgc = np.array([255, 196, 40], np.float32) * (1 - r) + np.array([170, 14, 20], np.float32) * r
+        fr = Image.fromarray(bgc.astype(np.uint8)).convert("RGBA"); d = ImageDraw.Draw(fr)
+        for i in range(30): a0 = i * 12; d.pieslice((900 - 1600, 300 - 1600, 900 + 1600, 300 + 1600), a0, a0 + 5, fill=(255, 255, 255, 38))
+        rimc, t1c, boxc, t2c = WHITE, WHITE, (255, 214, 40), (20, 10, 10); headline = ("DE CAMELÔ", "A BILIONÁRIO")
+    else:            # azul e dourado
+        fr = Image.new("RGBA", (TW, TH), NAVY + (255,)); d = ImageDraw.Draw(fr)
+        for i in range(24): a0 = i * 15; d.pieslice((900 - 1500, 330 - 1500, 900 + 1500, 330 + 1500), a0, a0 + 6, fill=(30, 54, 100, 255))
+        gl = Image.new("RGBA", (TW, TH), (0, 0, 0, 0)); ImageDraw.Draw(gl).ellipse((900 - 360, 330 - 360, 900 + 360, 330 + 360), fill=GOLD + (140,)); fr.alpha_composite(gl.filter(ImageFilter.GaussianBlur(100)))
+        rimc, t1c, boxc, t2c = GOLD_L, WHITE, GOLD, NAVY; headline = ("DE CAMELÔ", "A DONO DO SBT")
+    old = cutout("sorriso_azul", 900)
+    halo = Image.new("RGBA", old.size, rimc + (0,)); halo.putalpha(old.getchannel("A").filter(ImageFilter.MaxFilter(19)))
+    ox = TW - old.width + 60; oy = TH - old.height + 230
+    sh = Image.new("RGBA", (TW, TH), (0, 0, 0, 0)); sh.paste((0, 0, 0, 140), (ox - 30, oy + 10), old.getchannel("A")); fr.alpha_composite(sh.filter(ImageFilter.GaussianBlur(20)))
+    fr.alpha_composite(halo, (ox, oy)); fr.alpha_composite(old, (ox, oy))
+    yim = photo_img("paraquedista1948").convert("L").convert("RGB"); sc_ = 330 / yim.height; yim = yim.resize((int(yim.width * sc_), 330), Image.LANCZOS)
+    young = Image.new("RGBA", (yim.width + 24, yim.height + 64), (246, 242, 232, 255)); young.paste(yim, (12, 12))
+    ImageDraw.Draw(young).text((young.width / 2, yim.height + 38), "1948", font=ANTON(40), fill=(24, 24, 24, 255), anchor="mm"); young = young.rotate(-7, Image.BICUBIC, expand=True)
+    sh2 = Image.new("RGBA", (young.width + 60, young.height + 60), (0, 0, 0, 0)); sh2.paste((0, 0, 0, 170), (30, 40), young.getchannel("A")); fr.alpha_composite(sh2.filter(ImageFilter.GaussianBlur(14)), (20, 10))
+    fr.alpha_composite(young, (40, 20))
+    dd = ImageDraw.Draw(fr); ax, ay = 400, 220   # seta da foto antiga para o rosto
+    dd.polygon([(ax - 50, ay - 22), (ax + 20, ay - 22), (ax + 20, ay - 52), (ax + 85, ay), (ax + 20, ay + 52), (ax + 20, ay + 22), (ax - 50, ay + 22)], fill=boxc + (255,), outline=(0, 0, 0, 255), width=6)
+    l1 = txt(headline[0], ANTON(106), t1c, 9, (0, 0, 0)); fr.alpha_composite(l1, (34, 398))
+    f2 = ANTON(104); bb = f2.getbbox(headline[1]); bw, bh = bb[2] - bb[0] + 56, bb[3] - bb[1] + 40
+    box = Image.new("RGBA", (bw, bh), boxc + (255,)); ImageDraw.Draw(box).text((28 - bb[0], 20 - bb[1]), headline[1], font=f2, fill=t2c + (255,))
+    box = box.rotate(2, Image.BICUBIC, expand=True); fr.alpha_composite(box, (40, 532))
+    fr.convert("RGB").save(out, quality=95)
+
 def capa(out, var="A"):
     fr = BG.copy(); global _yr_s
     if var == "A":
@@ -509,6 +542,7 @@ def audio(vout):
                     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", OUTFILE], check=True)
 def main():
     if MODE == "thumb": thumbnail(OUTFILE); return
+    if MODE.startswith("thumb2"): thumbnail2(OUTFILE, MODE.split(":")[1] if ":" in MODE else "1"); return
     if MODE.startswith("capa"): capa(OUTFILE, MODE.split(":")[1] if ":" in MODE else "A"); return
     if MODE.startswith("one:"): frame_at(float(MODE[4:]), False).save(OUTFILE, quality=92); return
     if MODE.startswith("frames"):
