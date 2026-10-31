@@ -127,18 +127,22 @@ def brasil(size=520):
 
 # ---------------------------------------------------------------- fotos reais (Wikimedia Commons; domínio público ou CC BY com crédito)
 FOT = f"{V}/fotos"
-PHOTOS = [  # (início, fim) na fala original, arquivo, legenda, crédito
-    (12.3, 15.0, "s1959", "Senor Abravanel, 1959", "Revista do Rádio · domínio público"),
-    (15.07, 17.3, "s2019", "Silvio Santos, 2019", "Palácio do Planalto · CC BY 2.0"),
-    (18.4, 25.8, "s1959", "Silvio jovem, 1959", "Revista do Rádio · domínio público"),
-    (60.1, 66.0, "r1956", "Rádio Nacional de São Paulo, 1956", "domínio público"),
-    (66.3, 73.2, "n1957", "Com Manoel de Nóbrega, 1957", "domínio público"),
-    (89.4, 96.9, "f1960", "No ar em 1960", "Radiolândia · domínio público"),
-    (97.0, 101.6, "a1964", "Silvio em 1964", "Arquivo Nacional · domínio público"),
-    (112.6, 116.9, "tt", "Com Tony Tornado", "Arquivo Nacional · domínio público"),
-    (149.3, 160.4, "s2010", "Silvio em 2010", "Wikimedia Commons · CC BY 3.0 BR"),
-    (160.7, 166.6, "s2018", "Silvio em 2018", "Palácio do Planalto · CC BY 2.0"),
-    (166.7, 173.5, "s2019", "Aos 88 anos, em 2019", "Palácio do Planalto · CC BY 2.0"),
+PHOTOS = [  # (início, fim) na fala original, arquivo, legenda, crédito (fotos enviadas pelo Eliezio)
+    (12.3, 15.0, "jovem_cor", "Senor Abravanel, jovem", "reprodução"),
+    (15.07, 17.3, "sorriso_azul", "Silvio Santos", "reprodução"),
+    (18.4, 25.8, "jovem_sorriso", "Silvio jovem", "reprodução"),
+    (26.0, 33.6, "doc1950", "Documento de 1950", "reprodução"),
+    (41.2, 48.5, "paraquedista1948", "Paraquedista do Exército, 1948", "reprodução"),
+    (60.1, 66.0, "radio50", "Começo no rádio", "reprodução"),
+    (66.3, 73.2, "anos50", "Os primeiros anos em São Paulo", "reprodução"),
+    (82.4, 85.7, "palco70", "Precisava de um palco", "reprodução"),
+    (89.4, 96.9, "tv70a", "No comando do programa", "reprodução"),
+    (97.0, 101.6, "tv70b", "Anos 70", "reprodução"),
+    (112.6, 116.9, "radio70", "Dono da própria emissora", "reprodução"),
+    (117.2, 127.2, "colagem70", "O rosto mais conhecido da TV", "reprodução"),
+    (149.3, 160.4, "velho_paleto", "Silvio nos anos 2010", "reprodução"),
+    (160.7, 166.6, "palco", "No palco do programa", "reprodução"),
+    (166.7, 173.5, "sorriso_azul", "Silvio Santos · 1930–2024", "reprodução"),
 ]
 _ph = {}
 def photo_img(key):
@@ -146,15 +150,15 @@ def photo_img(key):
         pth = f"{FOT}/{key}.jpg"
         _ph[key] = Image.open(pth).convert("RGB") if os.path.exists(pth) else None
     return _ph[key]
-def photo_card(key, t, a, b, cap, cred, maxw=640, maxh=700):
+def photo_card(key, t, a, b, cap, cred, maxw=620, maxh=560):
     """porta-retrato com borda clara, leve giro e zoom lento (Ken Burns), legenda e crédito"""
     im = photo_img(key)
     if im is None: return None
     sc = min(maxw / im.width, maxh / im.height); w, h = int(im.width * sc), int(im.height * sc)
     z = 1.0 + 0.06 * clamp((t - a) / max(1, b - a)); cw, ch = im.width / z, im.height / z
     crop = im.crop((int((im.width - cw) / 2), int((im.height - ch) * 0.35), int((im.width + cw) / 2), int((im.height - ch) * 0.35 + ch))).resize((w, h), Image.BICUBIC)
-    pad, capH = 16, 92; card = Image.new("RGBA", (w + 2 * pad, h + pad + capH), (0, 0, 0, 0)); dd = ImageDraw.Draw(card)
-    dd.rounded_rectangle((0, 0, card.width - 1, card.height - 1), 10, fill=(246, 242, 232, 255)); card.paste(crop, (pad, pad))
+    pad, capH = 16, 92; cwid = max(w + 2 * pad, int(MF("ExtraBold", 28).getlength(cap)) + 50); card = Image.new("RGBA", (cwid, h + pad + capH), (0, 0, 0, 0)); dd = ImageDraw.Draw(card)
+    dd.rounded_rectangle((0, 0, card.width - 1, card.height - 1), 10, fill=(246, 242, 232, 255)); card.paste(crop, ((cwid - w) // 2, pad))
     dd.text((card.width / 2, h + pad + 30), cap, font=MF("ExtraBold", 28), fill=(24, 28, 36, 255), anchor="mm")
     dd.text((card.width / 2, h + pad + 66), "Foto: " + cred, font=MF("SemiBold", 18), fill=(110, 116, 128, 255), anchor="mm")
     sh = Image.new("RGBA", (card.width + 80, card.height + 80), (0, 0, 0, 0)); ImageDraw.Draw(sh).rounded_rectangle((40, 52, card.width + 40, card.height + 52), 14, fill=(0, 0, 0, 150))
@@ -164,7 +168,8 @@ def photo_state(t):
     for a, b, key, cap, cred in PHOTOS:
         A, B = T(a), T(b)
         if A - 0.01 <= t <= B + 0.45 and photo_img(key) is not None:
-            return clamp((t - A) / 0.5) * clamp((B + 0.45 - t) / 0.45), (a, b, key, cap, cred)
+            card = max([env(t, f(c0) - PAUSE, f(c0) + 1.3, 0.25, 0.35) for c0, *_ in CH] + [0])
+            return clamp((t - A) / 0.5) * clamp((B + 0.45 - t) / 0.45) * (1 - card), (a, b, key, cap, cred)
     return 0.0, None
 
 # ---------------------------------------------------------------- cenas (tempos da fala original via T())
@@ -382,7 +387,7 @@ def frame_at(t, smooth_year=True, with_captions=True):
         a, b, key, cap, cred = ph; card = photo_card(key, t, T(a), T(b), cap, cred)
         if card is not None:
             ang = -3 + 1.5 * math.sin(t * 0.4); card = card.rotate(ang, Image.BICUBIC, expand=True)
-            put(fr, card, W * 0.74 + 120 * (1 - e), CY + 10, pf)
+            put(fr, card, W * 0.74 + 120 * (1 - e), CY - 20, pf)
     g = np.zeros((300, W, 4), np.uint8); g[..., :3] = (3, 10, 22); g[..., 3] = np.linspace(0, 200, 300)[:, None].astype(np.uint8); fr.alpha_composite(Image.fromarray(g), (0, H - 300))
     if with_captions: captions(fr, t)
     chrome(fr, t)
@@ -395,7 +400,7 @@ FACTS = [(0, "DE CAMELÔ A DONO DO SBT", "1930–2024"), (17.4, "Nasceu Senor Ab
          (66.1, "Assume o Baú da Felicidade", "ANOS 50"), (85.8, "Estreia o Programa Silvio Santos", "1963"), (105.5, "Entra no ar o SBT", "1981"),
          (116.95, "Candidatura barrada pelo TSE", "1989"), (138.95, "Sequestro da filha e crise no banco", "2001 · 2010"), (160.55, "Morre aos 93 anos, em São Paulo", "2024"),
          (173.55, "A voz, a coragem e a teimosia", "LEGADO")]
-STRIP = [("s1959", "1959"), ("r1956", "1956"), ("f1960", "1960"), ("s2010", "2010"), ("s2019", "2019")]
+STRIP = [("paraquedista1948", "1948"), ("doc1950", "1950"), ("anos50", "ANOS 50"), ("tv70b", "ANOS 70"), ("sorriso_azul", "2010s")]
 _vbg = None
 def vbg():
     global _vbg
@@ -413,7 +418,7 @@ def vbg():
             ImageDraw.Draw(card).text((card.width / 2, th + 26), yr, font=MF("ExtraBold", 24), fill=(24, 28, 36, 255), anchor="mm"); bg.alpha_composite(card, (int(x), 360))
         x += tw + 16
     d.rounded_rectangle((0, VY - 6, VW - 1, VY + VHH + 6), 0, outline=GOLD + (255,), width=6)
-    put(bg, txt("fotos: Wikimedia Commons (domínio público e CC BY)", MF("SemiBold", 18), MUTED, 1), VW / 2, 640)
+    put(bg, txt("fotos: reprodução", MF("SemiBold", 18), MUTED, 1), VW / 2, VY + VHH + 26)
     _vbg = bg; return bg
 def vframe_at(t):
     fr = vbg().copy(); hz = frame_at(t, with_captions=False).resize((VW, VHH), Image.LANCZOS); fr.paste(hz, (0, VY))
@@ -450,14 +455,16 @@ def thumbnail(out):
         a0 = i * 15; d.pieslice((TW * 0.62 - 1400, TH * 0.55 - 1400, TW * 0.62 + 1400, TH * 0.55 + 1400), a0, a0 + 6, fill=(30, 52, 96, 255))
     glow = Image.new("RGBA", (TW, TH), (0, 0, 0, 0)); ImageDraw.Draw(glow).ellipse((TW * 0.62 - 330, TH * 0.55 - 330, TW * 0.62 + 330, TH * 0.55 + 330), fill=GOLD + (120,))
     fr.alpha_composite(glow.filter(ImageFilter.GaussianBlur(90)))
-    old = cutout("s2019", 760); young = cutout("s1959", 560).convert("LA").convert("RGBA")
-    yA = cutout("s1959", 560).getchannel("A"); young.putalpha(yA)
+    old = cutout("sorriso_azul", 760)
+    yim = photo_img("paraquedista1948").convert("L").convert("RGB"); sc_ = 470 / yim.height; yim = yim.resize((int(yim.width * sc_), 470), Image.LANCZOS)
+    young = Image.new("RGBA", (yim.width + 28, yim.height + 28), (246, 242, 232, 255)); young.paste(yim, (14, 14)); young = young.rotate(5, Image.BICUBIC, expand=True)
     def rim(im, col, r=10):
         a = im.getchannel("A").filter(ImageFilter.MaxFilter(r * 2 + 1)); halo = Image.new("RGBA", im.size, col + (0,)); halo.putalpha(a); return halo
-    fr.alpha_composite(rim(young, WHITE, 6), (40, TH - young.height)); fr.alpha_composite(young, (40, TH - young.height))
+    shd = Image.new("RGBA", (young.width + 60, young.height + 60), (0, 0, 0, 0)); shd.paste((0, 0, 0, 170), (30, 40), young.getchannel("A")); fr.alpha_composite(shd.filter(ImageFilter.GaussianBlur(16)), (30, 170))
+    fr.alpha_composite(young, (60, 190))
     ox = int(TW * 0.62 - old.width / 2); fr.alpha_composite(rim(old, GOLD_L, 8), (ox, TH - old.height + 40)); fr.alpha_composite(old, (ox, TH - old.height + 40))
-    put(fr, txt("DE CAMELÔ", ANTON(118), WHITE, 9, (0, 0, 0)), 300, 95); put(fr, txt("1959", ANTON(64), GOLD_L, 6, (0, 0, 0)), 150, TH - 60)
-    put(fr, txt("A DONO DO SBT", ANTON(118), GOLD_L, 9, (0, 0, 0)), TW - 330, 95); put(fr, txt("➜", ANTON(150), GOLD, 8, (0, 0, 0)), 520, 380)
+    put(fr, txt("DE CAMELÔ", ANTON(118), WHITE, 9, (0, 0, 0)), 300, 95); put(fr, txt("1948", ANTON(70), GOLD_L, 6, (0, 0, 0)), 240, TH - 50)
+    put(fr, txt("A DONO DO SBT", ANTON(118), GOLD_L, 9, (0, 0, 0)), TW - 330, 95); dd_ = ImageDraw.Draw(fr); ax, ay = 470, 380; dd_.polygon([(ax - 60, ay - 26), (ax + 20, ay - 26), (ax + 20, ay - 60), (ax + 90, ay), (ax + 20, ay + 60), (ax + 20, ay + 26), (ax - 60, ay + 26)], fill=GOLD + (255,), outline=(0, 0, 0, 255), width=6)
     put(fr, chip("A HISTÓRIA REAL", RED, 40), TW - 230, TH - 70)
     fr.convert("RGB").save(out, quality=95)
 
