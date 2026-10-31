@@ -36,6 +36,13 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 - `scripts/render_ucrania.py`, capa A (mapa), publicado na página do canal (saiu o card "O povo ontem, ep. 2" por causa do limite de 256 MB).
 - Voz: 825 créditos. Mapa: `dados/ucrania_ocupacao_aprox.json` (área aproximada, ~19% com as áreas oficiais).
 
+## Feito: "CBS de 11,3%" (31/10/2026)
+- Versão própria (roteiro e arte) a partir de um vídeo de referência do explica.ai. `scripts/render_cbs.py`, capa A, publicado (saiu o card "Bora votar"). Voz: 938 créditos.
+
+## PENDENTE: TikTok Shop em lives (2 partes, didático, telas ilustrativas)
+- Parte 1 (preparando a conta) com roteiro pronto, 781 créditos, esperando aprovação. Parte 2: sacola, teste e primeira live.
+- Melhor ainda se ele gravar a tela do celular fazendo o caminho; senão, telas genéricas com aviso "ilustração".
+
 ## Projeto avulso (fora dos canais)
 - Comercial Ares do Horto para a corretora Ana Paula: `../projetos-avulsos/ares-do-horto-ana-paula/`, página https://claude.ai/artifact/LGuzdi6rUbFbUE8EgFspe7. Falta só o número do registro da incorporação no rodapé, se ela mandar.
 
