@@ -8,6 +8,7 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 - Dois canais que **nunca se misturam**:
   - **Eliezio Souza** (opinião · atualidades · reações): marinho e dourado, barra lateral, caixa de manchete, legenda karaokê. Regras em `README.md` e na skill `.claude/skills/edicao-videos-eliezio`.
   - **Teacher Eliezio** (aulas de inglês): marinho e amarelo, avatar 3D, quiz com contador. Regras em `TEACHER.md`.
+- **Entrega sempre por página de download (01/11/2026):** ele não consegue baixar vídeo mandado como arquivo no chat. Todo vídeo vai para a página do canal com botão Baixar vídeo/capa e botões de copiar título + hashtags, descrição e hashtags.
 - Entrega: primeiro bloco = título + 4 hashtags do assunto na mesma linha; depois descrição e hashtags, cada um num bloco para copiar.
 - Opinião: só quando ele pedir. Proteção jurídica: fato conferido em mais de uma fonte, nada de acusação sem decisão, citar fonte.
 - Voz: conector ElevenLabs, modelo `eleven_v4`, voz do Eliezio `njASsAgVyTCHG8OdIeWh`, sempre 1 take. **Antes de gerar, mostrar roteiro e custo (`estimate_only`) e esperar aprovação.** Custo ≈ 1 crédito por caractere.
@@ -23,7 +24,7 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 - Controle das aulas (marcar feita): https://claude.ai/artifact/1S2ouhHbcGgVcEsuUpJwq4 (coleção `aulas`, doc `s{semana}-{a1|a2|b1|b2}` = `{done, doneAt}`).
 - Página de vídeos do canal (novo no topo): https://claude.ai/artifact/Br8ebANZH1TaR4wNAv7RwE
 - Feitas: s1-a1, s1-a2, s1-b1, s1-b2, s2-a1, s2-a2, s3-a1, s9-a2, **s4-a1 (Numbers 1–100, `scripts/render_short_numeros.py`)**.
-- **A, an, the (s5-a1) feita em 01/11/2026 no Remotion** (`remotion-teacher/` + `scripts/prep_aula_artigos.py`), 2 capas publicadas na página de vídeos; falta ele postar e escolher a capa. Voz: 657 créditos.
+- **A, an, the (s5-a1) feita em 01/11/2026 no Remotion** (`remotion-teacher/` + `scripts/prep_aula_artigos.py`), capa 1 escolhida ("A ou AN? Você erra essa?"), publicada na página de vídeos; falta ele postar. Voz: 657 créditos.
 - Próximas na fila: Plural (A1) · 10 verbos irregulares (A2, porque Was e were já foi feita) · Present Perfect × Simple Past (B1).
 - Avatar: 10 expressões novas (folha enviada por ele em 01/11), inclusive pensando (mão no queixo) no contador. Os PNGs não ficam no repositório (público): pedir a folha de novo ou recortar dos vídeos publicados.
 - Série viral (`scripts/render_viral.py`, variável `VIRAL`): basico, very, brasileiro, obrigado, isare — já refeitos no formato loop.

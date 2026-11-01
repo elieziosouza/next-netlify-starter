@@ -25,6 +25,7 @@ outra abertura.
 - **Quiz sem lacuna falada (01/11/2026):** a voz nunca fala "blank" nem "___". Ela lê as duas opções completas e pergunta qual está certa ("Which one is correct: a orange, or an orange?"). A lacuna "____" aparece só na tela.
 
 ## Entrega
+- **Sempre pela página de vídeos do canal** (ele não consegue baixar arquivo mandado no chat): cartão com Baixar vídeo, Baixar capa e 3 botões de copiar (título + 4 hashtags, descrição, hashtags).
 - Primeiro bloco: título com 4 hashtags na mesma linha, pronto para copiar. As 4 hashtags são do assunto do vídeo (ex.: #verbtobe #isorare #gramaticainglesa #quizdeingles), nada genérico.
 - Depois: descrição e hashtags, cada um no seu bloco.
 - Marcar a aula como feita no controle: https://claude.ai/artifact/1S2ouhHbcGgVcEsuUpJwq4
