@@ -23,7 +23,9 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 - Controle das aulas (marcar feita): https://claude.ai/artifact/1S2ouhHbcGgVcEsuUpJwq4 (coleção `aulas`, doc `s{semana}-{a1|a2|b1|b2}` = `{done, doneAt}`).
 - Página de vídeos do canal (novo no topo): https://claude.ai/artifact/Br8ebANZH1TaR4wNAv7RwE
 - Feitas: s1-a1, s1-a2, s1-b1, s1-b2, s2-a1, s2-a2, s3-a1, s9-a2, **s4-a1 (Numbers 1–100, `scripts/render_short_numeros.py`)**.
-- Próximas na fila: A, an, the (A1) · Was e were (A2) · Plural (A1) · Present Perfect × Simple Past (B1).
+- **A, an, the (s5-a1) feita em 01/11/2026 no Remotion** (`remotion-teacher/` + `scripts/prep_aula_artigos.py`), 2 capas publicadas na página de vídeos; falta ele postar e escolher a capa. Voz: 657 créditos.
+- Próximas na fila: Plural (A1) · 10 verbos irregulares (A2, porque Was e were já foi feita) · Present Perfect × Simple Past (B1).
+- Avatar: 10 expressões novas (folha enviada por ele em 01/11), inclusive pensando (mão no queixo) no contador. Os PNGs não ficam no repositório (público): pedir a folha de novo ou recortar dos vídeos publicados.
 - Série viral (`scripts/render_viral.py`, variável `VIRAL`): basico, very, brasileiro, obrigado, isare — já refeitos no formato loop.
 
 ## Eliezio Souza (opinião)
