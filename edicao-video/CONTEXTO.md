@@ -11,7 +11,7 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 - Entrega: primeiro bloco = título + 4 hashtags do assunto na mesma linha; depois descrição e hashtags, cada um num bloco para copiar.
 - Opinião: só quando ele pedir. Proteção jurídica: fato conferido em mais de uma fonte, nada de acusação sem decisão, citar fonte.
 - Voz: conector ElevenLabs, modelo `eleven_v4`, voz do Eliezio `njASsAgVyTCHG8OdIeWh`, sempre 1 take. **Antes de gerar, mostrar roteiro e custo (`estimate_only`) e esperar aprovação.** Custo ≈ 1 crédito por caractere.
-- Números por extenso no texto da voz. Para lacunas use "blank", nunca "___".
+- Números por extenso no texto da voz. No quiz, a voz lê as opções completas ("a orange, or an orange?"); nunca fala "blank" nem "___".
 
 ## Formato loop (desde 30/10/2026, os dois canais)
 - Capa muda por 0,5 s no início, sem riser e sem glitch (`scripts/finaliza.sh` para o canal de opinião, `scripts/finaliza_teacher.sh` para o Teacher). `GLITCH=1` volta o glitch antigo só se ele pedir.

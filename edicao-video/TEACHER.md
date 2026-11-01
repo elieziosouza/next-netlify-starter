@@ -22,6 +22,8 @@ outra abertura.
    revelação, e nenhum emoji ou cor na legenda que entregue a resposta. Conferir ouvindo onde a pergunta termina e a resposta começa.
 6. Pedido falado para comentar se acertou, seguir e salvar; na tela "COMENTA SE VOCÊ ACERTOU", "SIGA @teachereliezio" e "SALVA PRA REVISAR".
 
+- **Quiz sem lacuna falada (01/11/2026):** a voz nunca fala "blank" nem "___". Ela lê as duas opções completas e pergunta qual está certa ("Which one is correct: a orange, or an orange?"). A lacuna "____" aparece só na tela.
+
 ## Entrega
 - Primeiro bloco: título com 4 hashtags na mesma linha, pronto para copiar. As 4 hashtags são do assunto do vídeo (ex.: #verbtobe #isorare #gramaticainglesa #quizdeingles), nada genérico.
 - Depois: descrição e hashtags, cada um no seu bloco.
