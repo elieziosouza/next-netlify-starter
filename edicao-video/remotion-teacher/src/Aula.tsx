@@ -272,3 +272,23 @@ export const Capa: React.FC = () => {
     <Avatar tt={6.8} />
   </AbsoluteFill>);
 };
+
+// ---------- capa 2: as duas opções do gancho em cartões, "QUAL ESTÁ CERTO?" e o avatar pensando
+export const Capa2: React.FC = () => {
+  useFonts();
+  const Op: React.FC<{ n: number; s: string; rot: number }> = ({ n, s, rot }) => (
+    <div style={{ width: 860, height: 170, borderRadius: 40, background: "#fff", border: `7px solid ${YEL}`, display: "flex", alignItems: "center", position: "relative", transform: `rotate(${rot}deg)`, boxShadow: "0 20px 44px rgba(0,0,0,.45)" }}>
+      <div style={{ position: "absolute", left: 26, width: 112, height: 112, borderRadius: "50%", background: INK, color: "#fff", font: "800 60px Montserrat", display: "grid", placeItems: "center" }}>{n}</div>
+      <div style={{ flex: 1, textAlign: "center", font: "400 104px Anton", color: INK, paddingLeft: 90 }}>{s}</div></div>
+  );
+  return (<AbsoluteFill style={{ background: NAVY }}>
+    <Fundo />
+    <Center y={260}><Chip bg={C_AN} size={40}>BÁSICO · A1</Chip></Center>
+    <Center y={520}><div style={{ font: "400 150px Anton", color: YEL, ...Outline, textAlign: "center", lineHeight: 1 } as any}>QUAL ESTÁ<br />CERTO?</div></Center>
+    <Center y={830}><Op n={1} s="A UNIVERSITY" rot={-2} /></Center>
+    <Center y={1040}><Op n={2} s="AN UNIVERSITY" rot={1.5} /></Center>
+    <Center y={1240}><div style={{ font: "800 50px Montserrat", color: "#fff", ...Outline, WebkitTextStroke: "8px " + INK } as any}>MUITA GENTE ERRA ESSA <Emoji e="🤯" size={54} /></div></Center>
+    <Center y={1350}><Chip bg={C_THE} size={42}>QUIZ COM RESPOSTA</Chip></Center>
+    <Avatar tt={46.5} />
+  </AbsoluteFill>);
+};
