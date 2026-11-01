@@ -30,7 +30,7 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 - Página de vídeos: https://claude.ai/artifact/7wTF12GuP8AE3v9AcPqEq7 (limite de 256 MB: ao publicar novo, tirar os cards mais antigos).
 - O vídeo "Região por região" (mapa) foi muito bem: 20,7 mil views, público 55+. Ele quer mais vídeos explicativos com dados nesse estilo.
 - Feito em 30/10: **O novo Congresso** (`scripts/render_congresso.py`, capa A, publicado). Título: "O novo Congresso: quem ganhou e quem perdeu cadeiras #novocongresso #eleicoes2026 #camaradosdeputados #senadofederal".
-- Lista de temas sugeridos: (1) capital por capital, (2) abstenção por estado, (3) Congresso — feito, (4) isenção do IR até R$ 5 mil, (5) quanto cada região paga de imposto e recebe.
+- Lista de temas sugeridos: (1) capital por capital, (2) abstenção por estado, (3) Congresso — feito, (4) isenção do IR até R$ 5 mil — feito, (5) quanto cada região paga de imposto e recebe.
 
 ## Feito: "Quanto já custou a guerra na Ucrânia" (30/10/2026)
 - `scripts/render_ucrania.py`, capa A (mapa), publicado na página do canal (saiu o card "O povo ontem, ep. 2" por causa do limite de 256 MB).
@@ -38,6 +38,10 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 
 ## Feito: "CBS de 11,3%" (31/10/2026)
 - Versão própria (roteiro e arte) a partir de um vídeo de referência do explica.ai. `scripts/render_cbs.py`, capa A, publicado (saiu o card "Bora votar"). Voz: 938 créditos.
+
+## Feito: "Isenção do IR até R$ 5 mil" (01/11/2026)
+- `scripts/render_ir.py`, capa A (holerite com ZERO), publicado na página do canal (saiu o card "Ônibus na garagem"). Voz: 703 créditos. Fontes: Lei 15.270/2025, XP, Barbieri Advogados.
+- Remotion (skill remotion-best-practices) disponível; Node 22 ok. Os canais seguem no pipeline Python; Remotion só se ele pedir.
 
 ## PENDENTE: TikTok Shop em lives (2 partes, didático, telas ilustrativas)
 - Parte 1 (preparando a conta) com roteiro pronto, 781 créditos, esperando aprovação. Parte 2: sacola, teste e primeira live.
