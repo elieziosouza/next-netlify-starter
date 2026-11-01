@@ -85,3 +85,68 @@ def hope(dur=3.6, seed=5):
         k = int(d * SR); out[k:] += dream[:-k] * g
     out /= np.abs(out).max() + 1e-9
     return np.stack([out, np.roll(out, 240)], 1)
+
+def circulo(dur=0.5, seed=3):
+    """destaque suave: toque de madeira curto + pincelada de ar acompanhando o círculo sendo desenhado"""
+    r = np.random.default_rng(seed); n = int(dur * SR); t = np.arange(n) / SR
+    tok = (np.sin(2 * np.pi * 520 * t) + 0.4 * np.sin(2 * np.pi * 1310 * t)) * np.exp(-t / 0.025) * (1 - np.exp(-t * 2000))
+    x = r.normal(0, 1, n); bp = onepole_lp(x, np.full(n, 2600.0)); bp = bp - onepole_lp(bp, np.full(n, 700.0))
+    p = t / 0.45; brush = bp * np.clip(np.sin(np.pi * np.clip(p, 0, 1)), 0, 1) ** 2 * 0.5
+    brush /= np.abs(brush).max() + 1e-9
+    out = 0.8 * tok + 0.35 * brush; out /= np.abs(out).max() + 1e-9
+    pan = np.clip(p, 0, 1)
+    return np.stack([out * (1 - 0.3 * pan), out * (0.7 + 0.3 * pan)], 1)
+
+def barra(dur=1.2, seed=7):
+    """entrada da barra lateral: sopro curto subindo e um acorde de sino suave (mi, si, mi) que some devagar"""
+    r = np.random.default_rng(seed); n = int(dur * SR); t = np.arange(n) / SR
+    x = r.normal(0, 1, n); p = np.clip(t / 0.35, 0, 1)
+    air = onepole_lp(x, 400 + 5000 * p ** 2); air = air - onepole_lp(air, np.full(n, 300.0))
+    air *= np.sin(np.pi * p) ** 2 * (t < 0.35); air /= np.abs(air).max() + 1e-9
+    bell = np.zeros(n); t1 = np.clip(t - 0.22, 0, None); on = (t >= 0.22)
+    for f, g in ((659.3, 1.0), (987.8, 0.7), (1318.5, 0.45), (1975.5, 0.18)):
+        bell += g * np.sin(2 * np.pi * f * t1) * np.exp(-t1 / (0.55 if f < 1500 else 0.25))
+    bell *= on * (1 - np.exp(-t1 * 400)); bell /= np.abs(bell).max() + 1e-9
+    out = 0.35 * air + 0.6 * bell; out /= np.abs(out).max() + 1e-9
+    d = int(0.012 * SR); right = np.concatenate([np.zeros(d), out[:-d]])         # leve abertura estéreo
+    return np.stack([out, right], 1)
+
+
+def siga(dur=0.9, seed=9):
+    """chamada do "siga · compartilhe": duas notas suaves de marimba (sol, ré), ataque macio e grave, sem brilho"""
+    n = int(dur * SR); t = np.arange(n) / SR; out = np.zeros(n)
+    for t0, f in ((0.0, 392.0), (0.16, 587.3)):
+        tt = np.clip(t - t0, 0, None); on = t >= t0
+        tone = np.sin(2 * np.pi * f * tt) + 0.25 * np.sin(2 * np.pi * 2 * f * tt) * np.exp(-tt / 0.08)
+        out += on * tone * (1 - np.exp(-tt * 180)) * np.exp(-tt / 0.32)
+    out = onepole_lp(out, np.full(n, 2500.0)); out /= np.abs(out).max() + 1e-9
+    d = int(0.010 * SR); right = np.concatenate([np.zeros(d), out[:-d]])
+    return np.stack([out, right], 1)
+
+def muu(dur=0.75, seed=13):
+    """mugido de vaca de desenho (para tapar palavrão com humor): dente-de-serra grave que sobe e cai, com formantes de 'u'"""
+    n = int(dur * SR); t = np.arange(n) / SR
+    f0 = 118 + 38 * np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 0.7 + 3 * np.sin(2 * np.pi * 5.5 * t)
+    ph = 2 * np.pi * np.cumsum(f0) / SR; saw = 2 * ((ph / (2 * np.pi)) % 1.0) - 1
+    rng = np.random.default_rng(seed); saw += 0.04 * rng.normal(0, 1, n)
+    out = onepole_lp(saw, np.full(n, 700.0)) + 0.5 * onepole_lp(saw, np.full(n, 280.0))
+    env = np.minimum(1, t / 0.06) * np.minimum(1, (dur - t) / 0.18) ** 1.5
+    out = out * env; out /= np.abs(out).max() + 1e-9
+    return np.stack([out, out], 1)
+
+def riser(dur=1.0, tail=0.7, seed=21):
+    """Riser do final, igual ao do vídeo de referência que o Eliezio gostou: brilho metálico (parciais agudas e desafinadas entre si,
+    1,8 a 12,7 kHz, medidas no áudio da referência) que cresce por ~1 s, corta no começo da tela final e deixa uma cauda curta.
+    Encaixe: ev (END_IN - dur, riser(), 0.5); o corte cai exatamente no END_IN."""
+    P = [(1799, 0), (2548, -2), (3364, -6), (4768, -6), (4889, -8), (6512, -8), (6901, -10), (8021, -3.5), (9031, -5.5), (9228, -8.5), (11542, -4), (12713, -9), (1517, -13), (2171, -14.5)]
+    rng = np.random.default_rng(seed); n = int((dur + tail) * SR); t = np.arange(n) / SR
+    x = np.zeros(n, np.float32)
+    for f, db in P:
+        a = 10 ** (db / 20); ph = rng.uniform(0, 2 * np.pi); vib = 1 + 0.00025 * np.sin(2 * np.pi * rng.uniform(4, 7) * t)
+        x += a * np.sin(2 * np.pi * f * vib * t + ph)
+    u = np.clip(t / dur, 0, 1); grow = 10 ** ((-20 + 20 * u ** 1.4) / 20)              # +20 dB até o corte
+    trem = 1 - 0.18 * (0.5 + 0.5 * np.sin(2 * np.pi * 11 * t))
+    after = np.where(t < dur, 1.0, 0.22 * np.exp(-(t - dur) / 0.2))                 # corte seco + cauda curta
+    env = grow * trem * after; env[:int(0.01 * SR)] *= np.linspace(0, 1, int(0.01 * SR))
+    x = x * env; x /= np.abs(x).max() + 1e-6
+    return np.stack([x * 0.9, x * 0.9], 1).astype(np.float32)

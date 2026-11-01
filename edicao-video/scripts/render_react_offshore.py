@@ -287,6 +287,7 @@ CAPS.sort(key=lambda c: c["start"])
 for c in CAPS:
     hot = any(w.strip(",.?!:“”") in HOT for w in c["words"]); c["src"] = ("au" if hot else "me") if c["src"] == "me" else ("auc" if hot else "cl")
     c["hotc"] = hot
+def BIGF(s): return ImageFont.truetype(f"{FD}/Anton-Regular.ttf", s)
 SEG = PersonSeg(f"{S}/seg/u2net_human_seg.onnx")
 
 # palavras grandes: (fonte, início, fim na fonte, palavra, linha de apoio, modo) — modo "atras" = atrás dele; "cima" = em cima do cartão
@@ -298,8 +299,8 @@ _txt = {}
 def word_layer(word, col, size, sub=""):
     key = (word, size, sub)
     if key not in _txt:
-        f = MF("ExtraBold", size); d0 = ImageDraw.Draw(Image.new("RGBA", (4, 4)))
-        while d0.textlength(word, font=f) > W - 60: size -= 6; f = MF("ExtraBold", size)
+        size = int(size * 1.5); f = BIGF(size); d0 = ImageDraw.Draw(Image.new("RGBA", (4, 4)))    # Anton: palavra gigante (16/10/2026)
+        while d0.textlength(word, font=f) > W - 60: size -= 6; f = BIGF(size)
         hh = int(size * 1.35) + (60 if sub else 0)
         lay = Image.new("RGBA", (W, hh), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
         d.text((W / 2, size * 0.68), word, font=f, fill=col + (255,), anchor="mm")
@@ -317,7 +318,7 @@ def big_words(img, src_img, t, s, mode):
         lay = word_layer(word, GOLD_L if word != "CAINDO" else WHITE, 200 if md == "atras" else 150, sub)
         sc = 0.75 + 0.25 * k; lh, lw = lay.shape[:2]
         lay = cv2.resize(lay, (int(lw * sc), int(lh * sc)), interpolation=cv2.INTER_LINEAR)
-        cy = 215 if md == "atras" else 268
+        cy = 262 if md == "atras" else 290                 # Anton é alta: fica abaixo da barra das redes
         if md == "atras":
             m = cv2.resize(SEG(cv2.resize(src_img, (478, 850), interpolation=cv2.INTER_AREA)), (W, H)); m = np.clip((m - 0.35) / 0.3, 0, 1)
         else: m = np.zeros((H, W), np.float32)

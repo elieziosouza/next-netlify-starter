@@ -272,18 +272,19 @@ def finish(frame, t):
 
 CAPS = build_caps(ME_CAPS, "me", 4, "me")
 for c in CAPS: c["src"] = "au" if any(w.strip(",.?!") in HOT for w in c["words"]) else "me"
+def BIGF(s): return ImageFont.truetype(f"{FD}/Anton-Regular.ttf", s)
 SEG = PersonSeg(f"{S}/seg/u2net_human_seg.onnx")
 
 # palavras gigantes atrás da pessoa: (fonte, início, fim na fonte, palavra, cor, centro y)
-BIG = [("me", 4.85, 6.68, "PROFESSORES", GOLD_L, 240), ("me", 17.30, 18.42, "FUTURO", GOLD_L, 225),
+BIG = [("me", 4.85, 6.68, "PROFESSORES", GOLD_L, 268), ("me", 17.30, 18.42, "FUTURO", GOLD_L, 262),
        ("cl", 14.70, 16.40, "ESCOLA PÚBLICA", WHITE, 640), ("cl", 116.90, 119.05, "CIVILIDADE", GOLD_L, 640),
        ("cl", 129.60, 133.75, "ESPERANÇA", GOLD_L, 470)]
 _txt = {}
 def word_layer(word, col, size):
     key = (word, size)
     if key not in _txt:
-        f = MF("ExtraBold", size); d0 = ImageDraw.Draw(Image.new("RGBA", (4, 4)))
-        while d0.textlength(word, font=f) > W - 50: size -= 6; f = MF("ExtraBold", size)
+        size = int(size * 1.5); f = BIGF(size); d0 = ImageDraw.Draw(Image.new("RGBA", (4, 4)))    # Anton: palavra gigante (16/10/2026)
+        while d0.textlength(word, font=f) > W - 50: size -= 6; f = BIGF(size)
         lay = Image.new("RGBA", (W, int(size * 1.5)), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
         d.text((W / 2, lay.height / 2), word, font=f, fill=col + (255,), anchor="mm")
         sh = Image.new("RGBA", lay.size, (0, 0, 0, 0)); blk = Image.new("RGBA", lay.size, (0, 0, 0, 255)); blk.putalpha(lay.getchannel("A").point(lambda v: int(v * 0.55)))

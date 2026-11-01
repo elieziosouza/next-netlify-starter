@@ -23,10 +23,14 @@ Material pronto:
 
 Todo vídeo sai com três opções de capa impactante (A e B com o rosto dele, C sem o rosto) (`edicao-video/scripts/capa.py`, seção 7 do README). Antes de fechar o vídeo, mostre as duas e espere o Eliezio escolher qual vai embutida no início.
 
-Todo vídeo começa com a capa escolhida e a assinatura glitch, numa etapa só: `edicao-video/scripts/embutir_capa.py VIDEO CAPA SAIDA`. O glitch fica só sobre a capa e nunca em cima da fala inicial.
+Todo vídeo é feito para rodar em loop (desde 30/10/2026): começa com a capa escolhida parada e muda por 0,5 s, sem glitch e sem som de abertura (`edicao-video/scripts/finaliza.sh VIDEO CAPA SAIDA`), e termina 0,3 a 0,5 s depois da última palavra, com o "SIGA PARA MAIS" entrando por cima da última frase, sem tela final parada, sem riser e sem whoosh. O glitch antigo só volta com `GLITCH=1`, se ele pedir.
 
 Nunca cortar o rosto nem o topo da cabeça do Eliezio (vídeo, janelinha, capa, transições). Conferir em quadros soltos antes do render.
 
-Ao entregar cada vídeo, termine sempre com título (opções), legenda do post, hashtags e título para Shorts (seção 7.1 do README).
+Ao entregar cada vídeo, termine sempre com título (opções), legenda do post, hashtags e título para Shorts (seção 7.1 do README). O primeiro bloco é sempre o título com 4 hashtags na mesma linha, pronto para copiar e colar.
 
 Quando o Eliezio aprovar uma melhoria, atualize o README (seções 1 a 6 e o histórico) e faça commit.
+- Palavras gigantes: atrás dele (máscara) só se o recorte ficar limpo; senão acima da cabeça entrando pela lateral com clique. Nunca na frente, nunca comendo a cabeça, nunca no cabeçalho, sem transparência. Recorte ruim: avisar antes de entregar.
+- Barra lateral do canal (`barra_lateral.py`, azul/marinho/dourado) com progresso e cápsula SIGA · COMPARTILHE, e caixa de manchete fixa. Nada de vermelho nesses elementos.
+- Barra lateral colada no canto esquerdo (INSET 0). Textos e elementos longe das laterais (o YouTube corta até ~100 px).
+- Centralizar tudo no espaço depois da barra lateral (CX = 582), nunca no meio do quadro. Nenhum texto pode encostar em outro.
