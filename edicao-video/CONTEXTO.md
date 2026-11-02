@@ -25,7 +25,8 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 - Página de vídeos do canal (novo no topo): https://claude.ai/artifact/Br8ebANZH1TaR4wNAv7RwE
 - Feitas: s1-a1, s1-a2, s1-b1, s1-b2, s2-a1, s2-a2, s3-a1, s5-a1, s9-a2, **s4-a1 (Numbers 1–100, `scripts/render_short_numeros.py`)**.
 - **A, an, the (s5-a1) feita em 01/11/2026 no Remotion** (`remotion-teacher/` + `scripts/prep_aula_artigos.py`), capa 1 escolhida ("A ou AN? Você erra essa?"), publicada e postada (marcada como feita no controle). Voz: 657 créditos.
-- Próximas na fila: Plural (A1) · 10 verbos irregulares (A2, porque Was e were já foi feita) · Present Perfect × Simple Past (B1).
+- **Plural (s6-a1) feita em 02/11/2026 no Remotion** (`scripts/aulas/aula_plural.py`, `remotion-teacher/src/Plural.tsx`), 69 s, publicada na página de vídeos; falta ele postar. Voz: 676 créditos.
+- Próximas na fila: Present Perfect × Simple Past (B1, sábado da semana 3) · depois semana 4: Cores e adjetivos (A1), 10 verbos irregulares (A2).
 - Avatar: 10 expressões novas (folha enviada por ele em 01/11), inclusive pensando (mão no queixo) no contador. Os PNGs não ficam no repositório (público): pedir a folha de novo ou recortar dos vídeos publicados.
 - Série viral (`scripts/render_viral.py`, variável `VIRAL`): basico, very, brasileiro, obrigado, isare — já refeitos no formato loop.
 
