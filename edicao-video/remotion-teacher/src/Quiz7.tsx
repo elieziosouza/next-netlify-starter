@@ -29,7 +29,7 @@ const Abertura: React.FC = () => (
 /** uma pergunta: número n/7, palavra em português, contador, revelação em verde com confete */
 const Pergunta: React.FC<{ i: number }> = ({ i }) => {
   const { t } = useT(); const w = WORDS[i]; const a = T["q" + i]; const b = i < 6 ? T["q" + (i + 1)] : T.cta;
-  const { start: c0, reveal: rv } = TM.quiz[i]; const k = env(t, a - 0.05, b - 0.1, 0.25, 0.2); if (k <= 0) return null;
+  const { start: c0, reveal: rv } = TM.quiz[i]; const k = env(t, a - 0.05, b + 0.15, 0.25, 0.2); if (k <= 0) return null;
   const rvd = t >= rv; const sp = spring({ frame: Math.round((t - rv) * 30), fps: 30, config: { damping: 9 } });
   return (<AbsoluteFill style={{ opacity: k }}>
     <Pop at={a} y={300}><div style={{ font: "400 120px Anton", color: YEL, ...Outline } as any}>{i + 1}<span style={{ color: MUTED, fontSize: 70 }}>/7</span></div></Pop>
