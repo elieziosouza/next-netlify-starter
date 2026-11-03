@@ -29,7 +29,7 @@ for lg, ch in CAP:
 for i, c in enumerate(caps): c["until"] = round(caps[i + 1]["start"] - 0.1, 3) if i + 1 < len(caps) else TOTAL
 # expressões do avatar: 1 sorrindo, 2 desconfiado, 7 surpreso, 8 piscando, 9 pensando (mão no queixo), 10 bravo, 11 assustado
 EXPR = [(f(a), e) for a, e in C.EXPR]
-EXPR += [(QZ[0][0] - 0.05, 9), (QZ[0][1], 7), (QZ[1][0] - 0.05, 9), (QZ[1][1], 7)]   # mão no queixo no contador, surpreso na revelação
+EXPR += [e for a, b in QZ for e in ((a - 0.05, 9), (b, getattr(C, "REVEAL_EXPR", 7)))]   # mão no queixo no contador, surpreso (ou outra) na revelação
 EXPR = sorted((round(a, 3), e) for a, e in EXPR)
 def T(x): return round(f(x), 3)
 

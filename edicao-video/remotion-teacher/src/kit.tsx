@@ -118,7 +118,7 @@ export const Card: React.FC<{ children: React.ReactNode; border?: string; w?: nu
   <div style={{ background: "rgba(8,20,48,.82)", border: `4px solid ${border}`, borderRadius: 30, padding: "18px 44px", minWidth: w, textAlign: "center", boxShadow: "0 18px 40px rgba(0,0,0,.4)" }}>{children}</div>
 );
 // ---------- quiz com contador, revelação e confete saindo da alternativa certa
-const Confete: React.FC<{ t0: number; x0: number; y0: number }> = ({ t0, x0, y0 }) => {
+export const Confete: React.FC<{ t0: number; x0: number; y0: number }> = ({ t0, x0, y0 }) => {
   const { t } = useT(); const u = t - t0; if (u < 0 || u >= 1.8) return null;
   const cols = [YEL, GREEN, C_A, C_THE, "#fff", "#b478ff"]; const al = clamp((1.8 - u) / 0.5);
   return <AbsoluteFill>{Array.from({ length: 90 }).map((_, i) => {
@@ -127,7 +127,7 @@ const Confete: React.FC<{ t0: number; x0: number; y0: number }> = ({ t0, x0, y0 
     return <div key={i} style={{ position: "absolute", left: x, top: y, width: w * Math.abs(Math.cos(u * sp + ph)) + 3, height: w * 0.45, background: cols[i % 6], opacity: al, transform: `rotate(${u * sp * 40 + ph * 57}deg)` }} />;
   })}</AbsoluteFill>;
 };
-const Anel: React.FC<{ c0: number }> = ({ c0 }) => {
+export const Anel: React.FC<{ c0: number }> = ({ c0 }) => {
   const { t } = useT(); const u = (t - c0) / 3, n = Math.floor(3 - (t - c0)) + 1, fz = (t - c0) % 1, R = 100, col = n > 1 ? YEL : C_THE, L = 2 * Math.PI * R;
   return <Center y={1135}><div style={{ position: "relative", width: 260, height: 260 }}>
     <svg width={260} height={260} style={{ position: "absolute" }}><circle cx={130} cy={130} r={R} fill="rgba(8,18,40,.9)" stroke="#3c5480" strokeWidth={16} />
@@ -166,11 +166,11 @@ export const Quiz: React.FC<{ items: QuizItem[] }> = ({ items }) => {
     </AbsoluteFill>
   </AbsoluteFill>);
 };
-export const Chamada: React.FC = () => {
+export const Chamada: React.FC<{ titulo?: string; pedido?: string }> = ({ titulo = "ACERTOU?", pedido = "COMENTA AQUI" }) => {
   const TM = useTM(); const T = TM.t; const { t } = useT();
   return (<Cena a={T.cta} b={TM.total + 1}>
-    <Pop at={T.cta} y={400} from={0.85}><div style={{ font: "400 140px Anton", color: YEL, ...Outline } as any}>ACERTOU?</div></Pop>
-    <Pop at={T.cta + 0.1} y={590}><Chip bg={RED} size={50} style={{ transform: `scale(${1 + 0.03 * Math.sin(t * 6)})` }}>COMENTA AQUI</Chip></Pop>
+    <Pop at={T.cta} y={400} from={0.85}><div style={{ font: "400 140px Anton", color: YEL, ...Outline } as any}>{titulo}</div></Pop>
+    <Pop at={T.cta + 0.1} y={590}><Chip bg={RED} size={50} style={{ transform: `scale(${1 + 0.03 * Math.sin(t * 6)})` }}>{pedido}</Chip></Pop>
     <Pop at={T.cta + 0.3} y={690}><Emoji e="👇" size={64} style={{ transform: `translateY(${6 * Math.sin(t * 6)}px)` }} /></Pop>
     <Pop at={T.follow} y={800}><Chip bg="#fff" color={INK} size={44} style={{ transform: `scale(${1 + 0.04 * Math.sin(t * 5)})` }}>SIGA @teacher.eliezio</Chip></Pop>
     <Pop at={T.save} y={910}><Chip bg={YEL} color={INK} size={44}>SALVA PRA REVISAR</Chip></Pop>
