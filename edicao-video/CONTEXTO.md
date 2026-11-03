@@ -27,6 +27,8 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 - Feitas: s1-a1, s1-a2, s1-b1, s1-b2, s2-a1, s2-a2, s3-a1, s5-a1, s9-a2, **s4-a1 (Numbers 1–100, `scripts/render_short_numeros.py`)**.
 - **A, an, the (s5-a1) feita em 01/11/2026 no Remotion** (`remotion-teacher/` + `scripts/prep_aula_artigos.py`), capa 1 escolhida ("A ou AN? Você erra essa?"), publicada e postada (marcada como feita no controle). Voz: 657 créditos.
 - **Plural (s6-a1) feita em 02/11/2026 no Remotion** (`scripts/aulas/aula_plural.py`, `remotion-teacher/src/Plural.tsx`), 69 s, publicada e postada em 03/11 (com o @ antigo na tela). Voz: 676 créditos.
+- **Quiz relâmpago de 7 palavras (03/11/2026)**, formato que mais cresceu no nicho (`instagram/swipe.md`): `scripts/aulas/aula_quiz7.py` + `remotion-teacher/src/Quiz7.tsx`, 64 s, na página de vídeos. Voz: 485 créditos. Ele posta.
+- **Publicar direto pelo Windsor exige um link público direto do MP4.** A página de vídeos é privada e o conector do Drive não aceita arquivo de 14 MB; por enquanto ele baixa da página e posta.
 - Próximas na fila: Present Perfect × Simple Past (B1, sábado da semana 3) · depois semana 4: Cores e adjetivos (A1), Simple Past regular e "-ed" (A2), Mixed Conditionals (B2).
 - Avatar: 10 expressões novas (folha enviada por ele em 01/11), inclusive pensando (mão no queixo) no contador. Os PNGs não ficam no repositório (público): pedir a folha de novo ou recortar dos vídeos publicados.
 - Série viral (`scripts/render_viral.py`, variável `VIRAL`): basico, very, brasileiro, obrigado, isare — já refeitos no formato loop.
