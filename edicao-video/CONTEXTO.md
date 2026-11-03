@@ -5,7 +5,7 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 
 ## Quem é e regras gerais
 - Eliezio Souza: corretor de imóveis, fotógrafo e professor de inglês. Português sem jargão de IA.
-- **Instagram do Teacher é @teacher.eliezio (com ponto)**, corrigido em 03/11/2026 (os vídeos antigos saíram com @teachereliezio na tela). Conectado ao Windsor.ai no plano gratuito (1 conta só): dá para publicar as aulas por lá depois do OK.
+- **Instagram do Teacher é @teacher.eliezio (com ponto)**, corrigido em 03/11/2026 (os vídeos antigos saíram com @teachereliezio na tela). Conectado ao Windsor.ai (conector instagram, conta 17841457973610805) no plano gratuito, 1 conta só: as outras 4 contas saíram. Publicar as aulas por lá depois do OK.
 - Dois canais que **nunca se misturam**:
   - **Eliezio Souza** (opinião · atualidades · reações): marinho e dourado, barra lateral, caixa de manchete, legenda karaokê. Regras em `README.md` e na skill `.claude/skills/edicao-videos-eliezio`.
   - **Teacher Eliezio** (aulas de inglês): marinho e amarelo, avatar 3D, quiz com contador. Regras em `TEACHER.md`.
@@ -26,7 +26,7 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 - Página de vídeos do canal (novo no topo): https://claude.ai/artifact/Br8ebANZH1TaR4wNAv7RwE
 - Feitas: s1-a1, s1-a2, s1-b1, s1-b2, s2-a1, s2-a2, s3-a1, s5-a1, s9-a2, **s4-a1 (Numbers 1–100, `scripts/render_short_numeros.py`)**.
 - **A, an, the (s5-a1) feita em 01/11/2026 no Remotion** (`remotion-teacher/` + `scripts/prep_aula_artigos.py`), capa 1 escolhida ("A ou AN? Você erra essa?"), publicada e postada (marcada como feita no controle). Voz: 657 créditos.
-- **Plural (s6-a1) feita em 02/11/2026 no Remotion** (`scripts/aulas/aula_plural.py`, `remotion-teacher/src/Plural.tsx`), 69 s, publicada na página de vídeos; falta ele postar. Voz: 676 créditos.
+- **Plural (s6-a1) feita em 02/11/2026 no Remotion** (`scripts/aulas/aula_plural.py`, `remotion-teacher/src/Plural.tsx`), 69 s, publicada e postada em 03/11 (com o @ antigo na tela). Voz: 676 créditos.
 - Próximas na fila: Present Perfect × Simple Past (B1, sábado da semana 3) · depois semana 4: Cores e adjetivos (A1), Simple Past regular e "-ed" (A2), Mixed Conditionals (B2).
 - Avatar: 10 expressões novas (folha enviada por ele em 01/11), inclusive pensando (mão no queixo) no contador. Os PNGs não ficam no repositório (público): pedir a folha de novo ou recortar dos vídeos publicados.
 - Série viral (`scripts/render_viral.py`, variável `VIRAL`): basico, very, brasileiro, obrigado, isare — já refeitos no formato loop.
