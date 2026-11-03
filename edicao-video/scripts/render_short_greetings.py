@@ -204,7 +204,7 @@ def challenge(fr, t):
     put(fr, txt("ACERTOU OS 2?", ANTON(120), YEL, 7), 540, 600, k, 0.9 + 0.1 * bo((t - T(34.9)) / 0.4))
     put(fr, chip("COMENTA SE VOCÊ ACERTOU", RED_B, WHITE, 44), 540, 780, k, (0.6 + 0.4 * bo((t - T(34.9)) / 0.35, 2.2)) * (1 + 0.03 * math.sin(t * 6)))
     put(fr, emoji("👇", 64), 540, 860 + 6 * math.sin(t * 6), k)
-    if t > T(36.3): put(fr, chip("SIGA @teachereliezio", WHITE, INK, 42), 540, 960, k, (0.6 + 0.4 * bo((t - T(36.3)) / 0.35, 2.2)) * (1 + 0.04 * math.sin(t * 5)))
+    if t > T(36.3): put(fr, chip("SIGA @teacher.eliezio", WHITE, INK, 42), 540, 960, k, (0.6 + 0.4 * bo((t - T(36.3)) / 0.35, 2.2)) * (1 + 0.04 * math.sin(t * 5)))
     if t > T(37.2): put(fr, chip("SALVA PRA REVISAR DEPOIS", YEL, INK, 36), 540, 1060, k, 0.6 + 0.4 * bo((t - T(37.2)) / 0.35, 2.2))
 def captions(fr, t):
     for p in PAIRS:

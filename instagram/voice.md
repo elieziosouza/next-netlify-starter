@@ -65,9 +65,9 @@ Para melhorar este arquivo: mande 3 posts ou roteiros seus de cada conta e peça
 - **Provas:** {{número de casamentos, depoimentos com autorização}}
 - **CTA:** {{ex.: comenta DATA para saber se a sua está livre}}
 
-## 4. Teacher Eliezio (aulas de inglês): @teachereliezio
+## 4. Teacher Eliezio (aulas de inglês): @teacher.eliezio
 
-- **Quem:** Eliezio, professor de inglês. Canal para o Ensino Fundamental e o Médio, e adultos começando do zero.
+- **Quem:** Eliezio, professor de inglês. Atenção: o @ tem ponto (@teacher.eliezio); a hashtag fica #teachereliezio. Canal para o Ensino Fundamental e o Médio, e adultos começando do zero.
 - **Formato:** Shorts e Reels de 40 s a 1 min, avatar 3D, voz dele (ElevenLabs), quiz com contador e confete.
   Regras completas em `edicao-video/TEACHER.md`. **Essas regras têm prioridade sobre as skills `ig-*`.**
 - **Abertura fixa:** "Hello! Today: <tema>." e logo depois o gancho (pergunta ou erro comum). Não cortar essa abertura,

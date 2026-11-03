@@ -5,6 +5,7 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 
 ## Quem é e regras gerais
 - Eliezio Souza: corretor de imóveis, fotógrafo e professor de inglês. Português sem jargão de IA.
+- **Instagram do Teacher é @teacher.eliezio (com ponto)**, corrigido em 03/11/2026 (os vídeos antigos saíram com @teachereliezio na tela). Conectado ao Windsor.ai no plano gratuito (1 conta só): dá para publicar as aulas por lá depois do OK.
 - Dois canais que **nunca se misturam**:
   - **Eliezio Souza** (opinião · atualidades · reações): marinho e dourado, barra lateral, caixa de manchete, legenda karaokê. Regras em `README.md` e na skill `.claude/skills/edicao-videos-eliezio`.
   - **Teacher Eliezio** (aulas de inglês): marinho e amarelo, avatar 3D, quiz com contador. Regras em `TEACHER.md`.

@@ -229,7 +229,7 @@ def yourturn(fr, t):
         put(fr, chip("RESPONDE NOS COMENTÁRIOS", RED_B, WHITE, 44), 540, 940, k, (0.6 + 0.4 * bo((t - 40.6) / 0.35, 2.2)) * (1 + 0.03 * math.sin(t * 6)))
         put(fr, emoji("👇", 80), 540, 1040 + 8 * math.sin(t * 6), k)
     if t > 42.9: put(fr, chip("📌 SALVA PRA REVISAR" if False else "SALVA PRA REVISAR DEPOIS", YEL, INK, 36), 540, 1300, k, 0.6 + 0.4 * bo((t - 42.9) / 0.35, 2.2))
-    if t > 41.9: put(fr, chip("SIGA @teachereliezio", WHITE, INK, 44), 540, 1170, k, (0.6 + 0.4 * bo((t - 41.9) / 0.35, 2.2)) * (1 + 0.04 * math.sin(t * 5)))
+    if t > 41.9: put(fr, chip("SIGA @teacher.eliezio", WHITE, INK, 44), 540, 1170, k, (0.6 + 0.4 * bo((t - 41.9) / 0.35, 2.2)) * (1 + 0.04 * math.sin(t * 5)))
 def R_fade(img, a):
     return fade(img, a)
 def captions(fr, t):

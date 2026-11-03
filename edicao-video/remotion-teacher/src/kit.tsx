@@ -172,7 +172,7 @@ export const Chamada: React.FC = () => {
     <Pop at={T.cta} y={400} from={0.85}><div style={{ font: "400 140px Anton", color: YEL, ...Outline } as any}>ACERTOU?</div></Pop>
     <Pop at={T.cta + 0.1} y={590}><Chip bg={RED} size={50} style={{ transform: `scale(${1 + 0.03 * Math.sin(t * 6)})` }}>COMENTA AQUI</Chip></Pop>
     <Pop at={T.cta + 0.3} y={690}><Emoji e="👇" size={64} style={{ transform: `translateY(${6 * Math.sin(t * 6)}px)` }} /></Pop>
-    <Pop at={T.follow} y={800}><Chip bg="#fff" color={INK} size={44} style={{ transform: `scale(${1 + 0.04 * Math.sin(t * 5)})` }}>SIGA @teachereliezio</Chip></Pop>
+    <Pop at={T.follow} y={800}><Chip bg="#fff" color={INK} size={44} style={{ transform: `scale(${1 + 0.04 * Math.sin(t * 5)})` }}>SIGA @teacher.eliezio</Chip></Pop>
     <Pop at={T.save} y={910}><Chip bg={YEL} color={INK} size={44}>SALVA PRA REVISAR</Chip></Pop>
   </Cena>);
 };

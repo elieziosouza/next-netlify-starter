@@ -163,7 +163,7 @@ def frame_at(t):
     fr = BG.copy(); header(fr, t)
     {"troca": troca, "lista": lista, "teste": teste}[C["kind"]](fr, t)
     if t > T_SALVA: put(fr, chip("SALVA PRA REVISAR" if C["kind"] != "teste" else "QUANTAS VOCÊ ACERTOU? COMENTA!", YEL, INK, 38 if C["kind"] != "teste" else 32), 540, 1370, 1, (0.6 + 0.4 * bo((t - T_SALVA) / 0.35, 2.2)) * (1 + 0.03 * math.sin(t * 6)))
-    if t > T_SIGA: put(fr, chip("SIGA @teachereliezio", WHITE, INK, 38), 540, 1450, 1, 0.6 + 0.4 * bo((t - T_SIGA) / 0.35, 2.2))
+    if t > T_SIGA: put(fr, chip("SIGA @teacher.eliezio", WHITE, INK, 38), 540, 1450, 1, 0.6 + 0.4 * bo((t - T_SIGA) / 0.35, 2.2))
     avatar(fr, min(t, VO_LEN - 0.01)); progress(fr, t); return fr.convert("RGB")
 # loop: as chamadas entram durante a última frase e o vídeo acaba logo depois da voz, sem tela parada
 VO_LEN = f(VZ["dur"]); TOTAL = VO_LEN + 0.35

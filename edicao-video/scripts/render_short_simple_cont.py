@@ -187,7 +187,7 @@ def challenge(fr, t):
     put(fr, txt("ACERTOU?", ANTON(140), YEL, 7), 540, 420, k, 0.9 + 0.1 * bo((t - T(17.3)) / 0.4))
     put(fr, chip("COMENTA AQUI", RED_B, WHITE, 50), 540, 620, k, (0.6 + 0.4 * bo((t - T(17.4)) / 0.35, 2.2)) * (1 + 0.03 * math.sin(t * 6)))
     put(fr, emoji("👇", 64), 540, 710 + 6 * math.sin(t * 6), k)
-    if t > T(18.2): put(fr, chip("SIGA @teachereliezio", WHITE, INK, 44), 540, 820, k, (0.6 + 0.4 * bo((t - T(18.2)) / 0.35, 2.2)) * (1 + 0.04 * math.sin(t * 5)))
+    if t > T(18.2): put(fr, chip("SIGA @teacher.eliezio", WHITE, INK, 44), 540, 820, k, (0.6 + 0.4 * bo((t - T(18.2)) / 0.35, 2.2)) * (1 + 0.04 * math.sin(t * 5)))
 def captions(fr, t):
     for p in PAIRS:
         if not (p["en"][1] - 0.05 <= t < p["t1"]): continue

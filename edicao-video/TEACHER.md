@@ -20,7 +20,7 @@ outra abertura.
    (por trás dos cartões, para não cobrir o texto) e som leve de papel junto com o "ding" (pedido de 30/10/2026).
 5. Toda pergunta é respondida no próprio vídeo, no formato quiz com contador (pode ter 2 quizzes). Opções na mesma cor até a
    revelação, e nenhum emoji ou cor na legenda que entregue a resposta. Conferir ouvindo onde a pergunta termina e a resposta começa.
-6. Pedido falado para comentar se acertou, seguir e salvar; na tela "COMENTA SE VOCÊ ACERTOU", "SIGA @teachereliezio" e "SALVA PRA REVISAR".
+6. Pedido falado para comentar se acertou, seguir e salvar; na tela "COMENTA SE VOCÊ ACERTOU", "SIGA @teacher.eliezio" e "SALVA PRA REVISAR".
 
 - **Quiz sem lacuna falada (01/11/2026):** a voz nunca fala "blank" nem "___". Ela lê as duas opções completas e pergunta qual está certa ("Which one is correct: a orange, or an orange?"). A lacuna "____" aparece só na tela.
 

@@ -118,7 +118,7 @@ def frame_at(t):
             v = bo((t - ta - 0.35) / 0.3, 2.2); put(fr, chip(good, OKG, WHITE, 44, 26, 22), 780, y, 1, 0.5 + 0.5 * v)
             put(fr, txt(pt, MF("SemiBold", 24), (200, 214, 240), 2), 540, y + 52, clamp((t - ta - 0.5) / 0.3))
     if t > 5.0: put(fr, chip("SALVA PRA REVISAR", YEL, INK, 38), 540, 1370, 1, (0.6 + 0.4 * bo((t - 5.0) / 0.35, 2.2)) * (1 + 0.03 * math.sin(t * 6)))
-    if t > 7.6: put(fr, chip("SIGA @teachereliezio", WHITE, INK, 38), 540, 1450, 1, 0.6 + 0.4 * bo((t - 7.6) / 0.35, 2.2))
+    if t > 7.6: put(fr, chip("SIGA @teacher.eliezio", WHITE, INK, 38), 540, 1450, 1, 0.6 + 0.4 * bo((t - 7.6) / 0.35, 2.2))
     avatar(fr, t); progress(fr, t); return fr.convert("RGB")
 def progress(fr, t):
     d = ImageDraw.Draw(fr); d.rounded_rectangle((60, 1880, 1020, 1892), 6, fill=(60, 84, 128, 255)); d.rounded_rectangle((60, 1880, 60 + 960 * clamp(t / TOTAL), 1892), 6, fill=YEL + (255,))

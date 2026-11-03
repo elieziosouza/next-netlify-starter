@@ -229,7 +229,7 @@ def challenge(fr, t):
     if t > T(41.9):
         put(fr, chip("RESPONDE NOS COMENTÁRIOS", RED_B, WHITE, 44), 540, 980, k, (0.6 + 0.4 * bo((t - T(41.9)) / 0.35, 2.2)) * (1 + 0.03 * math.sin(t * 6)))
         put(fr, emoji("👇", 64), 540, 1060 + 6 * math.sin(t * 6), k)
-    if t > T(43.3): put(fr, chip("SIGA @teachereliezio", WHITE, INK, 40), 540, 1140, k, (0.6 + 0.4 * bo((t - T(43.3)) / 0.35, 2.2)) * (1 + 0.04 * math.sin(t * 5)))
+    if t > T(43.3): put(fr, chip("SIGA @teacher.eliezio", WHITE, INK, 40), 540, 1140, k, (0.6 + 0.4 * bo((t - T(43.3)) / 0.35, 2.2)) * (1 + 0.04 * math.sin(t * 5)))
     if t > T(44.3): put(fr, chip("SALVA PRA REVISAR DEPOIS", YEL, INK, 34), 540, 1215, k, 0.6 + 0.4 * bo((t - T(44.3)) / 0.35, 2.2))
 def captions(fr, t):
     for p in PAIRS:

@@ -239,7 +239,7 @@ def challenge(fr, t):
     if c0 <= t < rv: ring(fr, t, c0, 1060)
     if t >= rv + 0.3: put(fr, chip("CARRO = COISA → IT", C_IT, WHITE, 42), 540, 990, env(t, rv + 0.3, TOTAL, 0.3, 0.01), 0.7 + 0.3 * bo((t - rv - 0.3) / 0.3))
     if t > T(46.4): put(fr, chip("COMENTA SE ACERTOU 👇" if False else "COMENTA SE VOCÊ ACERTOU", RED_B, WHITE, 40), 540, 1080, k, (0.6 + 0.4 * bo((t - T(46.4)) / 0.35, 2.2)) * (1 + 0.03 * math.sin(t * 6)))
-    if t > T(47.4): put(fr, chip("SIGA @teachereliezio", WHITE, INK, 40), 540, 1160, k, (0.6 + 0.4 * bo((t - T(47.4)) / 0.35, 2.2)) * (1 + 0.04 * math.sin(t * 5)))
+    if t > T(47.4): put(fr, chip("SIGA @teacher.eliezio", WHITE, INK, 40), 540, 1160, k, (0.6 + 0.4 * bo((t - T(47.4)) / 0.35, 2.2)) * (1 + 0.04 * math.sin(t * 5)))
     if t > T(48.4): put(fr, chip("SALVA PRA REVISAR DEPOIS", YEL, INK, 34), 540, 1230, k, 0.6 + 0.4 * bo((t - T(48.4)) / 0.35, 2.2))
 def captions(fr, t):
     for p in PAIRS:
