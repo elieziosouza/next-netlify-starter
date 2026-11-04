@@ -16,13 +16,14 @@ def big(img, txt, cy, size, col=R.GOLD_L, band=None, tcol=None, rot=0):
     d.text((lay.width / 2, h / 2 + 4), txt, font=f, fill=(tcol or col) + (255,), anchor="mm", stroke_width=0 if band else 9, stroke_fill=R.NAVY + (255,))
     if rot: lay = lay.rotate(rot, resample=Image.BICUBIC, expand=True)
     R.paste(img, lay, CX - lay.width / 2, cy - lay.height / 2, 0.6, 16, (5, 12))
-def clip(x, w, y, img, y0=0.0, y1=0.55):
+def clip(x, w, y, img, y0=0.0, y1=0.42):
     """só a parte de cima da montagem (o vídeo do Flávio), sem a mulher rindo embaixo"""
     fr = G.cl_img(x); fr = fr[int(fr.shape[0] * y0):int(fr.shape[0] * y1)]
-    h = int(w * fr.shape[0] / fr.shape[1]); box = Image.fromarray(R.rounded(cv2.resize(fr, (w, h), interpolation=cv2.INTER_LANCZOS4), 30, 5))
-    R.paste(img, box, CX - w / 2, y, 0.6, 22, (8, 20)); return y + h
+    h = int(w * fr.shape[0] / fr.shape[1]); lay, pad = G.layered(fr, w, h)                 # cartão com as camadas douradas, levemente em 3D
+    lay = Image.fromarray(R.persp(np.asarray(lay), "left", 0.035))
+    R.paste(img, lay, CX - lay.width / 2, y - pad, 0.6, 22, (8, 20)); return y + h
 def navy(): return Image.fromarray(np.clip(R.NAVYBG, 0, 255).astype(np.uint8)).convert("RGBA")
-def credit(img, y): ImageDraw.Draw(img).text((CX, y), "Vídeo: reprodução redes sociais", font=MF("SemiBold", 22), fill=(220, 220, 228, 230), anchor="mm")
+def credit(img, y): ImageDraw.Draw(img).text((CX, y + 40), "Vídeo: reprodução redes sociais", font=MF("SemiBold", 22), fill=(220, 220, 228, 230), anchor="mm")
 ME_Y0 = 120                                                        # recorte dele começa acima da cabeça: o topo da cabeça nunca sai
 def me_panel(img, top, x, y1=1500):
     me = G.fr_of(G.MEF, x)[ME_Y0:y1]; ph = H - top; fw = int(me.shape[1] * ph / me.shape[0])
@@ -39,7 +40,7 @@ B = navy(); me_panel(B, 840, X_ME); big(B, "FUGIU?", 300, 230, col=(245, 90, 90)
 big(B, "DISSE QUE NÃO SAIRIA DO PAÍS", 520, 64, band=R.NAVY, tcol=R.WHITE); big(B, "E FOI PARA OS EUA", 660, 92, band=R.RED, tcol=R.WHITE, rot=-2)
 BAR.draw_bar(B, 0.0, "canal"); B.alpha_composite(R.top, (R.HDX, 0))
 C = navy(); big(C, "\"NUNCA PENSEI EM SAIR\"", 230, 110); y = clip(3.0, 820, 330, C)
-big(C, "1 DIA DEPOIS: EUA", y + 110, 104, band=R.RED, tcol=R.WHITE, rot=-2); big(C, "FLÁVIO E OS PASSAPORTES", y + 260, 70, band=R.NAVY, tcol=R.WHITE)
+big(C, "1 DIA DEPOIS: EUA", y + 170, 104, band=R.RED, tcol=R.WHITE, rot=-2); big(C, "FLÁVIO E OS PASSAPORTES", y + 320, 70, band=R.NAVY, tcol=R.WHITE)
 credit(C, y + 26); BAR.draw_bar(C, 0.0, "canal"); C.alpha_composite(R.top, (R.HDX, 0))
 for k, im in zip("ABC", (A, B, C)): im.convert("RGB").save(f"{V}/capa_{k}.jpg", quality=95)
 sheet = Image.new("RGB", (1080, 640)); [sheet.paste(Image.open(f"{V}/capa_{k}.jpg").resize((360, 640)), (i * 360, 0)) for i, k in enumerate("ABC")]
