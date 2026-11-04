@@ -34,6 +34,7 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 - Série viral (`scripts/render_viral.py`, variável `VIRAL`): basico, very, brasileiro, obrigado, isare — já refeitos no formato loop.
 
 ## Eliezio Souza (opinião)
+- **04/11/2026:** react "Flávio e os passaportes" (capa A) publicado na página de vídeos (saiu o card "Guerreiro do povo brasileiro" pelo limite de 256 MB). Estilo pedido por ele: cartões 3D, camadas, minimalismo, sem símbolo do TikTok.
 - Página de vídeos: https://claude.ai/artifact/7wTF12GuP8AE3v9AcPqEq7 (limite de 256 MB: ao publicar novo, tirar os cards mais antigos).
 - O vídeo "Região por região" (mapa) foi muito bem: 20,7 mil views, público 55+. Ele quer mais vídeos explicativos com dados nesse estilo.
 - Feito em 30/10: **O novo Congresso** (`scripts/render_congresso.py`, capa A, publicado). Título: "O novo Congresso: quem ganhou e quem perdeu cadeiras #novocongresso #eleicoes2026 #camaradosdeputados #senadofederal".
