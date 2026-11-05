@@ -88,7 +88,7 @@ def ding(d=1.1):
 
 def mix(vo):
     n = int(TOTAL * SR); bed = trilha(TOTAL + 1)[:n]; tl = np.arange(n) / SR
-    gain = 0.09 * np.clip(tl / 0.5, 0, 1) * np.clip(1 - (tl - (TOTAL - 0.8)) / 0.8, 0, 1)
+    gain = (0.0 if getattr(C, "NO_MUSIC", False) else 0.09) * np.clip(tl / 0.5, 0, 1) * np.clip(1 - (tl - (TOTAL - 0.8)) / 0.8, 0, 1)   # NO_MUSIC: aula de sala (compartilhamento de tela)
     for a, b in QZ: gain *= 1 - 0.5 * np.clip((tl - a + 0.3) / 0.3, 0, 1) * np.clip((b + 0.4 - tl) / 0.3, 0, 1)
     writew(f"{V}/song.wav", bed * gain[:, None])
     ev = [(T(a) - 0.15, sfx.whoosh(0.4), 0.12) for a in C.WHOOSH]
