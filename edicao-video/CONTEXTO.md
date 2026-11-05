@@ -34,6 +34,8 @@ Resumo salvo em 30/10/2026 para não carregar o histórico longo (economia de to
 - Série viral (`scripts/render_viral.py`, variável `VIRAL`): basico, very, brasileiro, obrigado, isare — já refeitos no formato loop.
 
 ## Eliezio Souza (opinião)
+- **05/11/2026:** explicativo "Fim da escala 6x1" (capa A + miniatura do YouTube) publicado; saiu o card "É tetra!" (limite de 256 MB). Voz: 1.139 créditos. Regra nova: vídeo acima de 60 s sai também com miniatura 16:9.
+- Ideias guardadas: "Trump perdeu o Congresso. E agora, Flávio?" (explicativo com mapa dos EUA) e "Até os aliados: o racha da direita" (react com Malafaia, carta do Flávio e Tarcísio).
 - **04/11/2026:** react "Flávio e os passaportes" (capa A) publicado na página de vídeos (saiu o card "Guerreiro do povo brasileiro" pelo limite de 256 MB). Estilo pedido por ele: cartões 3D, camadas, minimalismo, sem símbolo do TikTok.
 - Página de vídeos: https://claude.ai/artifact/7wTF12GuP8AE3v9AcPqEq7 (limite de 256 MB: ao publicar novo, tirar os cards mais antigos).
 - O vídeo "Região por região" (mapa) foi muito bem: 20,7 mil views, público 55+. Ele quer mais vídeos explicativos com dados nesse estilo.
