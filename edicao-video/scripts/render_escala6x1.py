@@ -250,6 +250,28 @@ def capa(out, var="A"):
             put(fr, layered(hours_card(lab, sub, hrs, col)), CX, 700 + i * 190)
         put(fr, chipimg("O SEU SALÁRIO NÃO CAI", (40, 150, 90), 46), CX, 1330)
     BAR.draw_bar(fr, 0.0, "canal"); fr.alpha_composite(R.top, (R.HDX, 0)); fr.convert("RGB").save(out, quality=95)
+def capa_yt(out, var="A"):
+    """miniatura horizontal do YouTube (16:9, 1280x720): acima de 60 s o vídeo vai para vídeos longos"""
+    YW, YH = 1280, 720
+    bg = cv2.resize(OCEAN[300:300 + 1080 * 1080 // 1920 * 2:, :], (YW, YH)) if False else cv2.resize(OCEAN[420:1500, :], (YW, YH), interpolation=cv2.INTER_AREA)
+    fr = Image.fromarray(bg).convert("RGBA"); d = ImageDraw.Draw(fr)
+    d.rectangle((0, 0, 14, YH), fill=GOLD + (255,))                                  # filete dourado da marca na borda esquerda
+    def tx(s_, size, col, x, y, anchor="lm", st=8, maxw=600):
+        while d.textlength(s_, font=ANTON(size)) > maxw: size -= 4
+        d.text((x, y), s_, font=ANTON(size), fill=col + (255,), anchor=anchor, stroke_width=st, stroke_fill=NAVY + (255,))
+    if var == "A":
+        fr.alpha_composite(chipimg("TRABALHO · CLT", GOLD, 34, NAVY), (60, 50))
+        tx("FIM DA", 120, WHITE, 60, 200, maxw=560); tx("ESCALA 6x1", 150, GOLD_L, 60, 335, maxw=580)
+        tx("O QUE MUDA E QUANDO", 64, WHITE, 60, 470, st=6, maxw=580)
+        fr.alpha_composite(chipimg("SEM REDUZIR SALÁRIO", (40, 150, 90), 40), (60, 540))
+        cal = layered(calendar(W5)); cal = cal.resize((int(cal.width * 0.70), int(cal.height * 0.70)), Image.LANCZOS)
+        cal = Image.fromarray(R.persp(np.asarray(cal), "right", 0.05)); fr.alpha_composite(cal, (YW - cal.width - 24, 96))
+        for i, (lab, sub, hrs, col) in enumerate([("HOJE", "1 folga", 44, (120, 132, 156)), ("DEZ / 2026", "2 folgas", 42, GOLD), ("DEZ / 2027", "2 folgas", 40, (60, 200, 120))]):
+            c = layered(hours_card(lab, sub, hrs, col, w=500)); c = c.resize((int(c.width * 0.66), int(c.height * 0.66)), Image.LANCZOS)
+            fr.alpha_composite(c, (YW - c.width - 34, 318 + i * 118))
+        st_ = stamp("ACABOU", RED, 64, -8); fr.alpha_composite(st_, (YW - st_.width - 40, 22))
+    d = ImageDraw.Draw(fr); d.text((60, YH - 34), "ELIEZIO SOUZA  ·  OPINIÃO · ATUALIDADES · REAÇÕES", font=MF("SemiBold", 22), fill=GOLD_L + (230,), anchor="lm")
+    fr.convert("RGB").save(out, quality=92)
 def audio(vout):
     SR = 48000; n = int(TOTAL * SR)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f"{V}/vo.mp3", "-ar", "48000", "-ac", "2", f"{V}/vo48.wav"], check=True)
@@ -271,6 +293,7 @@ def audio(vout):
                     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", OUTFILE], check=True)
 def main():
     if MODE == "lib": return
+    if MODE.startswith("yt"): capa_yt(OUTFILE, MODE.split(":")[1] if ":" in MODE else "A"); return
     if MODE.startswith("capa"): capa(OUTFILE, MODE.split(":")[1] if ":" in MODE else "A"); return
     if MODE.startswith("frames"):
         ts = [float(v) for v in MODE.split(":")[1].split(",")]
