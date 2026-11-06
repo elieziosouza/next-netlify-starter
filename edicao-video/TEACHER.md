@@ -34,3 +34,5 @@ outra abertura.
 ## Scripts
 - `render_short_present_continuous.py` (Short com exercício e CTAs), `render_short_comparative.py`, `render_aula_datas_vo.py` (quiz com
   contador e silêncio aberto na fala: `PINS` e `GAP`).
+
+- **Fechamento aprovado (06/11/2026):** ele gostou do fim da aula de Superlativos, com a voz dizendo "Follow Teacher Eliezio!" junto do cartão SIGA @teacher.eliezio. Usar esse fechamento nas próximas aulas.
