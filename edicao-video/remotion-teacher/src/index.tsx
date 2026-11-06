@@ -8,6 +8,8 @@ import { Quiz7, Quiz7Capa } from "./Quiz7";
 import TQ from "./timings/quiz7.json";
 import { SimplePast, ExplicacaoStill, LicaoStill, SimplePastCapa } from "./SimplePast";
 import TS from "./timings/simplepast.json";
+import { Superlativos, SuperlativosCapa } from "./Superlativos";
+import TSU from "./timings/superlativos.json";
 
 // uma composição por aula (vídeo) e uma still por capa
 const Root: React.FC = () => (
@@ -23,6 +25,8 @@ const Root: React.FC = () => (
     <Still id="SimplePastExplicacao" component={ExplicacaoStill} width={1920} height={1080} />
     <Still id="SimplePastLicao" component={LicaoStill} width={1920} height={1080} />
     <Still id="SimplePastCapa" component={SimplePastCapa} width={1920} height={1080} />
+    <Composition id="Superlativos" component={Superlativos} width={1080} height={1920} fps={TSU.fps} durationInFrames={Math.round(TSU.total * TSU.fps)} />
+    <Still id="SuperlativosCapa" component={SuperlativosCapa} width={1080} height={1920} />
   </>
 );
 registerRoot(Root);
