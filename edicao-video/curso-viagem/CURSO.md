@@ -1,0 +1,20 @@
+# Mini curso "Inglês para Viajar com o Teacher Eliezio" (Kiwify)
+
+Combinado em 07/11/2026:
+- 7 aulas de 3 a 4 min, horizontal 1920x1080, Remotion (`remotion-teacher/src/Viagem<N>.tsx`) e `scripts/aulas/aula_viagem<N>.py`.
+- O que não couber na aula vai para o PDF da aula (HTML em `curso-viagem/aula<N>_pdf.html`, gerado com `node mkpdf.cjs entrada.html saida.pdf`).
+- Voz do professor: a dele (njASsAgVyTCHG8OdIeWh). Simulações: pode usar mais de uma voz, uma por personagem.
+  - Oficial da imigração: Roger (CwhRBWXzGAHq8TQ4Fs17)
+  - Atendentes mulheres (hotel, loja): Jessica (cgSgspJ2msm6clMCkdW9)
+  - Atendentes homens jovens (garçom, motorista): Will (bIHbv24MWmeRgasZH58o)
+- Sempre roteiro + custo (estimate_only) e esperar o OK antes de gerar voz.
+- Ao terminar: cadastro na Kiwify (ele sobe os arquivos; eu preparo os textos).
+
+Aulas:
+1. No aeroporto: check-in e imigração (feita 07/11/2026, 1.570 créditos)
+2. No hotel
+3. No restaurante: pedir
+4. No restaurante: pagar e gorjeta
+5. Na rua: pedir informação
+6. Transporte: táxi, Uber, metrô
+7. Compras e emergências + encerramento
