@@ -12,6 +12,8 @@ import { Superlativos, SuperlativosCapa } from "./Superlativos";
 import TSU from "./timings/superlativos.json";
 import { WasWere, WasWereCapa } from "./WasWere";
 import TWW from "./timings/waswere.json";
+import { Viagem1, Viagem1Capa } from "./Viagem1";
+import TV1 from "./timings/viagem1.json";
 
 // uma composição por aula (vídeo) e uma still por capa
 const Root: React.FC = () => (
@@ -31,6 +33,8 @@ const Root: React.FC = () => (
     <Still id="SuperlativosCapa" component={SuperlativosCapa} width={1080} height={1920} />
     <Composition id="WasWere" component={WasWere} width={1080} height={1920} fps={TWW.fps} durationInFrames={Math.round(TWW.total * TWW.fps)} />
     <Still id="WasWereCapa" component={WasWereCapa} width={1080} height={1920} />
+    <Composition id="Viagem1" component={Viagem1} width={1920} height={1080} fps={TV1.fps} durationInFrames={Math.round(TV1.total * TV1.fps)} />
+    <Still id="Viagem1Capa" component={Viagem1Capa} width={1920} height={1080} />
   </>
 );
 registerRoot(Root);
