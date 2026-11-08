@@ -18,6 +18,8 @@ Aulas:
 2. No hotel (feita 08/11/2026, 1.467 créditos; simulação com recepcionista Jessica + respostas na voz dele)
 3. No restaurante: pedir (feita 08/11/2026, 1.234 créditos; garçom Will + respostas na voz dele)
 4. No restaurante: pagar e gorjeta (feita 08/11/2026, 1.327 créditos; garçom Will + respostas na voz dele)
-5. Na rua: pedir informação
-6. Transporte: táxi, Uber, metrô
-7. Compras e emergências + encerramento
+5. Na rua: pedir e entender direções (feita 08/11/2026, 1.346 créditos; moça na rua Jessica)
+6. Transporte: táxi, Uber e metrô (feita 08/11/2026, 1.191 créditos; motorista Chris)
+7. Compras e emergências + encerramento (feita 08/11/2026, 1.337 créditos; vendedora Jessica; PDF com resumo e certificado)
+
+Aulas 5 a 7 geradas com `curso-viagem/gera_aula.py` (voz + config + composição) e `curso-viagem/gera_pdf.py` (PDF).

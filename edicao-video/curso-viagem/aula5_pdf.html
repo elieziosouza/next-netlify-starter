@@ -1,0 +1,87 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<title>Inglês para Viajar · Aula 5 · Na rua</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:Anton;src:url(Anton-Regular.ttf)}
+@page{size:A4;margin:0}
+:root{--navy:#0a1a38;--navy2:#123372;--blue:#2f6fd6;--yel:#ffd640;--ink:#101626;--muted:#5d6886;--line:#e3e8f2;--soft:#f4f6fb;--green:#1f9d57;--red:#d9443a;--teal:#1aa39a}
+*{box-sizing:border-box}
+body{margin:0;font-family:Montserrat,sans-serif;color:var(--ink);font-size:10.5pt;line-height:1.45;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:210mm;height:297mm;position:relative;overflow:hidden;break-after:page;padding:16mm 15mm 18mm}
+.page:last-child{break-after:auto}
+.disp{font-family:Anton,Impact,sans-serif;font-weight:400;letter-spacing:.01em}
+/* ---------- capa ---------- */
+.cover{background:radial-gradient(120% 80% at 75% 20%,#2a5cc0 0%,#123372 45%,#0a1a38 100%);color:#fff;padding:18mm 16mm}
+.cover .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:9mm 9mm}
+.cover .tag{display:inline-block;background:var(--yel);color:#3d2f00;font-weight:900;font-size:9pt;letter-spacing:.18em;padding:2.2mm 4.5mm;border-radius:99px;position:relative}
+.cover h1{position:relative;font-size:66pt;line-height:.92;margin:9mm 0 3mm}
+.cover h1 span{color:var(--yel)}
+.cover .sub{position:relative;font-size:14pt;font-weight:700;color:#cfdaf3;max-width:92mm}
+.cover .av{position:absolute;right:12mm;top:70mm;width:78mm;height:78mm;border-radius:50%;background:var(--yel);box-shadow:0 0 0 4mm rgba(255,214,64,.25),0 18mm 30mm rgba(0,0,0,.45)}
+.cover .av img{position:absolute;left:4mm;top:4mm;width:70mm;height:70mm}
+.cover .emo{position:absolute;right:20mm;top:156mm;font-size:30pt;letter-spacing:4mm}
+.learn{position:absolute;left:16mm;right:16mm;bottom:40mm;background:rgba(255,255,255,.08);border:1px solid rgba(255,214,64,.4);border-radius:6mm;padding:7mm 8mm}
+.learn h3{margin:0 0 3mm;font-size:10pt;letter-spacing:.16em;color:var(--yel);font-weight:900}
+.learn ul{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:2.5mm 8mm}
+.learn li{font-weight:700;font-size:11pt;padding-left:7mm;position:relative}
+.learn li:before{content:"✓";position:absolute;left:0;color:var(--yel);font-weight:900}
+.brand{position:absolute;left:16mm;right:16mm;bottom:16mm;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#cfdaf3;font-size:9.5pt}
+.brand b{color:#fff;font-size:12pt}
+.pill{display:inline-block;background:#fff;color:var(--navy);font-weight:900;padding:1.6mm 4mm;border-radius:99px;font-size:9pt}
+/* ---------- páginas internas ---------- */
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7mm}
+.top .l{font-weight:900;font-size:8.5pt;letter-spacing:.18em;color:var(--blue)}
+.top .r{font-weight:700;font-size:8.5pt;color:var(--muted)}
+.foot{position:absolute;left:15mm;right:15mm;bottom:9mm;display:flex;justify-content:space-between;font-size:8pt;color:var(--muted);border-top:1px solid var(--line);padding-top:2.5mm}
+.sec{display:flex;align-items:center;gap:4mm;margin:0 0 4mm}
+.num{width:11mm;height:11mm;border-radius:3mm;background:var(--navy);color:var(--yel);display:grid;place-items:center;font-family:Anton;font-size:17pt}
+.sec h2{margin:0;font-family:Anton;font-weight:400;font-size:24pt;line-height:1;color:var(--navy)}
+.sec small{display:block;font-size:9pt;font-weight:700;color:var(--muted);margin-top:1mm}
+.card{border:1px solid var(--line);border-radius:4mm;padding:3.4mm 4.5mm;margin-bottom:2.6mm;display:grid;grid-template-columns:9mm 1fr;gap:3.5mm;align-items:start;background:#fff;box-shadow:0 1.2mm 3mm rgba(16,22,38,.05)}
+.card .e{font-size:16pt;line-height:1.1}
+.en{font-weight:800;font-size:12.5pt;color:var(--ink)}
+.pron{display:inline-block;margin-top:1mm;font-size:8.5pt;font-weight:700;color:var(--blue);background:#eaf1fd;border-radius:99px;padding:.6mm 2.6mm}
+.pt{color:var(--muted);font-weight:600;font-size:9.5pt;margin-top:1mm}
+.qa{border-left:1.6mm solid var(--blue)}
+.ans{margin-top:2.2mm;display:flex;flex-wrap:wrap;gap:2mm;align-items:center}
+.ans .lb{font-size:7.5pt;font-weight:900;letter-spacing:.14em;color:var(--green)}
+.ans .a{background:#e6f6ec;color:#11683a;font-weight:800;border-radius:2mm;padding:.8mm 2.8mm;font-size:10pt}
+.tip{background:linear-gradient(135deg,#fff6cc,#fff0a8);border-radius:4mm;padding:4.5mm 6mm;display:grid;grid-template-columns:12mm 1fr;gap:3mm;align-items:center;margin-top:4mm}
+.tip .i{font-size:22pt}
+.tip b.t{font-family:Anton;font-weight:400;font-size:14pt;color:#5c4700;display:block;letter-spacing:.02em}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:3mm}
+table.more{width:100%;border-collapse:separate;border-spacing:0 2mm}
+table.more td{padding:2.8mm 4mm;background:var(--soft);vertical-align:top}
+table.more td:first-child{border-radius:3mm 0 0 3mm;font-weight:800;width:56%}
+table.more td:last-child{border-radius:0 3mm 3mm 0;color:var(--muted);font-weight:600}
+table.more .pron{font-size:7.8pt}
+.voc{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5mm}
+.voc div{border:1px solid var(--line);border-radius:3mm;padding:2.5mm 3mm;display:flex;gap:2mm;align-items:center}
+.voc .e{font-size:13pt}
+.voc b{display:block;font-size:9.5pt}
+.voc span{font-size:8.5pt;color:var(--muted);font-weight:600}
+.dlg{border-radius:4mm;overflow:hidden;border:1px solid var(--line)}
+.dlg .row{display:grid;grid-template-columns:24mm 1fr;padding:1.7mm 4mm;border-bottom:1px solid var(--line);align-items:start}
+.dlg .row:last-child{border:0}
+.dlg .who{font-size:8pt;font-weight:900;letter-spacing:.1em;padding-top:.6mm}
+.dlg .o .who{color:var(--blue)} .dlg .y{background:#f2fbf5} .dlg .y .who{color:var(--green)}
+.dlg .row div{font-weight:700}
+.dlg .row small{display:block;color:var(--muted);font-weight:600;font-size:8.5pt}
+.ex{border:1.5px dashed #c7cfe2;border-radius:4mm;padding:4mm 5mm;margin-bottom:3mm}
+.ex .q{font-weight:800}
+.ex .ln{border-bottom:1.2px solid #b9c2d8;height:8mm}
+.check{display:grid;grid-template-columns:1fr 1fr;gap:2.5mm 6mm;margin-top:2mm}
+.check div{display:flex;gap:2.5mm;align-items:center;font-weight:700;font-size:10pt}
+.check i{width:5mm;height:5mm;border:2px solid var(--navy);border-radius:1.4mm;flex:none}
+.next{margin-top:12mm;background:var(--navy);color:#fff;border-radius:5mm;padding:6mm 7mm;display:flex;align-items:center;gap:6mm}
+.next .av2{width:24mm;height:24mm;border-radius:50%;background:var(--yel);flex:none;position:relative}
+.next .av2 img{position:absolute;left:1.5mm;top:1.5mm;width:21mm;height:21mm}
+.next b{font-family:Anton;font-weight:400;font-size:20pt;color:var(--yel);display:block;line-height:1.05}
+</style></head><body>
+<section class="page cover"><div class="grid"></div>
+  <span class="tag">✈️ INGLÊS PARA VIAJAR · AULA 5 DE 7</span>
+  <h1 class="disp" style="font-size:56pt">NA<br><span>RUA</span></h1><div class="sub">Pedir e entender direções: como chegar onde você quer sem se perder.</div>
+  <div class="av"><img src="avatar.png" alt=""></div><div class="emo">🗺️ 🧭 🚶</div>
+  <div class="learn"><h3>NESTA AULA VOCÊ VAI APRENDER</h3><ul><li>Chamar a atenção com educação</li><li>Perguntar como chegar</li><li>Entender esquerda, direita e em frente</li><li>Entender perto, ao lado e do outro lado</li><li>Pedir para repetir devagar</li><li>10 frases extras de direção</li></ul></div>
+  <div class="brand"><div><b>Teacher Eliezio</b><br>@teacher.eliezio</div><span class="pill">GUIA DE BOLSO · SALVE NO CELULAR</span></div></section><section class="page"><div class="top"><span class="l">✈️ INGLÊS PARA VIAJAR · AULA 5</span><span class="r">Na rua</span></div><div class="sec"><div class="num">1</div><div><h2>PERGUNTAR</h2><small>Comece sempre com “Excuse me”</small></div></div><div class="two"><div class="card"><div class="e">🙋</div><div><div class="en">Excuse me.</div><span class="pron">eks-kiúz mi</span><div class="pt">Com licença.</div></div></div><div class="card"><div class="e">🏛️</div><div><div class="en">How do I get to the museum?</div><span class="pron">ráu du ai guét tu dâ miu-zí-âm</span><div class="pt">Como eu chego ao museu?</div></div></div><div class="card"><div class="e">🚇</div><div><div class="en">Where is the nearest subway station?</div><span class="pron">uér iz dâ ní-rest sâb-uêi stêi-shân</span><div class="pt">Onde fica a estação de metrô mais próxima?</div></div></div></div><div class="sec" style="margin-top:6mm"><div class="num">2</div><div><h2>ENTENDER A RESPOSTA</h2><small>As palavras que você vai ouvir</small></div></div><div class="two"><div class="card"><div class="e">⬅️</div><div><div class="en">Turn left.</div><span class="pron">târn léft</span><div class="pt">Vire à esquerda.</div></div></div><div class="card"><div class="e">➡️</div><div><div class="en">Turn right.</div><span class="pron">târn ráit</span><div class="pt">Vire à direita.</div></div></div><div class="card"><div class="e">⬆️</div><div><div class="en">Go straight.</div><span class="pron">gôu strêit</span><div class="pt">Siga em frente.</div></div></div><div class="card"><div class="e">🏦</div><div><div class="en">It's next to the bank.</div><span class="pron">its nékst tu dâ bénk</span><div class="pt">Fica ao lado do banco.</div></div></div><div class="card"><div class="e">↔️</div><div><div class="en">It's across the street.</div><span class="pron">its â-krós dâ strít</span><div class="pt">Fica do outro lado da rua.</div></div></div><div class="card"><div class="e">🐢</div><div><div class="en">Could you say that again, more slowly?</div><span class="pron">kud iú sêi dét â-guén, mór slôu-li</span><div class="pt">Pode repetir mais devagar?</div></div></div></div><div class="tip"><div class="i">💡</div><div><b class="t">DICA DE OURO</b>Pergunte também se é longe: <b>“Is it far?”</b> Uma resposta comum é <b>“It's a five-minute walk.”</b> (São cinco minutos a pé.)</div></div><div class="foot"><span>Inglês para Viajar · Teacher Eliezio</span><span>2</span></div></section><section class="page"><div class="top"><span class="l">✈️ INGLÊS PARA VIAJAR · AULA 5</span><span class="r">Na rua</span></div><div class="sec"><div class="num">3</div><div><h2>MAIS 10 FRASES ÚTEIS</h2><small>Para ir além do vídeo</small></div></div><table class="more"><tr><td>Is it near here?<br><span class="pron">iz it nír rír</span></td><td>É perto daqui?</td></tr><tr><td>Can I walk there?<br><span class="pron">kén ai uók dér</span></td><td>Dá para ir a pé?</td></tr><tr><td>Can you show me on the map?<br><span class="pron">kén iú xôu mi ón dâ mép</span></td><td>Pode me mostrar no mapa?</td></tr><tr><td>Go past the church.<br><span class="pron">gôu pést dâ tchârtch</span></td><td>Passe a igreja.</td></tr><tr><td>It's on the corner.<br><span class="pron">its ón dâ kór-nâr</span></td><td>Fica na esquina.</td></tr><tr><td>At the traffic light, turn right.<br><span class="pron">ét dâ tré-fik láit, târn ráit</span></td><td>No semáforo, vire à direita.</td></tr><tr><td>It's two blocks away.<br><span class="pron">its tu blóks â-uêi</span></td><td>Fica a duas quadras.</td></tr><tr><td>I'm lost.<br><span class="pron">áim lóst</span></td><td>Estou perdido.</td></tr><tr><td>Which way is north?<br><span class="pron">uítch uêi iz nórth</span></td><td>Para que lado é o norte?</td></tr><tr><td>Thank you, I'll find it.<br><span class="pron">thénk iú, ail fáind it</span></td><td>Obrigado, vou achar.</td></tr></table><div class="foot"><span>Inglês para Viajar · Teacher Eliezio</span><span>3</span></div></section><section class="page"><div class="top"><span class="l">✈️ INGLÊS PARA VIAJAR · AULA 5</span><span class="r">Na rua</span></div><div class="sec"><div class="num">4</div><div><h2>VOCABULÁRIO</h2><small>Palavras que você vai ouvir e ver</small></div></div><div class="voc"><div><span class="e">⬅️</span><p style="margin:0"><b>left</b><span>esquerda</span></p></div><div><span class="e">➡️</span><p style="margin:0"><b>right</b><span>direita</span></p></div><div><span class="e">⬆️</span><p style="margin:0"><b>straight</b><span>em frente</span></p></div><div><span class="e">🏙️</span><p style="margin:0"><b>block</b><span>quadra</span></p></div><div><span class="e">📐</span><p style="margin:0"><b>corner</b><span>esquina</span></p></div><div><span class="e">🚦</span><p style="margin:0"><b>traffic light</b><span>semáforo</span></p></div><div><span class="e">🛣️</span><p style="margin:0"><b>street / avenue</b><span>rua / avenida</span></p></div><div><span class="e">🗺️</span><p style="margin:0"><b>map</b><span>mapa</span></p></div><div><span class="e">📍</span><p style="margin:0"><b>near / far</b><span>perto / longe</span></p></div><div><span class="e">↔️</span><p style="margin:0"><b>across</b><span>do outro lado</span></p></div><div><span class="e">🧭</span><p style="margin:0"><b>north / south</b><span>norte / sul</span></p></div><div><span class="e">🚶</span><p style="margin:0"><b>walk</b><span>caminhar</span></p></div><div><span class="e">🌉</span><p style="margin:0"><b>bridge</b><span>ponte</span></p></div><div><span class="e">🏛️</span><p style="margin:0"><b>museum</b><span>museu</span></p></div><div><span class="e">🚇</span><p style="margin:0"><b>subway station</b><span>estação de metrô</span></p></div></div><div style="height:5mm"></div><div class="sec"><div class="num">5</div><div><h2>SUA VEZ</h2><small>Escreva a sua resposta</small></div></div><div class="two"><div class="ex"><div class="q">Como pedir licença para perguntar?</div><div class="ln"></div></div><div class="ex"><div class="q">Como perguntar como chegar ao hotel?</div><div class="ln"></div></div><div class="ex"><div class="q">O que significa “Turn right”?</div><div class="ln"></div></div><div class="ex"><div class="q">Como pedir para repetir devagar?</div><div class="ln"></div></div></div><div class="next"><div class="av2"><img src="avatar8.png" alt=""></div><div><b>PRÓXIMA AULA: TRANSPORTE 🚕</b>Táxi, Uber e metrô. Até lá, treine pedir direções em voz alta!</div></div><div class="foot"><span>Inglês para Viajar · Teacher Eliezio</span><span>4</span></div></section><section class="page"><div class="top"><span class="l">✈️ INGLÊS PARA VIAJAR · AULA 5</span><span class="r">Na rua</span></div><div class="sec"><div class="num">6</div><div><h2>A SIMULAÇÃO COMPLETA</h2><small>Leia em voz alta. Depois cubra a coluna “Você” e responda sozinho.</small></div></div><div class="dlg"><div class="row y"><span class="who">VOCÊ</span><div>Excuse me! How do I get to the museum?<small>Com licença! Como eu chego ao museu?</small></div></div><div class="row o"><span class="who">PASSERBY</span><div>Sure! Go straight for two blocks, then turn left.<small>Claro! Siga em frente duas quadras e vire à esquerda.</small></div></div><div class="row y"><span class="who">VOCÊ</span><div>Sorry, could you say that again, more slowly?<small>Desculpe, pode repetir mais devagar?</small></div></div><div class="row o"><span class="who">PASSERBY</span><div>Of course. Go straight, two blocks. Then turn left. It's next to the bank.<small>Claro. Siga em frente, duas quadras. Depois vire à esquerda. Fica ao lado do banco.</small></div></div><div class="row y"><span class="who">VOCÊ</span><div>Is it far?<small>É longe?</small></div></div><div class="row o"><span class="who">PASSERBY</span><div>No, it's a five-minute walk.<small>Não, são cinco minutos a pé.</small></div></div><div class="row y"><span class="who">VOCÊ</span><div>Thank you so much!<small>Muito obrigado!</small></div></div><div class="row o"><span class="who">PASSERBY</span><div>You're welcome! Have a nice day!<small>De nada! Tenha um bom dia!</small></div></div></div><div class="sec" style="margin-top:6mm"><div class="num">7</div><div><h2>CHECKLIST</h2><small>Marque o que você já treinou</small></div></div><div class="check"><div><i></i>Sei pedir licença</div><div><i></i>Sei perguntar como chegar</div><div><i></i>Entendo left e right</div><div><i></i>Entendo go straight</div><div><i></i>Sei pedir para repetir</div><div><i></i>Sei perguntar se é longe</div><div><i></i>Li a simulação em voz alta</div><div><i></i>Salvei este guia no celular</div></div><div class="foot"><span>Inglês para Viajar · Teacher Eliezio · @teacher.eliezio</span><span>5</span></div></section>
+</body></html>

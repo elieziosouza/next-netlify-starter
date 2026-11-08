@@ -20,6 +20,12 @@ import { Viagem3, Viagem3Capa, Viagem3Capa916 } from "./Viagem3";
 import TV3 from "./timings/viagem3.json";
 import { Viagem4, Viagem4Capa, Viagem4Capa916 } from "./Viagem4";
 import TV4 from "./timings/viagem4.json";
+import { Viagem7, Viagem7Capa, Viagem7Capa916 } from "./Viagem7";
+import TV7 from "./timings/viagem7.json";
+import { Viagem6, Viagem6Capa, Viagem6Capa916 } from "./Viagem6";
+import TV6 from "./timings/viagem6.json";
+import { Viagem5, Viagem5Capa, Viagem5Capa916 } from "./Viagem5";
+import TV5 from "./timings/viagem5.json";
 
 // uma composição por aula (vídeo) e uma still por capa
 const Root: React.FC = () => (
@@ -54,6 +60,15 @@ const Root: React.FC = () => (
     <Composition id="Viagem4" component={Viagem4} width={1920} height={1080} fps={TV4.fps} durationInFrames={Math.round(TV4.total * TV4.fps)} />
     <Still id="Viagem4Capa" component={Viagem4Capa} width={1920} height={1080} />
     <Still id="Viagem4Capa916" component={Viagem4Capa916} width={1080} height={1920} />
+    <Composition id="Viagem5" component={Viagem5} width={1920} height={1080} fps={TV5.fps} durationInFrames={Math.round(TV5.total * TV5.fps)} />
+    <Still id="Viagem5Capa" component={Viagem5Capa} width={1920} height={1080} />
+    <Still id="Viagem5Capa916" component={Viagem5Capa916} width={1080} height={1920} />
+    <Composition id="Viagem6" component={Viagem6} width={1920} height={1080} fps={TV6.fps} durationInFrames={Math.round(TV6.total * TV6.fps)} />
+    <Still id="Viagem6Capa" component={Viagem6Capa} width={1920} height={1080} />
+    <Still id="Viagem6Capa916" component={Viagem6Capa916} width={1080} height={1920} />
+    <Composition id="Viagem7" component={Viagem7} width={1920} height={1080} fps={TV7.fps} durationInFrames={Math.round(TV7.total * TV7.fps)} />
+    <Still id="Viagem7Capa" component={Viagem7Capa} width={1920} height={1080} />
+    <Still id="Viagem7Capa916" component={Viagem7Capa916} width={1080} height={1920} />
   </>
 );
 registerRoot(Root);
