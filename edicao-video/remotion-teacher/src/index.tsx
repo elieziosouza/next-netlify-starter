@@ -16,6 +16,8 @@ import { Viagem1, Viagem1Capa, Viagem1Capa916, CursoQuadrado, CursoCheckout, Cur
 import TV1 from "./timings/viagem1.json";
 import { Viagem2, Viagem2Capa, Viagem2Capa916 } from "./Viagem2";
 import TV2 from "./timings/viagem2.json";
+import { Viagem3, Viagem3Capa, Viagem3Capa916 } from "./Viagem3";
+import TV3 from "./timings/viagem3.json";
 
 // uma composição por aula (vídeo) e uma still por capa
 const Root: React.FC = () => (
@@ -44,6 +46,9 @@ const Root: React.FC = () => (
     <Composition id="Viagem2" component={Viagem2} width={1920} height={1080} fps={TV2.fps} durationInFrames={Math.round(TV2.total * TV2.fps)} />
     <Still id="Viagem2Capa" component={Viagem2Capa} width={1920} height={1080} />
     <Still id="Viagem2Capa916" component={Viagem2Capa916} width={1080} height={1920} />
+    <Composition id="Viagem3" component={Viagem3} width={1920} height={1080} fps={TV3.fps} durationInFrames={Math.round(TV3.total * TV3.fps)} />
+    <Still id="Viagem3Capa" component={Viagem3Capa} width={1920} height={1080} />
+    <Still id="Viagem3Capa916" component={Viagem3Capa916} width={1080} height={1920} />
   </>
 );
 registerRoot(Root);
