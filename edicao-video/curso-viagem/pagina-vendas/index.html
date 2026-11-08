@@ -116,6 +116,16 @@ section.block { padding-block: 56px }
 .final { text-align: center; display: grid; gap: 16px; justify-items: center; padding-block: 56px 70px }
 .final h2 { font-size: clamp(1.9rem, 4.2vw, 2.6rem) }
 footer { padding-block: 26px 40px; color: var(--muted); font-size: .88rem; text-align: center; border-top: 1px solid var(--line) }
+.buybar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: rgba(13,20,34,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,.12);
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  transform: translateY(110%); transition: transform .25s ease }
+.buybar.on { transform: none }
+.buybar .in { max-width: 980px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px }
+.buybar .pr { line-height: 1.2; font-size: .82rem; color: var(--muted) }
+.buybar .pr s { color: var(--muted) }
+.buybar .pr b { display: block; color: var(--ink); font-family: var(--display); font-size: 1.35rem }
+.buybar .btn { padding: 12px 22px; flex: none }
+body { padding-bottom: 76px }
 </style>
 
 <nav class="band"><div class="wrap">
@@ -132,7 +142,7 @@ footer { padding-block: 26px 40px; color: var(--muted); font-size: .88rem; text-
       <a class="btn" href="https://pay.kiwify.com.br/KEnga6D" target="_blank" rel="noopener">Quero o curso · R$ 27</a>
       <a class="link" href="#amostra">Ver a aula grátis</a>
     </div>
-    <div class="mini"><span><b>7</b> videoaulas</span><span><b>7</b> PDFs de bolso</span><span><b>7 dias</b> de garantia</span></div>
+    <div class="mini"><span><s>R$ 59</s> <b>R$ 27</b> por tempo limitado</span><span><b>7</b> videoaulas</span><span><b>7</b> PDFs de bolso</span><span><b>7 dias</b> de garantia</span></div>
   </div>
   <div class="portrait" aria-hidden="true">
     <div class="disc"></div><img src="avatar.png" alt="">
@@ -194,8 +204,8 @@ footer { padding-block: 26px 40px; color: var(--muted); font-size: .88rem; text-
 
 <section class="band block" id="comprar"><div class="wrap">
   <div class="price">
-    <span class="tag">PREÇO DE LANÇAMENTO</span>
-    <span class="old">de R$ 47</span>
+    <span class="tag">POR TEMPO LIMITADO</span>
+    <span class="old">de R$ 59</span>
     <span class="now"><small>R$</small>27</span>
     <ul>
       <li>7 videoaulas com simulação</li>
@@ -226,3 +236,21 @@ footer { padding-block: 26px 40px; color: var(--muted); font-size: .88rem; text-
 </main>
 
 <footer class="band"><div class="wrap">Inglês para Viajar · Teacher Eliezio · @teacher.eliezio</div></footer>
+
+<div class="buybar" id="buybar" aria-hidden="true">
+  <div class="in">
+    <span class="pr"><s>R$ 59</s> por tempo limitado<b>R$ 27</b></span>
+    <a class="btn" href="https://pay.kiwify.com.br/KEnga6D" target="_blank" rel="noopener" tabindex="-1">Comprar agora</a>
+  </div>
+</div>
+<script>
+/* barra aparece depois do topo e some quando o quadro de preço está na tela */
+(function () {
+  var bar = document.getElementById("buybar"), hero = document.getElementById("topo"), price = document.getElementById("comprar");
+  if (!bar || !("IntersectionObserver" in window)) return;
+  var heroOn = true, priceOn = false;
+  function upd() { var on = !heroOn && !priceOn; bar.classList.toggle("on", on); bar.setAttribute("aria-hidden", on ? "false" : "true"); bar.querySelector("a").tabIndex = on ? 0 : -1; }
+  new IntersectionObserver(function (e) { heroOn = e[0].isIntersecting; upd(); }).observe(hero);
+  new IntersectionObserver(function (e) { priceOn = e[0].isIntersecting; upd(); }).observe(price);
+})();
+</script>
