@@ -23,9 +23,10 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -.02
 p { margin: 0 }
 .hl { background: var(--sun); color: #14203a; border-radius: 8px; padding: 0 .18em }
 .kicker { font-weight: 800; font-size: .82rem; letter-spacing: .12em; text-transform: uppercase; color: var(--blue) }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--blue); color: var(--btn-ink); font: 800 1rem var(--body); text-decoration: none; padding: 15px 26px; border-radius: 999px; transition: transform .15s, box-shadow .15s; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--sun); color: #14203a; font: 800 1rem var(--body); text-decoration: none; padding: 15px 26px; border-radius: 999px; transition: transform .15s, box-shadow .15s; }
 .btn:hover { transform: translateY(-1px); filter: brightness(.92) }
 .btn:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px }
+.btn:focus-visible { outline-color: #ffffff }
 .link { color: var(--ink); font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--sun) }
 
 /* topo */
@@ -124,7 +125,7 @@ footer { padding-block: 26px 40px; color: var(--muted); font-size: .88rem; text-
 .buybar .pr { line-height: 1.2; font-size: .82rem; color: var(--muted) }
 .buybar .pr s { color: var(--muted) }
 .buybar .pr b { display: block; color: var(--ink); font-family: var(--display); font-size: 1.35rem }
-.buybar .btn { padding: 12px 22px; flex: none; background: var(--sun); color: #14203a; box-shadow: 0 6px 18px rgba(255,214,64,.22) }
+.buybar .btn { padding: 12px 22px; flex: none; box-shadow: 0 6px 18px rgba(255,214,64,.22) }
 body { padding-bottom: 76px }
 </style>
 
