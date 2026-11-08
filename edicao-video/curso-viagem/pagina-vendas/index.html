@@ -45,9 +45,14 @@ nav .btn { padding: 10px 18px; font-size: .92rem; box-shadow: none }
 .portrait { position: relative; justify-self: center; width: min(320px, 80vw); aspect-ratio: 1; max-width: 100% }
 .portrait .disc { position: absolute; inset: 0; border-radius: 50%; background: var(--sun) }
 .portrait img { position: absolute; inset: 6%; width: 88%; height: 88%; object-fit: contain }
-.chip { position: absolute; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; font-weight: 800; font-size: .88rem; box-shadow: 0 10px 24px rgba(20,32,58,.10); white-space: nowrap }
-.chip.a { left: -6%; top: 12% } .chip.b { right: -8%; top: 46% } .chip.c { left: 4%; bottom: 4% }
-@media (max-width: 760px) { .hero .wrap { grid-template-columns: 1fr } .portrait { order: -1; width: min(240px, 70vw) } .chip { font-size: .8rem } }
+.hero { overflow-x: clip }
+.chip { position: absolute; z-index: 2; display: inline-flex; align-items: center; gap: 6px; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; font-weight: 800; font-size: .9rem; box-shadow: 0 10px 24px rgba(0,0,0,.28); white-space: nowrap; animation: bob 4.5s ease-in-out infinite }
+.chip.a { left: -14%; top: 8% } .chip.b { right: -16%; top: 26%; animation-delay: -1.2s } .chip.c { left: -18%; top: 54%; animation-delay: -2.4s }
+.chip.d { right: -12%; bottom: 14%; animation-delay: -3.3s } .chip.e { left: 22%; bottom: -6%; animation-delay: -.6s }
+@keyframes bob { 50% { transform: translateY(-7px) } }
+@media (prefers-reduced-motion: reduce) { .chip { animation: none } }
+@media (max-width: 760px) { .hero .wrap { grid-template-columns: 1fr } .portrait { order: -1; width: min(220px, 56vw); margin-block: 6px 18px } .chip { font-size: .78rem; padding: 6px 11px }
+  .chip.a { left: -30% } .chip.b { right: -32% } .chip.c { left: -36% } .chip.d { right: -28% } .chip.e { left: 18%; bottom: -10% } }
 
 section.block { padding-block: 56px }
 .head { max-width: 620px; margin-bottom: 30px; display: grid; gap: 10px }
@@ -131,6 +136,7 @@ footer { padding-block: 26px 40px; color: var(--muted); font-size: .88rem; text-
   </div>
   <div class="portrait" aria-hidden="true">
     <div class="disc"></div><img src="avatar.png" alt="">
+    <span class="chip a">✈️ Airport</span><span class="chip b">🏨 Hotel</span><span class="chip c">🍽️ Restaurant</span><span class="chip d">🚕 Taxi</span><span class="chip e">🛍️ Shopping</span>
   </div>
 </div></header>
 
