@@ -178,3 +178,20 @@ export const Viagem1Capa: React.FC = () => {
     <Pill bg="#fff" color={INK} size={32}>Teacher Eliezio</Pill>
   </AbsoluteFill>);
 };
+/** capa vertical 9:16 (Reels, Stories e vitrine da Kiwify no celular) */
+export const Viagem1Capa916: React.FC = () => {
+  useFonts();
+  return (<AbsoluteFill style={{ background: BG, alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 34 }}>
+    <AbsoluteFill style={{ backgroundImage: "linear-gradient(rgba(255,255,255,.04) 2px, transparent 2px), linear-gradient(90deg, rgba(255,255,255,.04) 2px, transparent 2px)", backgroundSize: "60px 60px" }} />
+    <Pill bg={C_A} size={38}>✈️ INGLÊS PARA VIAJAR</Pill>
+    <div style={{ font: F(800, 40), color: "#fff", letterSpacing: 6 }}>AULA 1 DE 7</div>
+    <div style={{ display: "flex", gap: 36 }}><Emoji e="🛬" size={140} /><Emoji e="🛂" size={140} /><Emoji e="🧳" size={140} /></div>
+    <Title size={200} color={YEL}>NO<br />AEROPORTO</Title>
+    <Title size={76}>Check-in e imigração<br />sem medo</Title>
+    <div style={{ marginTop: 40, display: "flex", flexDirection: "column", alignItems: "center", gap: 18 }}>
+      <div style={{ width: 300, height: 300, borderRadius: "50%", background: YEL, position: "relative", boxShadow: "0 0 0 16px rgba(255,214,64,.25)" }}>
+        <Img src={staticFile("av/av3d_1.png")} style={{ position: "absolute", left: 14, top: 14, width: 272, height: 272 }} /></div>
+      <Pill bg="#fff" color={INK} size={36}>Teacher Eliezio</Pill>
+    </div>
+  </AbsoluteFill>);
+};
