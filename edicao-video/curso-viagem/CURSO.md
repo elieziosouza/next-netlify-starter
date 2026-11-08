@@ -9,6 +9,7 @@ Combinado em 07/11/2026:
   - Atendentes homens jovens (garçom, motorista): Will (bIHbv24MWmeRgasZH58o)
 - Simulações com fala das duas pessoas (pedido de 08/11/2026): o atendente/oficial fala com a voz do personagem e a resposta do "VOCÊ" é falada na voz dele (clonada), não fica só na tela. A Aula 1 fica como está.
 - Reels de divulgação (pedido de 08/11/2026): sempre entregar um título com 4 hashtags NA MESMA LINHA, com botão de copiar na página do curso. Ex.: "Como pedir comida em inglês sem travar no restaurante 🍽️ #inglesparaviajar #restaurante #frasesemingles #teachereliezio".
+- Reels de divulgação (pedido de 08/11/2026): a capa (título + avatar + "link na bio") entra parada nos primeiros 0,5 s do próprio Reel. Montagem: `curso-viagem/reel_divulgacao.py`.
 - Sempre roteiro + custo (estimate_only) e esperar o OK antes de gerar voz.
 - Ao terminar: cadastro na Kiwify (ele sobe os arquivos; eu preparo os textos).
 
