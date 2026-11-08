@@ -17,7 +17,7 @@ Aulas:
 1. No aeroporto: check-in e imigração (feita 07/11/2026, 1.570 créditos)
 2. No hotel (feita 08/11/2026, 1.467 créditos; simulação com recepcionista Jessica + respostas na voz dele)
 3. No restaurante: pedir (feita 08/11/2026, 1.234 créditos; garçom Will + respostas na voz dele)
-4. No restaurante: pagar e gorjeta
+4. No restaurante: pagar e gorjeta (feita 08/11/2026, 1.327 créditos; garçom Will + respostas na voz dele)
 5. Na rua: pedir informação
 6. Transporte: táxi, Uber, metrô
 7. Compras e emergências + encerramento
