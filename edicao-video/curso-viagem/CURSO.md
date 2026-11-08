@@ -7,6 +7,7 @@ Combinado em 07/11/2026:
   - Oficial da imigração: Roger (CwhRBWXzGAHq8TQ4Fs17)
   - Atendentes mulheres (hotel, loja): Jessica (cgSgspJ2msm6clMCkdW9)
   - Atendentes homens jovens (garçom, motorista): Will (bIHbv24MWmeRgasZH58o)
+- Simulações com fala das duas pessoas (pedido de 08/11/2026): o atendente/oficial fala com a voz do personagem e a resposta do "VOCÊ" é falada na voz dele (clonada), não fica só na tela. A Aula 1 fica como está.
 - Sempre roteiro + custo (estimate_only) e esperar o OK antes de gerar voz.
 - Ao terminar: cadastro na Kiwify (ele sobe os arquivos; eu preparo os textos).
 
