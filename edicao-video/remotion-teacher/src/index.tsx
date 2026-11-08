@@ -12,7 +12,7 @@ import { Superlativos, SuperlativosCapa } from "./Superlativos";
 import TSU from "./timings/superlativos.json";
 import { WasWere, WasWereCapa } from "./WasWere";
 import TWW from "./timings/waswere.json";
-import { Viagem1, Viagem1Capa, Viagem1Capa916 } from "./Viagem1";
+import { Viagem1, Viagem1Capa, Viagem1Capa916, CursoQuadrado, CursoCheckout, CursoModulo } from "./Viagem1";
 import TV1 from "./timings/viagem1.json";
 
 // uma composição por aula (vídeo) e uma still por capa
@@ -36,6 +36,9 @@ const Root: React.FC = () => (
     <Composition id="Viagem1" component={Viagem1} width={1920} height={1080} fps={TV1.fps} durationInFrames={Math.round(TV1.total * TV1.fps)} />
     <Still id="Viagem1Capa" component={Viagem1Capa} width={1920} height={1080} />
     <Still id="Viagem1Capa916" component={Viagem1Capa916} width={1080} height={1920} />
+    <Still id="CursoQuadrado" component={CursoQuadrado} width={1080} height={1080} />
+    <Still id="CursoCheckout" component={CursoCheckout} width={1920} height={480} />
+    <Still id="CursoModulo" component={CursoModulo} width={1000} height={1500} />
   </>
 );
 registerRoot(Root);

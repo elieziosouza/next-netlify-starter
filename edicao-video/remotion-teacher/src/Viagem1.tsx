@@ -195,3 +195,42 @@ export const Viagem1Capa916: React.FC = () => {
     </div>
   </AbsoluteFill>);
 };
+
+// ---------------------------------------------------------------- imagens do produto na Kiwify (curso inteiro, não de uma aula)
+const Grid = () => <AbsoluteFill style={{ backgroundImage: "linear-gradient(rgba(255,255,255,.04) 2px, transparent 2px), linear-gradient(90deg, rgba(255,255,255,.04) 2px, transparent 2px)", backgroundSize: "60px 60px" }} />;
+const AvCirc: React.FC<{ s: number }> = ({ s }) => (
+  <div style={{ width: s, height: s, borderRadius: "50%", background: YEL, position: "relative", boxShadow: `0 0 0 ${s * 0.05}px rgba(255,214,64,.25)`, flex: "none" }}>
+    <Img src={staticFile("av/av3d_1.png")} style={{ position: "absolute", left: s * 0.05, top: s * 0.05, width: s * 0.9, height: s * 0.9 }} /></div>
+);
+const Itens: React.FC<{ size: number; dir?: "row" | "column"; left?: boolean }> = ({ size, dir = "row", left }) => (
+  <div style={{ display: "flex", flexDirection: dir, gap: size * 0.6, flexWrap: "wrap", justifyContent: left ? "flex-start" : "center" }}>
+    {["🎬 7 aulas curtas", "📄 PDF com pronúncia", "🗣️ simulações reais"].map((t) => <Pill key={t} bg="rgba(255,255,255,.12)" size={size}>{t}</Pill>)}
+  </div>
+);
+/** 1080x1080: imagem principal do produto */
+export const CursoQuadrado: React.FC = () => { useFonts(); return (
+  <AbsoluteFill style={{ background: BG, alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 26 }}><Grid />
+    <div style={{ display: "flex", gap: 30 }}><Emoji e="✈️" size={110} /><Emoji e="🏨" size={110} /><Emoji e="🍽️" size={110} /><Emoji e="🗺️" size={110} /></div>
+    <Title size={150} color={YEL}>INGLÊS PARA<br />VIAJAR</Title>
+    <Title size={52}>do aeroporto às emergências</Title>
+    <div style={{ display: "flex", alignItems: "center", gap: 24, marginTop: 10 }}><AvCirc s={170} /><Pill bg="#fff" color={INK} size={38}>com o Teacher Eliezio</Pill></div>
+  </AbsoluteFill>); };
+/** 1920x480: banner do checkout */
+export const CursoCheckout: React.FC = () => { useFonts(); return (
+  <AbsoluteFill style={{ background: BG, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 60, padding: "0 120px" }}><Grid />
+    <AvCirc s={300} />
+    <div style={{ display: "flex", flexDirection: "column", gap: 18, flex: 1 }}>
+      <div style={{ font: `400 120px Anton`, color: YEL, ...OUT, lineHeight: 1 } as any}>INGLÊS PARA VIAJAR</div>
+      <div style={{ font: F(700, 38), color: "#fff" }}>As frases certas do aeroporto às emergências, com o Teacher Eliezio</div>
+      <Itens size={30} left />
+    </div>
+  </AbsoluteFill>); };
+/** 1000x1500: capa vertical do módulo na área de membros */
+export const CursoModulo: React.FC = () => { useFonts(); return (
+  <AbsoluteFill style={{ background: BG, alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 34 }}><Grid />
+    <Pill bg={C_A} size={34}>MINI CURSO · 7 AULAS</Pill>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, auto)", gap: 30 }}>{["✈️", "🏨", "🍽️", "🗺️", "🚕", "🛍️"].map((e) => <Emoji key={e} e={e} size={110} />)}</div>
+    <Title size={170} color={YEL}>INGLÊS<br />PARA<br />VIAJAR</Title>
+    <AvCirc s={240} />
+    <Pill bg="#fff" color={INK} size={36}>Teacher Eliezio</Pill>
+  </AbsoluteFill>); };
