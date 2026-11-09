@@ -40,12 +40,12 @@ def giant_img(txt,col):
     if txt in gcache: return gcache[txt]
     s=260
     while True:
-        f=ImageFont.truetype(f"{FD}/Anton-Regular.ttf",s); b=f.getbbox(txt,stroke_width=4)
+        f=ImageFont.truetype(f"{FD}/Anton-Regular.ttf",s); b=f.getbbox(txt)
         if b[2]-b[0]<=640 and b[3]-b[1]<=250: break
         s-=8
     im=Image.new("RGBA",(b[2]-b[0]+80,b[3]-b[1]+80),(0,0,0,0))
-    # dourado com transparência (pedido de 09/11/2026): preenchimento a 78%, contorno marinho fino a 45%, sombra leve
-    ImageDraw.Draw(im).text((40-b[0],40-b[1]),txt,font=f,fill=GOLD_L+(200,),stroke_width=4,stroke_fill=NAVY+(115,))
+    # dourado com transparência e sem contorno (pedidos de 09/11/2026): preenchimento a 78%, sombra leve
+    ImageDraw.Draw(im).text((40-b[0],40-b[1]),txt,font=f,fill=GOLD_L+(200,))
     sh=Image.new("RGBA",im.size,(0,0,0,0)); sh.putalpha(im.getchannel("A").point(lambda v:int(v*.35)))
     out=Image.new("RGBA",im.size,(0,0,0,0)); out.alpha_composite(sh.filter(ImageFilter.GaussianBlur(16)),(0,8)); out.alpha_composite(im)
     gcache[txt]=out; return out
