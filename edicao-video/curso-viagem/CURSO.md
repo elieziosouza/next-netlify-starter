@@ -23,3 +23,6 @@ Aulas:
 7. Compras e emergências + encerramento (feita 08/11/2026, 1.337 créditos; vendedora Jessica; PDF com resumo e certificado)
 
 Aulas 5 a 7 geradas com `curso-viagem/gera_aula.py` (voz + config + composição) e `curso-viagem/gera_pdf.py` (PDF).
+
+Reel de vendas (10/11/2026): `video_vendas.py` (+ `capas_venda.py`). 37 s, vertical, formato Teacher, oficial (Roger) + voz dele (550 créditos, 1 tomada). Preço dito na voz ("de cinquenta e nove por vinte e sete, por tempo limitado"): quando a promoção acabar, refazer a voz (516 créditos) ou trocar por versão sem preço. Pré-requisitos na pasta de trabalho: prof.mp3, oficial.mp3, segs.json (transcrever.py), av3d_*.png, pdf-1/pdf-2/cert-7.jpg, amostra-capa.jpg, song.wav (nada disso fica no repositório público). Capa embutida com `finaliza_teacher.sh`. Link na bio do @teacher.eliezio: https://teacher-eliezio.vercel.app/
+
