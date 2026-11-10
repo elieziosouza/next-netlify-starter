@@ -79,9 +79,9 @@ Para melhorar este arquivo: mande 3 posts ou roteiros seus de cada conta e peça
 - **Nunca:** ligar um vídeo ao outro ("resposta do último desafio"), cor ou emoji que entregue a resposta antes da hora.
 - **Plano das aulas:** https://claude.ai/artifact/1S2ouhHbcGgVcEsuUpJwq4
 
-## 5. Opinião · Atualidades · Reações: @ezvideos_cortes
+## 5. Opinião · Atualidades · Reações: @eliezio.souza78
 
-- **Redes:** Instagram @ezvideos_cortes · TikTok e Kwai @elieziosouza78 · YouTube @eliezio.souza78
+- **Redes:** Instagram @eliezio.souza78 (era @ezvideos_cortes até 17/10/2026) · TikTok, Kwai e X @elieziosouza78 · YouTube @eliezio.souza78
 - **Formato:** vídeos verticais com ele falando, tela dividida com dados, reacts. Regras em `edicao-video/README.md`
   e na skill `edicao-videos-eliezio`. **Essas regras têm prioridade sobre as skills `ig-*`.**
 - **Público:** 55+ é o que mais assiste; vídeos explicativos com dados e mapa foram os melhores (ex.: "Região por
