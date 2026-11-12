@@ -1,0 +1,270 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Parede da Consciência – 8º B</title>
+<style>
+@page { size: A4; margin: 10mm; }
+@page land { size: A4 landscape; margin: 10mm; }
+* { box-sizing: border-box; margin: 0; }
+body { font-family: "Inter", Arial, sans-serif; color: #1c1a19; font-size: 10.5pt; line-height: 1.4; }
+.page { break-after: page; height: 277mm; display: flex; flex-direction: column; }
+.page:last-child { break-after: auto; }
+.top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4mm; }
+.n { font-weight: 800; letter-spacing: .12em; text-transform: uppercase; font-size: 10pt; color: #8a3a22; }
+.cart { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 10.5pt; }
+.cart i, .sw i { display: inline-block; width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid #1c1a19; }
+.poster { align-self: center; width: 158mm; height: 200mm; border: 2px solid #1c1a19; border-radius: 4px; box-shadow: 4px 6px 0 rgba(0,0,0,.12);
+  padding: 9mm 11mm; display: grid; grid-template-rows: auto 1fr auto auto auto auto; position: relative; }
+.poster h2 { font-family: "Inter Display", "Inter", Arial, sans-serif; font-weight: 900; text-transform: uppercase; text-align: center;
+  color: var(--p); font-size: 38pt; line-height: 1.08; letter-spacing: .01em; align-self: center; }
+.poster h2 .x { color: var(--d); }
+.poster h2 .box { display: inline-block; background: #1c1a19; color: #fbfaf6; padding: 1mm 4mm; margin-top: 2mm; border-radius: 3px; }
+.z { font-size: 7pt; font-weight: 800; letter-spacing: .14em; color: rgba(28,26,25,.45); border-top: 1px dashed rgba(28,26,25,.35); padding-top: 1.5mm; }
+.poster .z:first-child { border-top: none; padding-top: 0; }
+.ic { height: 50mm; display: flex; align-items: center; justify-content: center; padding: 3mm 0; }
+.ic svg { height: 100%; max-width: 120mm; }
+.pq { background: rgba(255,255,255,.55); border: 2px solid var(--p); border-radius: 6px; padding: 3mm 5mm; display: flex; flex-direction: column; gap: 1mm; margin-top: 1mm; }
+.pq b { font-size: 10pt; text-transform: uppercase; letter-spacing: .05em; color: var(--d); }
+.pq span { font-size: 13pt; font-style: italic; }
+.info { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; margin-top: 6mm; }
+.info h3 { font-size: 10pt; text-transform: uppercase; letter-spacing: .06em; color: #8a3a22; margin-bottom: 2mm; }
+.info p { font-size: 10.5pt; }
+.info .m { color: #5b4f45; font-size: 9.5pt; margin-top: 2mm; }
+.sws { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.sw { display: flex; align-items: center; gap: 5px; font-weight: 600; }
+/* capa */
+.capa h1 { font-family: "Inter Display", Arial; font-weight: 900; font-size: 34pt; line-height: 1.05; margin: 2mm 0 3mm; }
+.esc { font-size: 8.5pt; letter-spacing: .1em; text-transform: uppercase; color: #8a3a22; font-weight: 800; }
+.capa .lead { font-size: 12pt; color: #3b322b; max-width: 165mm; }
+.stripe { height: 8px; background: linear-gradient(90deg,#d23a2a 0 25%,#f2c21b 25% 50%,#2f8f4e 50% 75%,#2a63c4 75% 100%); border-radius: 4px; margin: 5mm 0; }
+.passos { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm 10mm; margin-top: 2mm; }
+.passo { display: flex; gap: 4mm; }
+.passo b.num { flex: none; width: 10mm; height: 10mm; border-radius: 50%; background: #1c1a19; color: #fbfaf6; display: flex; align-items: center; justify-content: center; font-size: 13pt; }
+.passo h4 { font-size: 12pt; margin-bottom: 1mm; }
+.passo p { font-size: 10.5pt; color: #3b322b; }
+.esq { display: flex; gap: 10mm; align-items: center; margin-top: 6mm; background: #f6f1e8; border-radius: 8px; padding: 6mm; }
+.mini { width: 52mm; height: 68mm; border: 2px solid #1c1a19; background: #fbfaf6; display: grid; grid-template-rows: 1.3fr 1fr .7fr; flex: none; }
+.mini div { border-bottom: 1.5px dashed #8a7a64; display: flex; align-items: center; justify-content: center; font-size: 8.5pt; font-weight: 800; letter-spacing: .08em; color: #5b4f45; text-align: center; }
+.mini div:last-child { border-bottom: none; }
+.esq ul { padding-left: 5mm; font-size: 10.5pt; }
+.esq li + li { margin-top: 1.5mm; }
+/* tiras */
+.tiras { display: flex; flex-direction: column; gap: 3mm; flex: 1; }
+.tira { flex: 1; border: 1.5px dashed #8a7a64; border-radius: 4px; display: flex; align-items: center; gap: 5mm; padding: 0 6mm; font-weight: 800; font-size: 15pt; }
+.tira span { flex: none; width: 9mm; height: 9mm; border-radius: 50%; background: #8a3a22; color: #fff; font-size: 11pt; display: flex; align-items: center; justify-content: center; }
+/* faixa */
+.faixa { page: land; height: 190mm; border: 5px solid #1c1a19; background: #fbfaf6; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6mm; text-align: center; }
+.faixa .a { font-weight: 800; letter-spacing: .25em; font-size: 20pt; color: #8a3a22; }
+.faixa .b { font-family: "Inter Display", Arial; font-weight: 900; text-transform: uppercase; font-size: 70pt; line-height: 1; }
+.faixa .b span { color: #d23a2a; }
+.faixa .stripe { width: 70%; height: 14px; margin: 0; }
+</style></head><body>
+
+<section class="page capa">
+<p class="esc">EE Prof. Duglas Teixeira Monteiro · Projeto ERER · 16/11/2026</p>
+<h1>Parede da Consciência<br>8º B</h1>
+<p class="lead">Modelos para os cartazes da turma. Cada trio recebe uma frase, copia o modelo na cartolina e escreve com as próprias palavras por que aquela frase importa. No final, os cartazes formam uma parede na sala.</p>
+<div class="stripe"></div>
+<div class="passos">
+<div class="passo"><b class="num">1</b><div><h4>Divida a cartolina</h4><p>Com lápis bem fraco, marque três faixas: frase em cima, desenho no meio e o “por quê” embaixo.</p></div></div>
+<div class="passo"><b class="num">2</b><div><h4>Escreva a frase a lápis</h4><p>Letras de forma, maiúsculas, com 8 a 10 cm de altura. Comece pelo meio da linha para não faltar espaço.</p></div></div>
+<div class="passo"><b class="num">3</b><div><h4>Contorne com canetinha</h4><p>Passe a canetinha escura por cima do lápis. A parte destacada vai na outra cor do modelo.</p></div></div>
+<div class="passo"><b class="num">4</b><div><h4>Pinte e desenhe</h4><p>Preencha as letras com marca-texto e faça o desenho do modelo, bem grande.</p></div></div>
+<div class="passo"><b class="num">5</b><div><h4>Escreva o “por quê”</h4><p>Uma ou duas linhas com as palavras do grupo explicando por que a frase importa.</p></div></div>
+<div class="passo"><b class="num">6</b><div><h4>Nomes atrás</h4><p>Escreva o nome do trio no verso. Apague o lápis que sobrou e o cartaz está pronto.</p></div></div>
+</div>
+<div class="esq">
+<div class="mini"><div>1 · FRASE</div><div>2 · DESENHO</div><div>3 · POR QUÊ</div></div>
+<ul>
+<li><b>Cartolina em pé</b>, como os modelos das próximas páginas.</li>
+<li>Letra grande é melhor que letra bonita: o cartaz precisa ser lido do fundo da sala.</li>
+<li>Errou? Vire a cartolina e use o verso, ou cole um papel por cima.</li>
+<li>Deixe uma margem de dois dedos em volta para a fita crepe.</li>
+</ul>
+</div>
+</section>
+
+<section class="page">
+<div class="top"><span class="n">Frase 1 de 12</span><span class="cart"><i style="background:#fbfaf6"></i>Cartolina branca</span></div>
+<div class="poster" style="background:#fbfaf6;--p:#1c1a19;--d:#d23a2a">
+  <span class="z">1 · FRASE</span>
+  <h2>Racismo<br><span class="x">não tem vez</span><br>aqui</h2>
+  <span class="z">2 · DESENHO</span>
+  <div class="ic"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#d23a2a" stroke-width="10"/><line x1="22" y1="78" x2="78" y2="22" stroke="#d23a2a" stroke-width="10" stroke-linecap="round"/></svg></div>
+  <span class="z">3 · POR QUÊ</span>
+  <div class="pq"><b>Por que isso importa?</b><span>Na nossa sala, ninguém é tratado diferente pela cor da pele.</span></div>
+</div>
+<div class="info">
+  <div><h3>Cores das canetinhas</h3><div class="sws"><span class="sw"><i style="background:#1c1a19"></i>preto</span><span class="sw"><i style="background:#d23a2a"></i>vermelho</span></div><p class="m">Contorno das letras em <b>preto</b>. A parte destacada em <b>vermelho</b>. Marca-texto para preencher.</p></div>
+  <div><h3>Desenho</h3><p>Placa de “proibido”: um círculo vermelho grande com uma faixa na diagonal. Se quiser, escreva RACISMO pequeno embaixo da faixa.</p><p class="m">O “por que” acima é só um exemplo: o grupo pode escrever com as próprias palavras.</p></div>
+</div>
+</section><section class="page">
+<div class="top"><span class="n">Frase 2 de 12</span><span class="cart"><i style="background:#fbe9a6"></i>Cartolina amarela</span></div>
+<div class="poster" style="background:#fbe9a6;--p:#6b3e26;--d:#2a63c4">
+  <span class="z">1 · FRASE</span>
+  <h2>Respeitar<br>é <span class="x">conhecer</span></h2>
+  <span class="z">2 · DESENHO</span>
+  <div class="ic"><svg viewBox="0 0 120 90"><path d="M60 20 C45 10 20 10 8 14 L8 78 C20 74 45 74 60 84 Z" fill="#fbfaf6" stroke="#2a63c4" stroke-width="4" stroke-linejoin="round"/><path d="M60 20 C75 10 100 10 112 14 L112 78 C100 74 75 74 60 84 Z" fill="#fbfaf6" stroke="#2a63c4" stroke-width="4" stroke-linejoin="round"/><line x1="60" y1="20" x2="60" y2="84" stroke="#2a63c4" stroke-width="4"/><g stroke="#2a63c4" stroke-width="3" stroke-linecap="round"><line x1="20" y1="30" x2="48" y2="30"/><line x1="20" y1="42" x2="48" y2="42"/><line x1="20" y1="54" x2="44" y2="54"/><line x1="72" y1="30" x2="100" y2="30"/><line x1="72" y1="42" x2="100" y2="42"/><line x1="72" y1="54" x2="96" y2="54"/></g></svg></div>
+  <span class="z">3 · POR QUÊ</span>
+  <div class="pq"><b>Por que isso importa?</b><span>Quando a gente conhece outra cultura, o preconceito perde força.</span></div>
+</div>
+<div class="info">
+  <div><h3>Cores das canetinhas</h3><div class="sws"><span class="sw"><i style="background:#6b3e26"></i>marrom</span><span class="sw"><i style="background:#2a63c4"></i>azul</span></div><p class="m">Contorno das letras em <b>marrom</b>. A parte destacada em <b>azul</b>. Marca-texto para preencher.</p></div>
+  <div><h3>Desenho</h3><p>Um livro aberto. Pode escrever palavras pequenas nas páginas: cultura, história, respeito.</p><p class="m">O “por que” acima é só um exemplo: o grupo pode escrever com as próprias palavras.</p></div>
+</div>
+</section><section class="page">
+<div class="top"><span class="n">Frase 3 de 12</span><span class="cart"><i style="background:#cfe3f6"></i>Cartolina azul clara</span></div>
+<div class="poster" style="background:#cfe3f6;--p:#1c1a19;--d:#7a3fa0">
+  <span class="z">1 · FRASE</span>
+  <h2>Somos diferentes e <span class="x">igualmente humanos</span></h2>
+  <span class="z">2 · DESENHO</span>
+  <div class="ic"><svg viewBox="0 0 160 80"><g stroke="#1c1a19" stroke-width="3">
+<circle cx="20" cy="22" r="12" fill="#6b3e26"/><path d="M4 74 C4 50 36 50 36 74 Z" fill="#2a63c4"/>
+<circle cx="50" cy="22" r="12" fill="#f3c9a0"/><path d="M34 74 C34 50 66 50 66 74 Z" fill="#d23a2a"/>
+<circle cx="80" cy="22" r="12" fill="#3a2418"/><path d="M64 74 C64 50 96 50 96 74 Z" fill="#2f8f4e"/>
+<circle cx="110" cy="22" r="12" fill="#c98b5a"/><path d="M94 74 C94 50 126 50 126 74 Z" fill="#f2c21b"/>
+<circle cx="140" cy="22" r="12" fill="#a0673f"/><path d="M124 74 C124 50 156 50 156 74 Z" fill="#7a3fa0"/></g></svg></div>
+  <span class="z">3 · POR QUÊ</span>
+  <div class="pq"><b>Por que isso importa?</b><span>Cada um tem sua história, mas todos merecem o mesmo respeito.</span></div>
+</div>
+<div class="info">
+  <div><h3>Cores das canetinhas</h3><div class="sws"><span class="sw"><i style="background:#1c1a19"></i>preto</span><span class="sw"><i style="background:#7a3fa0"></i>roxo</span></div><p class="m">Contorno das letras em <b>preto</b>. A parte destacada em <b>roxo</b>. Marca-texto para preencher.</p></div>
+  <div><h3>Desenho</h3><p>Uma fila de bonequinhos simples, cada um com um tom de pele e uma cor de roupa diferente.</p><p class="m">O “por que” acima é só um exemplo: o grupo pode escrever com as próprias palavras.</p></div>
+</div>
+</section><section class="page">
+<div class="top"><span class="n">Frase 4 de 12</span><span class="cart"><i style="background:#f8d3e2"></i>Cartolina rosa</span></div>
+<div class="poster" style="background:#f8d3e2;--p:#6b3e26;--d:#7a3fa0">
+  <span class="z">1 · FRASE</span>
+  <h2>Minha cor<br><span class="x">não é defeito</span></h2>
+  <span class="z">2 · DESENHO</span>
+  <div class="ic"><svg viewBox="0 0 170 50"><g stroke="#1c1a19" stroke-width="3"><circle cx="20" cy="25" r="17" fill="#f6dcc4"/><circle cx="52" cy="25" r="17" fill="#e8b98e"/><circle cx="84" cy="25" r="17" fill="#c98b5a"/><circle cx="116" cy="25" r="17" fill="#8a5432"/><circle cx="148" cy="25" r="17" fill="#3a2418"/></g></svg></div>
+  <span class="z">3 · POR QUÊ</span>
+  <div class="pq"><b>Por que isso importa?</b><span>Nenhuma cor de pele é melhor ou pior que outra.</span></div>
+</div>
+<div class="info">
+  <div><h3>Cores das canetinhas</h3><div class="sws"><span class="sw"><i style="background:#6b3e26"></i>marrom</span><span class="sw"><i style="background:#7a3fa0"></i>roxo</span></div><p class="m">Contorno das letras em <b>marrom</b>. A parte destacada em <b>roxo</b>. Marca-texto para preencher.</p></div>
+  <div><h3>Desenho</h3><p>Uma fileira de bolinhas com tons de pele do mais claro ao mais escuro, todas do mesmo tamanho.</p><p class="m">O “por que” acima é só um exemplo: o grupo pode escrever com as próprias palavras.</p></div>
+</div>
+</section><section class="page">
+<div class="top"><span class="n">Frase 5 de 12</span><span class="cart"><i style="background:#fbfaf6"></i>Cartolina branca</span></div>
+<div class="poster" style="background:#fbfaf6;--p:#1c1a19;--d:#d23a2a">
+  <span class="z">1 · FRASE</span>
+  <h2>Racismo<br><span class="x">é crime.</span><br><span class="box">Denuncie.</span></h2>
+  <span class="z">2 · DESENHO</span>
+  <div class="ic"><svg viewBox="0 0 120 90"><path d="M20 35 L70 12 L70 78 L20 55 Z" fill="#f2c21b" stroke="#1c1a19" stroke-width="4" stroke-linejoin="round"/><rect x="8" y="35" width="14" height="20" fill="#1c1a19"/><path d="M28 56 L34 80 L46 80 L40 60" fill="#1c1a19"/><g stroke="#d23a2a" stroke-width="5" stroke-linecap="round"><line x1="84" y1="45" x2="108" y2="45"/><line x1="82" y1="28" x2="102" y2="16"/><line x1="82" y1="62" x2="102" y2="74"/></g></svg></div>
+  <span class="z">3 · POR QUÊ</span>
+  <div class="pq"><b>Por que isso importa?</b><span>Racismo e injúria racial são crimes no Brasil. Viu, avise um adulto.</span></div>
+</div>
+<div class="info">
+  <div><h3>Cores das canetinhas</h3><div class="sws"><span class="sw"><i style="background:#1c1a19"></i>preto</span><span class="sw"><i style="background:#d23a2a"></i>vermelho</span><span class="sw"><i style="background:#f2c21b"></i>amarelo</span></div><p class="m">Contorno das letras em <b>preto</b>. A parte destacada em <b>vermelho</b>. Marca-texto para preencher.</p></div>
+  <div><h3>Desenho</h3><p>Um megafone com risquinhos saindo, como se estivesse falando alto.</p><p class="m">O “por que” acima é só um exemplo: o grupo pode escrever com as próprias palavras.</p></div>
+</div>
+</section><section class="page">
+<div class="top"><span class="n">Frase 6 de 12</span><span class="cart"><i style="background:#d4ecd8"></i>Cartolina verde clara</span></div>
+<div class="poster" style="background:#d4ecd8;--p:#1c1a19;--d:#d23a2a">
+  <span class="z">1 · FRASE</span>
+  <h2>Vidas<br><span class="x">indígenas</span><br>importam</h2>
+  <span class="z">2 · DESENHO</span>
+  <div class="ic"><svg viewBox="0 0 200 40"><g fill="none" stroke-width="5" stroke-linejoin="round"><path d="M0 34 L20 6 L40 34 L60 6 L80 34 L100 6 L120 34 L140 6 L160 34 L180 6 L200 34" stroke="#1c1a19"/></g><g fill="#d23a2a"><path d="M10 34 L20 20 L30 34 Z"/><path d="M50 34 L60 20 L70 34 Z"/><path d="M90 34 L100 20 L110 34 Z"/><path d="M130 34 L140 20 L150 34 Z"/><path d="M170 34 L180 20 L190 34 Z"/></g></svg></div>
+  <span class="z">3 · POR QUÊ</span>
+  <div class="pq"><b>Por que isso importa?</b><span>Os povos indígenas estão vivos e merecem respeito e o direito às suas terras.</span></div>
+</div>
+<div class="info">
+  <div><h3>Cores das canetinhas</h3><div class="sws"><span class="sw"><i style="background:#1c1a19"></i>preto</span><span class="sw"><i style="background:#d23a2a"></i>vermelho</span></div><p class="m">Contorno das letras em <b>preto</b>. A parte destacada em <b>vermelho</b>. Marca-texto para preencher.</p></div>
+  <div><h3>Desenho</h3><p>Faixas de grafismo indígena (zigue-zague e triângulos) em cima e embaixo do cartaz, em vermelho e preto, as cores do urucum e do jenipapo.</p><p class="m">O “por que” acima é só um exemplo: o grupo pode escrever com as próprias palavras.</p></div>
+</div>
+</section><section class="page">
+<div class="top"><span class="n">Frase 7 de 12</span><span class="cart"><i style="background:#fbe9a6"></i>Cartolina amarela</span></div>
+<div class="poster" style="background:#fbe9a6;--p:#6b3e26;--d:#2f8f4e">
+  <span class="z">1 · FRASE</span>
+  <h2>Orgulho das<br><span class="x">nossas raízes</span></h2>
+  <span class="z">2 · DESENHO</span>
+  <div class="ic"><svg viewBox="0 0 120 120"><circle cx="60" cy="38" r="30" fill="#2f8f4e" stroke="#1c1a19" stroke-width="4"/><circle cx="36" cy="48" r="18" fill="#2f8f4e" stroke="#1c1a19" stroke-width="4"/><circle cx="84" cy="48" r="18" fill="#2f8f4e" stroke="#1c1a19" stroke-width="4"/><rect x="52" y="56" width="16" height="34" fill="#6b3e26" stroke="#1c1a19" stroke-width="4"/><g stroke="#6b3e26" stroke-width="6" stroke-linecap="round" fill="none"><path d="M60 90 L60 112"/><path d="M58 92 C48 100 36 104 22 112"/><path d="M62 92 C72 100 84 104 98 112"/><path d="M56 96 C46 108 40 112 38 116"/><path d="M64 96 C74 108 80 112 82 116"/></g><line x1="10" y1="92" x2="110" y2="92" stroke="#1c1a19" stroke-width="3" stroke-dasharray="6 5"/></svg></div>
+  <span class="z">3 · POR QUÊ</span>
+  <div class="pq"><b>Por que isso importa?</b><span>Nossa história tem raízes africanas e indígenas, e isso é motivo de orgulho.</span></div>
+</div>
+<div class="info">
+  <div><h3>Cores das canetinhas</h3><div class="sws"><span class="sw"><i style="background:#6b3e26"></i>marrom</span><span class="sw"><i style="background:#2f8f4e"></i>verde</span></div><p class="m">Contorno das letras em <b>marrom</b>. A parte destacada em <b>verde</b>. Marca-texto para preencher.</p></div>
+  <div><h3>Desenho</h3><p>Uma árvore com a copa verde e raízes grandes aparecendo embaixo da terra.</p><p class="m">O “por que” acima é só um exemplo: o grupo pode escrever com as próprias palavras.</p></div>
+</div>
+</section><section class="page">
+<div class="top"><span class="n">Frase 8 de 12</span><span class="cart"><i style="background:#cfe3f6"></i>Cartolina azul clara</span></div>
+<div class="poster" style="background:#cfe3f6;--p:#2a63c4;--d:#2f8f4e">
+  <span class="z">1 · FRASE</span>
+  <h2>Escola antirracista:<br><span class="x">eu faço parte</span></h2>
+  <span class="z">2 · DESENHO</span>
+  <div class="ic"><svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" rx="12" fill="#fbfaf6" stroke="#1c1a19" stroke-width="7"/><path d="M26 52 L44 70 L76 30" fill="none" stroke="#2f8f4e" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <span class="z">3 · POR QUÊ</span>
+  <div class="pq"><b>Por que isso importa?</b><span>Combater o racismo é tarefa de todos, inclusive minha.</span></div>
+</div>
+<div class="info">
+  <div><h3>Cores das canetinhas</h3><div class="sws"><span class="sw"><i style="background:#2a63c4"></i>azul</span><span class="sw"><i style="background:#2f8f4e"></i>verde</span></div><p class="m">Contorno das letras em <b>azul</b>. A parte destacada em <b>verde</b>. Marca-texto para preencher.</p></div>
+  <div><h3>Desenho</h3><p>Um quadradinho marcado com um ✓ verde, como uma lista de tarefas cumprida.</p><p class="m">O “por que” acima é só um exemplo: o grupo pode escrever com as próprias palavras.</p></div>
+</div>
+</section><section class="page">
+<div class="top"><span class="n">Frase 9 de 12</span><span class="cart"><i style="background:#f8d3e2"></i>Cartolina rosa</span></div>
+<div class="poster" style="background:#f8d3e2;--p:#7a3fa0;--d:#ee7d22">
+  <span class="z">1 · FRASE</span>
+  <h2>Meu cabelo,<br><span class="x">minha coroa</span></h2>
+  <span class="z">2 · DESENHO</span>
+  <div class="ic"><svg viewBox="0 0 120 90"><path d="M12 72 L18 22 L42 46 L60 12 L78 46 L102 22 L108 72 Z" fill="#f2c21b" stroke="#1c1a19" stroke-width="5" stroke-linejoin="round"/><rect x="12" y="70" width="96" height="12" rx="3" fill="#7a3fa0" stroke="#1c1a19" stroke-width="4"/><g fill="#7a3fa0" stroke="#1c1a19" stroke-width="3"><circle cx="18" cy="20" r="6"/><circle cx="60" cy="10" r="6"/><circle cx="102" cy="20" r="6"/></g></svg></div>
+  <span class="z">3 · POR QUÊ</span>
+  <div class="pq"><b>Por que isso importa?</b><span>Cabelo crespo e cacheado é bonito do jeito que é.</span></div>
+</div>
+<div class="info">
+  <div><h3>Cores das canetinhas</h3><div class="sws"><span class="sw"><i style="background:#7a3fa0"></i>roxo</span><span class="sw"><i style="background:#ee7d22"></i>laranja</span><span class="sw"><i style="background:#f2c21b"></i>amarelo</span></div><p class="m">Contorno das letras em <b>roxo</b>. A parte destacada em <b>laranja</b>. Marca-texto para preencher.</p></div>
+  <div><h3>Desenho</h3><p>Uma coroa amarela com bolinhas roxas nas pontas. Pode desenhar cabelos crespos e cacheados em volta.</p><p class="m">O “por que” acima é só um exemplo: o grupo pode escrever com as próprias palavras.</p></div>
+</div>
+</section><section class="page">
+<div class="top"><span class="n">Frase 10 de 12</span><span class="cart"><i style="background:#fbfaf6"></i>Cartolina branca</span></div>
+<div class="poster" style="background:#fbfaf6;--p:#1c1a19;--d:#ee7d22">
+  <span class="z">1 · FRASE</span>
+  <h2>O Brasil<br>também é<br><span class="x">africano<br>e indígena</span></h2>
+  <span class="z">2 · DESENHO</span>
+  <div class="ic"><svg viewBox="0 0 200 110"><circle cx="75" cy="55" r="50" fill="#ee7d22" fill-opacity=".55" stroke="#1c1a19" stroke-width="4"/><circle cx="125" cy="55" r="50" fill="#2f8f4e" fill-opacity=".55" stroke="#1c1a19" stroke-width="4"/><text x="50" y="59" text-anchor="middle" font-size="11" font-weight="800" font-family="Inter, Arial" fill="#1c1a19">ÁFRICA</text><text x="150" y="59" text-anchor="middle" font-size="9.5" font-weight="800" font-family="Inter, Arial" fill="#1c1a19">INDÍGENA</text><text x="100" y="59" text-anchor="middle" font-size="10" font-weight="900" font-family="Inter, Arial" fill="#1c1a19">BRASIL</text></svg></div>
+  <span class="z">3 · POR QUÊ</span>
+  <div class="pq"><b>Por que isso importa?</b><span>Palavras, comidas e músicas que usamos todo dia vêm dessas culturas.</span></div>
+</div>
+<div class="info">
+  <div><h3>Cores das canetinhas</h3><div class="sws"><span class="sw"><i style="background:#1c1a19"></i>preto</span><span class="sw"><i style="background:#ee7d22"></i>laranja</span><span class="sw"><i style="background:#2f8f4e"></i>verde</span></div><p class="m">Contorno das letras em <b>preto</b>. A parte destacada em <b>laranja</b>. Marca-texto para preencher.</p></div>
+  <div><h3>Desenho</h3><p>Dois círculos que se cruzam: “África” de um lado, “Indígena” do outro e “Brasil” no meio.</p><p class="m">O “por que” acima é só um exemplo: o grupo pode escrever com as próprias palavras.</p></div>
+</div>
+</section><section class="page">
+<div class="top"><span class="n">Frase 11 de 12</span><span class="cart"><i style="background:#d4ecd8"></i>Cartolina verde clara</span></div>
+<div class="poster" style="background:#d4ecd8;--p:#1c1a19;--d:#2f8f4e">
+  <span class="z">1 · FRASE</span>
+  <h2>Preconceito se aprende.<br><span class="x">Respeito também.</span></h2>
+  <span class="z">2 · DESENHO</span>
+  <div class="ic"><svg viewBox="0 0 140 50"><rect x="20" y="12" width="90" height="26" fill="#f2c21b" stroke="#1c1a19" stroke-width="4"/><rect x="8" y="12" width="14" height="26" fill="#e5559b" stroke="#1c1a19" stroke-width="4"/><path d="M110 12 L134 25 L110 38 Z" fill="#f3d6a8" stroke="#1c1a19" stroke-width="4" stroke-linejoin="round"/><path d="M126 21 L134 25 L126 29 Z" fill="#1c1a19"/></svg></div>
+  <span class="z">3 · POR QUÊ</span>
+  <div class="pq"><b>Por que isso importa?</b><span>Ninguém nasce preconceituoso: dá para aprender a respeitar.</span></div>
+</div>
+<div class="info">
+  <div><h3>Cores das canetinhas</h3><div class="sws"><span class="sw"><i style="background:#1c1a19"></i>preto</span><span class="sw"><i style="background:#2f8f4e"></i>verde</span><span class="sw"><i style="background:#f2c21b"></i>amarelo</span><span class="sw"><i style="background:#e5559b"></i>rosa</span></div><p class="m">Contorno das letras em <b>preto</b>. A parte destacada em <b>verde</b>. Marca-texto para preencher.</p></div>
+  <div><h3>Desenho</h3><p>Um lápis grande, como se estivesse escrevendo a palavra “respeito”.</p><p class="m">O “por que” acima é só um exemplo: o grupo pode escrever com as próprias palavras.</p></div>
+</div>
+</section><section class="page">
+<div class="top"><span class="n">Frase 12 de 12</span><span class="cart"><i style="background:#fcdcbc"></i>Cartolina laranja clara</span></div>
+<div class="poster" style="background:#fcdcbc;--p:#1c1a19;--d:#2a63c4">
+  <span class="z">1 · FRASE</span>
+  <h2>Diferença<br><span class="x">não é</span><br>desigualdade</h2>
+  <span class="z">2 · DESENHO</span>
+  <div class="ic"><svg viewBox="0 0 120 100"><line x1="60" y1="14" x2="60" y2="86" stroke="#1c1a19" stroke-width="6"/><rect x="36" y="84" width="48" height="8" rx="3" fill="#1c1a19"/><line x1="16" y1="26" x2="104" y2="26" stroke="#ee7d22" stroke-width="6" stroke-linecap="round"/><g stroke="#1c1a19" stroke-width="2.5"><line x1="20" y1="26" x2="8" y2="56"/><line x1="20" y1="26" x2="32" y2="56"/><line x1="100" y1="26" x2="88" y2="56"/><line x1="100" y1="26" x2="112" y2="56"/></g><path d="M4 56 L36 56 C34 68 6 68 4 56 Z" fill="#2a63c4" stroke="#1c1a19" stroke-width="3"/><path d="M84 56 L116 56 C114 68 86 68 84 56 Z" fill="#2a63c4" stroke="#1c1a19" stroke-width="3"/><circle cx="60" cy="14" r="6" fill="#ee7d22" stroke="#1c1a19" stroke-width="3"/></svg></div>
+  <span class="z">3 · POR QUÊ</span>
+  <div class="pq"><b>Por que isso importa?</b><span>Ser diferente é normal. Ter menos direitos por ser diferente, não.</span></div>
+</div>
+<div class="info">
+  <div><h3>Cores das canetinhas</h3><div class="sws"><span class="sw"><i style="background:#1c1a19"></i>preto</span><span class="sw"><i style="background:#2a63c4"></i>azul</span><span class="sw"><i style="background:#ee7d22"></i>laranja</span></div><p class="m">Contorno das letras em <b>preto</b>. A parte destacada em <b>azul</b>. Marca-texto para preencher.</p></div>
+  <div><h3>Desenho</h3><p>Uma balança com os dois pratos na mesma altura, equilibrada.</p><p class="m">O “por que” acima é só um exemplo: o grupo pode escrever com as próprias palavras.</p></div>
+</div>
+</section>
+
+<section class="page">
+<div class="top"><span class="n">Tirinhas para o sorteio</span><span class="cart">Recorte e sorteie uma por trio</span></div>
+<div class="tiras"><div class="tira"><span>1</span>Racismo não tem vez aqui</div><div class="tira"><span>2</span>Respeitar é conhecer</div><div class="tira"><span>3</span>Somos diferentes e igualmente humanos</div><div class="tira"><span>4</span>Minha cor não é defeito</div><div class="tira"><span>5</span>Racismo é crime. Denuncie.</div><div class="tira"><span>6</span>Vidas indígenas importam</div><div class="tira"><span>7</span>Orgulho das nossas raízes</div><div class="tira"><span>8</span>Escola antirracista: eu faço parte</div><div class="tira"><span>9</span>Meu cabelo, minha coroa</div><div class="tira"><span>10</span>O Brasil também é africano e indígena</div><div class="tira"><span>11</span>Preconceito se aprende. Respeito também.</div><div class="tira"><span>12</span>Diferença não é desigualdade</div></div>
+</section>
+
+<section class="page faixa">
+<div class="stripe"></div>
+<p class="a">8º B · PROJETO ERER</p>
+<p class="b">Parede da<br><span>Consciência</span></p>
+<div class="stripe"></div>
+</section>
+</body></html>
