@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Museu do Invisível – 8º B</title>
+<style>
+@page { size: A4; margin: 11mm; }
+@page land { size: A4 landscape; margin: 10mm; }
+* { box-sizing: border-box; margin: 0; }
+body { font-family: "Inter", Arial, sans-serif; color: #1d1a17; font-size: 10.5pt; line-height: 1.4; }
+.page { break-after: page; }
+.page:last-child { break-after: auto; }
+.escola { font-size: 8.5pt; letter-spacing: .08em; text-transform: uppercase; color: #8a3a22; font-weight: 700; }
+h1 { font-size: 19pt; line-height: 1.15; margin: 3px 0 4px; font-family: Georgia, serif; }
+h2 { font-size: 10.5pt; color: #8a3a22; margin: 10px 0 4px; text-transform: uppercase; letter-spacing: .04em; }
+.lead { color: #4a3a2e; }
+ul { padding-left: 17px; }
+li + li { margin-top: 2px; }
+table { width: 100%; border-collapse: collapse; font-size: 9.6pt; }
+th, td { border: 1px solid #d9cdbd; padding: 4px 7px; text-align: left; vertical-align: top; }
+th { background: #f3ebe0; }
+td.t { width: 54px; white-space: nowrap; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.box { background: #f7f2ea; border-left: 4px solid #d9a441; padding: 6px 10px; margin-top: 7px; font-size: 9.8pt; }
+.sub { font-size: 8.5pt; color: #6b5a4c; text-align: center; margin-bottom: 3mm; }
+
+/* placa de entrada */
+.placa { page: land; height: 188mm; border: 6px solid #2b1a12; background: #2b1a12; color: #f6efe4; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 6mm; }
+.placa .a { font-size: 22pt; letter-spacing: .2em; color: #d9a441; font-weight: 800; }
+.placa .b { font-family: Georgia, serif; font-size: 92pt; line-height: 1; font-weight: 700; }
+.placa .c { font-size: 20pt; color: #e3d3bf; max-width: 80%; line-height: 1.35; }
+.placa .d { font-size: 15pt; color: #d9a441; font-weight: 700; letter-spacing: .1em; }
+.stripe { width: 60%; height: 12px; background: linear-gradient(90deg,#b4472a 0 33%,#d9a441 33% 66%,#2f7a62 66% 100%); }
+
+/* alas */
+.alas { display: flex; flex-direction: column; height: 274mm; gap: 5mm; }
+.ala { flex: 1; border: 2px dashed #b9a88f; border-radius: 6px; padding: 7mm 9mm; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+.tag { align-self: flex-start; font-size: 11pt; font-weight: 800; color: #fff; padding: 3px 11px; border-radius: 999px; }
+.ala h3 { font-family: Georgia, serif; font-size: 28pt; line-height: 1.1; }
+.ala .intro { font-size: 13.5pt; color: #3b2f26; }
+.pecas { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; font-size: 12.5pt; }
+.pecas p b { color: #1d1a17; }
+.pecas p { color: #3b2f26; line-height: 1.35; }
+.missao { margin-top: auto; background: #f7f2ea; border-radius: 6px; padding: 9px 13px; font-size: 12pt; }
+.k1 { background: #b4472a; } .k2 { background: #2f7a62; } .k3 { background: #9a6a10; } .k4 { background: #5a3a8a; } .k5 { background: #1f5f8b; } .k6 { background: #2b1a12; }
+
+/* etiquetas */
+.etqs { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 4mm; height: 258mm; }
+.etq { border: 1.5px solid #2b1a12; border-radius: 4px; padding: 5mm 6mm; display: flex; flex-direction: column; gap: 3.2mm; font-size: 11pt; overflow: hidden; background: #fbf8f2; }
+.etq .h { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #b4472a; padding-bottom: 2mm; }
+.etq .h span:first-child { font-size: 8pt; letter-spacing: .14em; font-weight: 800; color: #8a3a22; }
+.etq .h span:last-child { font-size: 8pt; color: #6b5a4c; }
+.etq .l { display: flex; flex-direction: column; gap: 1mm; }
+.etq .lab { font-size: 8pt; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #4a3a2e; }
+.etq .line { border-bottom: 1px solid #a99a86; height: 6.5mm; }
+.etq .chk { font-size: 10pt; }
+
+/* linha do tempo */
+.tl { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 4mm; height: 262mm; }
+.tc { border: 2px solid #2b1a12; border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; }
+.tc .ev { flex: 1; padding: 6mm 6mm 4mm; display: flex; flex-direction: column; justify-content: center; gap: 2mm; }
+.tc .ev p { font-size: 17pt; line-height: 1.32; font-weight: 600; }
+.tc .ev small { font-size: 12pt; color: #4a3a2e; font-weight: 400; line-height: 1.35; }
+.tc .fold { border-top: 2px dashed #8a7a64; height: 24mm; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f3ebe0; }
+.tc .fold span { font-size: 7.5pt; color: #6b5a4c; letter-spacing: .08em; text-transform: uppercase; }
+.tc .fold b { font-family: Georgia, serif; font-size: 26pt; color: #8a3a22; line-height: 1.1; }
+</style>
+</head>
+<body>
+
+<!-- 1. ROTEIRO -->
+<section class="page">
+<p class="escola">EE Prof. Duglas Teixeira Monteiro · Projeto ERER · 8º B · 16/11/2026</p>
+<h1>Museu do Invisível</h1>
+<p class="lead">A sala vira um museu de coisas do nosso dia a dia que vêm das culturas africanas e indígenas, mas que ninguém percebe. Abertura com a Linha do Tempo Humana. Uma aula de 50 minutos. Guia do professor.</p>
+
+<h2>Passo a passo</h2>
+<table>
+<tr><th>Tempo</th><th>O que fazer</th></tr>
+<tr><td class="t">10 min</td><td><b>Linha do Tempo Humana.</b> Entregue um cartão a cada aluno, com o ano dobrado para trás. Sem desdobrar, a turma tem que se organizar em fila, do mais antigo ao mais recente. Depois todos desdobram, conferem e corrigem. Peça que 4 ou 5 alunos leiam seus cartões em voz alta (Zumbi 1695, Lei Áurea 1888, Constituição 1988, Lei 10.639 de 2003, feriado em 2023).</td></tr>
+<tr><td class="t">5 min</td><td><b>Explicação.</b> “Hoje a nossa sala vai virar o Museu do Invisível: um museu de coisas que usamos todo dia e que vêm de povos africanos e indígenas, só que ninguém percebe.” Divida a turma em 6 grupos e sorteie as 6 alas do museu. Cada grupo recebe o cartão da ala e 4 etiquetas em branco.</td></tr>
+<tr><td class="t">20 min</td><td><b>Montagem.</b> Cada grupo escolhe pelo menos 3 peças da sua ala, coloca a peça (objeto real, palavra escrita ou desenho) num canto da sala ou na carteira e preenche uma etiqueta para cada uma. Cada grupo escolhe um <b>guia</b> e prepara a “peça viva” do cartão.</td></tr>
+<tr><td class="t">12 min</td><td><b>Visita guiada.</b> A turma inteira passa pelas 6 alas. Em cada uma, o guia apresenta as peças em até 2 minutos.</td></tr>
+<tr><td class="t">3 min</td><td><b>Fechamento e fotos.</b> Pergunta final: “O que estava invisível para você e agora você vê?” Fotos das alas montadas para a coordenação.</td></tr>
+</table>
+
+<div class="two">
+<div>
+<h2>O que levar (kit do professor)</h2>
+<ul>
+<li>Estas folhas impressas (cartões de ala, etiquetas, linha do tempo e placa de entrada)</li>
+<li>Fita crepe e canetinhas</li>
+<li>Algumas peças reais (opcional, ajuda muito): saquinho de pipoca, farinha de mandioca ou tapioca, uma peteca, uma rede pequena</li>
+<li>Celular com uma música de samba para a ala da música</li>
+<li>Folhas sulfite para desenhar o que não tiver objeto</li>
+</ul>
+<h2>Antes da aula</h2>
+<ul>
+<li>Recorte os cartões da linha do tempo, as etiquetas e os cartões de ala</li>
+<li>Dobre os cartões da linha do tempo na linha pontilhada, escondendo o ano</li>
+<li>Cole a placa “Museu do Invisível” na porta</li>
+</ul>
+</div>
+<div>
+<h2>Fotos para a coordenação</h2>
+<ul>
+<li><b>Foto 1:</b> a turma em fila na linha do tempo</li>
+<li><b>Foto 2:</b> uma ala do museu com etiquetas</li>
+<li><b>Foto 3:</b> um guia apresentando a ala</li>
+</ul>
+<p style="margin-top:5px"><b>Legenda sugerida:</b> “8º B – Projeto ERER: a sala virou o Museu do Invisível. Em grupos, os alunos identificaram palavras, comidas, músicas, brincadeiras e pessoas de origem africana e indígena presentes no nosso dia a dia e apresentaram as peças em uma visita guiada.”</p>
+<h2>Se a turma tiver mais de 21 alunos</h2>
+<p>Há 21 cartões na linha do tempo. Quem ficar sem cartão vira “fiscal da história”: ajuda a organizar a fila e confere a ordem no final.</p>
+</div>
+</div>
+
+<div class="box"><b>Dica:</b> a “peça viva” é o que torna o museu divertido. Um aluno fazendo um passo de capoeira, outro jogando peteca, um grupo cantando o refrão de um samba. Incentive, mas sem obrigar ninguém.</div>
+</section>
+
+<!-- 2. PLACA DE ENTRADA -->
+<section class="page placa">
+<div class="stripe"></div>
+<p class="a">8º B · PROJETO ERER</p>
+<p class="b">Museu do<br>Invisível</p>
+<p class="c">Coisas que usamos todo dia e que vêm dos povos africanos e indígenas. Agora você vai ver.</p>
+<p class="d">ENTRADA FRANCA · RESPEITAR É CONHECER</p>
+<div class="stripe"></div>
+</section>
+
+<!-- 3. ALAS 1 e 2 -->
+<section class="page alas">
+<div class="ala">
+<span class="tag k1">Ala 1</span>
+<h3>A Cozinha</h3>
+<p class="intro">O prato brasileiro junta saberes indígenas e africanos. Muita coisa que você come vem deles.</p>
+<div class="pecas">
+<p><b>Pipoca:</b> o milho já era cultivado pelos indígenas. A palavra “pipoca” vem do tupi.</p>
+<p><b>Mandioca e tapioca:</b> alimentos indígenas que viraram base da comida brasileira.</p>
+<p><b>Açaí:</b> fruta da Amazônia, consumida há séculos pelos povos indígenas. Nome de origem tupi.</p>
+<p><b>Acarajé:</b> bolinho de feijão frito no dendê, de origem africana. O ofício das baianas de acarajé é patrimônio cultural do Brasil.</p>
+<p><b>Vatapá:</b> prato afro-baiano feito com dendê.</p>
+<p><b>Azeite de dendê:</b> vem de uma palmeira africana trazida para o Brasil.</p>
+</div>
+<div class="missao"><b>Peça viva:</b> montem um “cardápio do museu” no quadro e mostrem uma peça real (pipoca, farinha ou tapioca), se tiver.</div>
+</div>
+<div class="ala">
+<span class="tag k2">Ala 2</span>
+<h3>Palavras que vieram da África</h3>
+<p class="intro">Línguas africanas, como o quimbundo e o iorubá, deixaram muitas palavras no português do Brasil.</p>
+<div class="pecas">
+<p><b>Caçula:</b> o filho mais novo.</p>
+<p><b>Cafuné:</b> carinho na cabeça.</p>
+<p><b>Moleque:</b> menino.</p>
+<p><b>Dengo:</b> carinho, manha.</p>
+<p><b>Quitanda:</b> lugar que vende frutas e verduras.</p>
+<p><b>Fubá:</b> farinha de milho.</p>
+<p><b>Xingar:</b> falar mal, ofender.</p>
+</div>
+<div class="missao"><b>Peça viva:</b> escrevam as palavras em letras grandes e criem uma frase que use pelo menos 4 delas. O guia lê a frase para os visitantes.</div>
+</div>
+</section>
+
+<!-- 4. ALAS 3 e 4 -->
+<section class="page alas">
+<div class="ala">
+<span class="tag k3">Ala 3</span>
+<h3>São Paulo fala tupi</h3>
+<p class="intro">Muitos lugares de São Paulo e muitos nomes de bichos e frutas vêm do tupi, língua de povos indígenas do litoral.</p>
+<div class="pecas">
+<p><b>Lugares:</b> Ibirapuera, Anhangabaú, Tatuapé, Itaquera, Jabaquara.</p>
+<p><b>Bichos:</b> jacaré, capivara, tatu, jabuti.</p>
+<p><b>Frutas:</b> abacaxi, maracujá, caju.</p>
+<p><b>Outras:</b> pipoca, cutucar, perereca.</p>
+</div>
+<div class="missao"><b>Peça viva:</b> façam um “mapa” desenhado com os lugares de SP de nome tupi. Desafio: descubram mais um bairro ou cidade com nome indígena e perguntem aos visitantes se eles sabiam.</div>
+</div>
+<div class="ala">
+<span class="tag k4">Ala 4</span>
+<h3>Música e movimento</h3>
+<p class="intro">Ritmos, danças e instrumentos de origem africana fazem parte da identidade do Brasil.</p>
+<div class="pecas">
+<p><b>Samba:</b> nasceu de tradições afro-brasileiras.</p>
+<p><b>Capoeira:</b> luta, dança e jogo criados por africanos e seus descendentes no Brasil. A roda de capoeira é Patrimônio Cultural da Humanidade (UNESCO).</p>
+<p><b>Berimbau:</b> instrumento que comanda a roda de capoeira.</p>
+<p><b>Atabaque:</b> tambor de origem africana.</p>
+<p><b>Maracatu e jongo:</b> manifestações afro-brasileiras de música e dança.</p>
+</div>
+<div class="missao"><b>Peça viva:</b> toquem um trecho de samba no celular ou marquem um ritmo com palmas na carteira. Quem souber pode mostrar um movimento de capoeira.</div>
+</div>
+</section>
+
+<!-- 5. ALAS 5 e 6 -->
+<section class="page alas">
+<div class="ala">
+<span class="tag k5">Ala 5</span>
+<h3>O jeito de brincar e descansar</h3>
+<p class="intro">Brincadeiras e costumes que parecem “normais” têm origem indígena ou africana.</p>
+<div class="pecas">
+<p><b>Peteca:</b> brincadeira indígena. O nome vem do tupi.</p>
+<p><b>Rede de dormir:</b> costume dos povos indígenas, adotado no Brasil inteiro.</p>
+<p><b>Jogo da onça:</b> jogo de tabuleiro tradicional entre povos indígenas, como os Bororo.</p>
+<p><b>Mancala:</b> família de jogos de tabuleiro muito antigos da África, jogados com sementes ou pedrinhas.</p>
+</div>
+<div class="missao"><b>Peça viva:</b> mostrem uma peteca (real ou de papel) ou desenhem um tabuleiro do jogo da onça na folha e expliquem como se joga.</div>
+</div>
+<div class="ala">
+<span class="tag k6">Ala 6</span>
+<h3>Pessoas que a história escondeu</h3>
+<p class="intro">Muitas pessoas negras e indígenas fizeram história, mas quase não aparecem nos livros.</p>
+<div class="pecas">
+<p><b>Luiz Gama:</b> advogado que conseguiu na Justiça a liberdade de centenas de escravizados.</p>
+<p><b>Carolina Maria de Jesus:</b> escritora de “Quarto de Despejo”, diário escrito na favela do Canindé, em SP.</p>
+<p><b>Enedina Alves Marques:</b> primeira mulher negra engenheira do Brasil.</p>
+<p><b>Ailton Krenak:</b> pensador indígena, primeiro indígena na Academia Brasileira de Letras.</p>
+<p><b>Daniel Munduruku:</b> escritor indígena de livros para jovens.</p>
+<p><b>Sônia Guajajara:</b> primeira ministra dos Povos Indígenas.</p>
+</div>
+<div class="missao"><b>Peça viva:</b> façam uma “galeria de retratos” desenhados de 3 pessoas, cada uma com etiqueta. O guia apresenta como num museu de verdade.</div>
+</div>
+</section>
+
+<!-- 6-9. ETIQUETAS (4 páginas, 24 etiquetas) -->
+<section class="page"><p class="sub">Etiquetas do museu · recorte e preencha uma para cada peça</p><div class="etqs">
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+</div></section>
+<section class="page"><p class="sub">Etiquetas do museu · recorte e preencha uma para cada peça</p><div class="etqs">
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+</div></section>
+<section class="page"><p class="sub">Etiquetas do museu · recorte e preencha uma para cada peça</p><div class="etqs">
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+</div></section>
+<section class="page"><p class="sub">Etiquetas do museu · recorte e preencha uma para cada peça</p><div class="etqs">
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+<div class="etq"><div class="h"><span>MUSEU DO INVISÍVEL</span><span>Peça nº ___</span></div><div class="l"><span class="lab">Nome da peça</span><div class="line"></div></div><p class="chk">Origem: ☐ africana &nbsp; ☐ indígena &nbsp; ☐ as duas</p><div class="l"><span class="lab">De onde vem</span><div class="line"></div><div class="line"></div></div><div class="l"><span class="lab">Você sabia?</span><div class="line"></div><div class="line"></div></div></div>
+</div></section>
+
+
+<!-- LINHA DO TEMPO -->
+<section class="page"><p class="sub">Linha do Tempo Humana · recorte, dobre na linha pontilhada escondendo o ano e entregue um para cada aluno</p><div class="tl"><div class="tc"><div class="ev"><p>Os portugueses chegam ao território que hoje é o Brasil.</p><small>A terra já era habitada por muitos povos indígenas.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>Anos 1500</b></div></div><div class="tc"><div class="ev"><p>Começa o tráfico de africanos escravizados para o Brasil.</p><small>Milhões de pessoas foram trazidas à força da África ao longo de mais de três séculos.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>Anos 1500</b></div></div><div class="tc"><div class="ev"><p>Morre Zumbi, líder do Quilombo dos Palmares, em 20 de novembro.</p><small>Por isso o 20 de novembro é o Dia da Consciência Negra.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>1695</b></div></div><div class="tc"><div class="ev"><p>Revolta dos Malês, em Salvador.</p><small>Levante organizado por africanos escravizados, muitos deles muçulmanos e alfabetizados.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>1835</b></div></div><div class="tc"><div class="ev"><p>Uma lei proíbe a entrada de africanos escravizados no Brasil.</p><small>Lei Eusébio de Queirós. A escravidão, porém, continuou.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>1850</b></div></div><div class="tc"><div class="ev"><p>Lei do Ventre Livre.</p><small>Filhos de mulheres escravizadas nascidos a partir dessa data seriam considerados livres.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>1871</b></div></div></div></section>
+<section class="page"><p class="sub">Linha do Tempo Humana · recorte, dobre na linha pontilhada escondendo o ano e entregue um para cada aluno</p><div class="tl"><div class="tc"><div class="ev"><p>Lei Áurea: fim da escravidão no Brasil.</p><small>O Brasil foi o último país das Américas a abolir a escravidão.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>1888</b></div></div><div class="tc"><div class="ev"><p>Revolta da Chibata, no Rio de Janeiro.</p><small>Marinheiros, liderados por João Cândido, se revoltam contra castigos físicos.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>1910</b></div></div><div class="tc"><div class="ev"><p>Enedina Alves Marques se forma engenheira.</p><small>Primeira mulher negra engenheira do Brasil.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>1945</b></div></div><div class="tc"><div class="ev"><p>Lei Afonso Arinos.</p><small>Primeira lei brasileira contra a discriminação racial.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>1951</b></div></div><div class="tc"><div class="ev"><p>Carolina Maria de Jesus publica “Quarto de Despejo”.</p><small>Diário escrito na favela do Canindé, em São Paulo.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>1960</b></div></div><div class="tc"><div class="ev"><p>É criado o Parque Indígena do Xingu.</p><small>Primeira grande terra indígena criada pelo governo federal.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>1961</b></div></div></div></section>
+<section class="page"><p class="sub">Linha do Tempo Humana · recorte, dobre na linha pontilhada escondendo o ano e entregue um para cada aluno</p><div class="tl"><div class="tc"><div class="ev"><p>A Constituição torna o racismo crime inafiançável.</p><small>Também reconhece o direito dos povos indígenas às suas terras.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>1988</b></div></div><div class="tc"><div class="ev"><p>Lei Caó (Lei 7.716).</p><small>Define os crimes de racismo no Brasil.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>1989</b></div></div><div class="tc"><div class="ev"><p>Lei 10.639.</p><small>Torna obrigatório o ensino de história e cultura afro-brasileira e africana nas escolas.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>2003</b></div></div><div class="tc"><div class="ev"><p>Lei 11.645.</p><small>Inclui a história e cultura dos povos indígenas no ensino.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>2008</b></div></div><div class="tc"><div class="ev"><p>Lei de Cotas.</p><small>Reserva vagas em universidades e institutos federais para estudantes de escola pública, pretos, pardos e indígenas.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>2012</b></div></div><div class="tc"><div class="ev"><p>A roda de capoeira vira Patrimônio Cultural da Humanidade.</p><small>Reconhecimento da UNESCO.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>2014</b></div></div></div></section>
+<section class="page"><p class="sub">Linha do Tempo Humana · recorte, dobre na linha pontilhada escondendo o ano e entregue um para cada aluno</p><div class="tl"><div class="tc"><div class="ev"><p>19 de abril passa a ser o Dia dos Povos Indígenas.</p><small>Antes se chamava “Dia do Índio”.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>2022</b></div></div><div class="tc"><div class="ev"><p>Ailton Krenak é eleito para a Academia Brasileira de Letras.</p><small>Primeiro indígena na Academia.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>2023</b></div></div><div class="tc"><div class="ev"><p>O 20 de novembro vira feriado nacional.</p><small>Dia Nacional de Zumbi e da Consciência Negra.</small></div><div class="fold"><span>dobre para trás ✂ não espie</span><b>2023</b></div></div></div></section>
+
+</body>
+</html>
