@@ -17,7 +17,7 @@ GOLD = (214, 182, 116); GOLD_L = (245, 226, 176); NAVY = (6, 34, 58); WHITE = (2
 ME_SS = 0.85; ME_DUR = 8.62            # trecho dele (o vídeo original tem 9,47 s; os primeiros 0,85 s são silêncio)
 CLIP_SS = 13.0                         # trecho do vídeo de terceiros
 END = 13.2
-ZOOMS = [(4.4, 7.9, 0.05)]
+ZOOMS = [(4.4, 7.9, 0.035)]
 words = L.words
 def clamp(x, a=0.0, b=1.0): return max(a, min(b, x))
 def eo(x): x = clamp(x); return 1 - (1 - x) ** 3
@@ -34,7 +34,7 @@ def wt(txt, n=1):
     raise SystemExit("palavra não achada: " + txt)
 GIANT = [(wt("presidente"), "PRESIDENTE"), (wt("popstar"), "POPSTAR"), (wt("flavinho", 1), "FLAVINHO"), (wt("volta"), "VOLTA PRO BRASIL"), (wt("chupa"), "CHUPA ESSA")]
 GDUR = 1.45
-CARD_C = (CX, 1400); CARD_S = 540
+CARD_C = (CX, 1445); CARD_S = 540
 WIN_C = (CX, 493); WIN_W, WIN_H = 500, 667
 
 def rounded(im, rad, border=None, bw=5):
@@ -52,12 +52,12 @@ def put(fr, im, cx, cy, a=1.0, sc=1.0):
     if a < 1: al = im.getchannel("A").point(lambda v: int(v * a)); im = im.copy(); im.putalpha(al)
     fr.alpha_composite(im, (int(cx - im.width / 2), int(cy - im.height / 2)))
 
-SEAM = 1040
+SEAM = 1100
 def top_panel(me_rgb, t):
     z = zoom_suave.nivel(t, ZOOMS); img = zoom_suave.aplica(me_rgb, z, cy_frac=0.30)
     sc = 0.86; sm = cv2.resize(img, (int(W * sc), int(H * sc)), interpolation=cv2.INTER_AREA)        # ele a 86%: cabeça inteira, folga em cima e embaixo
     bgp = cv2.GaussianBlur(cv2.resize(img[40:40 + SEAM], (W // 8, SEAM // 8)), (0, 0), 3); bgp = cv2.resize(bgp, (W, SEAM)).astype(np.float32) * 0.62
-    y0 = 33; fg = sm[y0:y0 + SEAM].astype(np.float32); x0 = (W - sm.shape[1]) // 2
+    y0 = 13; fg = sm[y0:y0 + SEAM].astype(np.float32); x0 = (W - sm.shape[1]) // 2
     m = np.ones((SEAM, sm.shape[1]), np.float32); f = 40; ramp = np.linspace(0, 1, f); m[:, :f] *= ramp; m[:, -f:] *= ramp[::-1]; m = m[..., None]
     bgp[:, x0:x0 + sm.shape[1]] = bgp[:, x0:x0 + sm.shape[1]] * (1 - m) + fg * m
     return Image.fromarray(np.clip(bgp, 0, 255).astype(np.uint8)).convert("RGBA")
@@ -117,7 +117,7 @@ def compose(me_rgb, cl_rgb, t):
     draw_giant(fr, t)
     kc = eo((t - 0.3) / 0.5)
     if kc > 0: BAR.lower_card(fr, "COP31 · TURQUIA", ["LULA É OVACIONADO E CERCADO", "SEGUNDO A BNEWS (11/11)"], SEAM + 30, kc, fs=34)
-    ImageDraw.Draw(fr).text((CX, SEAM + 168), "Vídeo: reprodução redes sociais", font=MF("SemiBold", 21), fill=(235, 238, 245, 225), anchor="mm", stroke_width=3, stroke_fill=NAVY + (200,))
+    ImageDraw.Draw(fr).text((CX, SEAM + 168), "Vídeo recebido por WhatsApp", font=MF("SemiBold", 21), fill=(235, 238, 245, 225), anchor="mm", stroke_width=3, stroke_fill=NAVY + (200,))
     if t < 8.2: fr.alpha_composite(CAP.overlay(t))
     end_texts(fr, t)
     if t >= 0.4:
