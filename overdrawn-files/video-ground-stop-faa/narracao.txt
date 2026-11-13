@@ -1,0 +1,75 @@
+On Friday, November 13th, at 2:54 in the afternoon, Central Time, the United States did something it almost never does. It stopped every departing flight in the country.
+
+Not because of a storm. Not because of an attack. Because the people who guide planes through the sky had a problem talking to them.
+
+In this video: what we know about the outage, why it keeps happening, and the question nobody has answered yet. How much money does a single afternoon like this burn?
+
+Here's what's confirmed. The Federal Aviation Administration ordered a nationwide ground stop after what it called a "temporary telecommunications outage."
+
+Transportation Secretary Sean Duffy said it was "a communication issue impacting all Air Route Traffic Control Centers." Those are the big regional centers that handle planes at cruising altitude, across the whole country.
+
+To understand how big that is, look at a normal day. According to the FAA's own numbers, its air traffic system handles more than forty-four thousand flights and more than three million airline passengers every single day. Across more than twenty-nine million square miles of airspace.
+
+Every one of those flights depends on a simple thing: a controller on the ground can talk to the pilot in the air. Voice over radio, and data over phone and network lines that link radar sites, towers, and control centers. When those links fail, controllers can lose the ability to talk to flights, or to see them.
+
+And when controllers can't safely talk to planes, the FAA does the only safe thing it can. It stops sending more planes up. That's a ground stop. Nothing new takes off until the people in charge are sure every flight can be guided.
+
+Planes already in the air were allowed to keep flying, and land. New departures were frozen. International flights heading to the U.S. were handled case by case. And by Friday evening, the FAA said the stop would last until at least 11 p.m. Eastern.
+
+The first question everyone asked: was this an attack?
+
+So far, officials say no. The White House said there was no indication of a "nefarious act." Homeland Security Secretary Markwayne Mullin said it was not a threat to the country, and not linked to this week's Microsoft outage.
+
+Bloomberg reported that investigators were looking at whether a software update could be behind it. That has not been confirmed. If the FAA announces an official cause, it will be pinned in the description.
+
+By the afternoon, the flight tracking site FlightAware counted nearly seven thousand flights delayed or canceled. At Chicago's two airports alone, more than a thousand delays.
+
+And a ground stop doesn't end when it's lifted. Planes and crews end up in the wrong cities. Pilots hit their legal limit on working hours. The next morning's first flights may not have a plane, or a crew. One afternoon can ripple into the whole weekend.
+
+Now, the question this channel exists for. How much does a day like this cost?
+
+Here's the honest answer: nobody has published a number for this outage yet. Anyone giving you an exact figure today is guessing.
+
+But we do have a yardstick. The FAA has paid for studies on what flight delays cost the U.S. economy. For 2019, that estimate was about thirty-three billion dollars a year. That counts what airlines lose, what passengers lose in wasted time, lost bookings, and the knock-on effect on the wider economy.
+
+Divide that by three hundred sixty-five, and it's roughly ninety million dollars a day. On an ordinary day. With ordinary delays.
+
+Friday was not an ordinary day. So the real bill for this outage is almost certainly higher than a normal day's. How much higher, we'll only know when the airlines report.
+
+So who pays? In the original FAA-funded study, about half of the cost of delays fell on passengers, not airlines. Missed meetings. Extra hotel nights. Lost work hours. A wedding you didn't make it to.
+
+Airlines pay for crews, fuel burned while waiting, rebooking, and hotel vouchers. And then there's everyone else. Hotels, rental cars, and the businesses waiting for people who never arrived.
+
+One more thing passengers should know. When the cause is an air traffic control problem, and not the airline itself, U.S. airlines generally don't have to cover your hotel or your meals. Some do it anyway. Check your airline's policy before you assume.
+
+But there is one thing you are owed, no matter whose fault it was. Since 2024, U.S. rules require airlines to give you an automatic cash refund if your flight is canceled, or significantly changed, and you choose not to travel. Significantly changed means, for a domestic flight, leaving or arriving more than three hours late. For an international flight, more than six.
+
+And the money has to come back fast. Within seven business days if you paid by credit card. Within twenty days for other payment methods. Not a voucher. Not a travel credit, unless you accept one. Cash, back to the way you paid.
+
+So if your flight was canceled on Friday and you decided to stay home, don't let anyone talk you into a credit you didn't ask for.
+
+This isn't the first time. It's the first nationwide ground stop since January 2023. That time, a system that sends safety notices to pilots, called NOTAM, crashed. The cause was traced to a damaged database file. More than a thousand flights were canceled, and about ten thousand were delayed.
+
+In 2025, controllers handling Newark Airport lost radar and radio contact more than once. Part of the problem: radar data traveling over old copper telecom wires.
+
+In September of this year, the same Philadelphia facility lost both its main and its backup data lines at the same time. Newark had almost no commercial landings for much of that day.
+
+And now, every air route traffic control center in the country.
+
+The pattern is the same every time. Old equipment. And backups that fail when they're needed.
+
+Back in 2023, the FAA's own budget documents described the NOTAM database as running on "failing vintage hardware." That's the agency describing itself.
+
+Congress approved twelve and a half billion dollars last year to modernize air traffic control. The FAA says it has already replaced three thousand three hundred forty-six communication lines, and one hundred ninety voice switches. But Secretary Duffy has said finishing the job will take tens of billions more.
+
+So the money is moving. But the system is being repaired while it's running. Like changing the engine of a plane in mid-flight.
+
+Here's what we still don't know.
+
+We don't know the official cause. We don't know the final count of delays and cancellations, once the ripple effect is over. And we don't know the bill. No airline or government agency has put a dollar figure on this day yet.
+
+A country can spend billions building the safest air system in the world, and still lose an afternoon, and millions of dollars, to a phone line that stops working.
+
+This story is still developing. Everything here is based on official statements and news reports from November 13th, 2026.
+
+When the airlines and the FAA put a number on this, I'll do the follow-up. Subscribe if you want to see it. And tell me in the comments: were you stuck in an airport on Friday?

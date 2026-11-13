@@ -1,0 +1,797 @@
+[
+ {
+  "start": 0.18,
+  "end": 2.05,
+  "text": "Friday, November 13."
+ },
+ {
+  "start": 2.68,
+  "end": 5.77,
+  "text": "2.54 in the afternoon, central time."
+ },
+ {
+  "start": 6.33,
+  "end": 10.34,
+  "text": "The United States did something it almost never does."
+ },
+ {
+  "start": 10.68,
+  "end": 13.77,
+  "text": "It stopped every departing flight in the country."
+ },
+ {
+  "start": 14.23,
+  "end": 15.69,
+  "text": "not because of a storm."
+ },
+ {
+  "start": 15.96,
+  "end": 17.51,
+  "text": "not because of an attack."
+ },
+ {
+  "start": 18.01,
+  "end": 22.85,
+  "text": "because the people who guide planes through the sky had a problem talking to them."
+ },
+ {
+  "start": 23.35,
+  "end": 24.45,
+  "text": "in this video."
+ },
+ {
+  "start": 24.7,
+  "end": 26.76,
+  "text": "what we know about the outage."
+ },
+ {
+  "start": 27.06,
+  "end": 28.55,
+  "text": "why it keeps happening."
+ },
+ {
+  "start": 28.86,
+  "end": 31.53,
+  "text": "and the question nobody has answered yet."
+ },
+ {
+  "start": 32.18,
+  "end": 35.65,
+  "text": "How much money does a single afternoon like this burn?"
+ },
+ {
+  "start": 36.18,
+  "end": 37.67,
+  "text": "Here's what's confirmed."
+ },
+ {
+  "start": 38.17,
+  "end": 42.98,
+  "text": "The Federal Aviation Administration ordered a nationwide ground stop."
+ },
+ {
+  "start": 43.64,
+  "end": 47.91,
+  "text": "what it called a temporary telecommunications outage."
+ },
+ {
+  "start": 48.76,
+  "end": 53.73,
+  "text": "Transportation Secretary Sean Duffy said it was \"a communication issue.\""
+ },
+ {
+  "start": 54.01,
+  "end": 57.45,
+  "text": "impacting all air route traffic control centers."
+ },
+ {
+  "start": 57.82,
+  "end": 62.57,
+  "text": "Those are the big regional centers that handle planes at cruising altitude."
+ },
+ {
+  "start": 62.87,
+  "end": 64.58,
+  "text": "across the whole country."
+ },
+ {
+  "start": 65.05,
+  "end": 68.33,
+  "text": "To understand how big that is, look at a normal day."
+ },
+ {
+  "start": 68.82,
+  "end": 75.91,
+  "text": "According to the FAA's own numbers, its air traffic system handles more than 44,000 flights."
+ },
+ {
+  "start": 76.28,
+  "end": 80.61,
+  "text": "and more than 3 million airline passengers every single day."
+ },
+ {
+  "start": 80.95,
+  "end": 84.9,
+  "text": "across more than 29 million square miles of airspace."
+ },
+ {
+  "start": 85.43,
+  "end": 87.05,
+  "text": "every one of those flights."
+ },
+ {
+  "start": 87.61,
+  "end": 89.25,
+  "text": "depends on a simple thing."
+ },
+ {
+  "start": 89.59,
+  "end": 92.97,
+  "text": "A controller on the ground can talk to the pilot in the air."
+ },
+ {
+  "start": 93.46,
+  "end": 96.81,
+  "text": "voice over radio and data over phone"
+ },
+ {
+  "start": 97.08,
+  "end": 102.47,
+  "text": "and networked lines that link radar sites, towers, and control centers."
+ },
+ {
+  "start": 102.97,
+  "end": 104.36,
+  "text": "when those links fail."
+ },
+ {
+  "start": 104.86,
+  "end": 108.84,
+  "text": "Controllers can lose the ability to talk to flights or to see them."
+ },
+ {
+  "start": 109.34,
+  "end": 115.33,
+  "text": "And when controllers can safely talk to planes, the FAA does the only safe thing it can."
+ },
+ {
+  "start": 115.86,
+  "end": 117.89,
+  "text": "it stops sending more planes up."
+ },
+ {
+  "start": 118.39,
+  "end": 119.56,
+  "text": "That's a ground stop."
+ },
+ {
+  "start": 119.83,
+  "end": 125.22,
+  "text": "Nothing new takes off until the people in charge are sure every flight can be guided."
+ },
+ {
+  "start": 125.78,
+  "end": 128.74,
+  "text": "Plains already in the air were allowed to keep flying."
+ },
+ {
+  "start": 129.05,
+  "end": 129.73,
+  "text": "and land."
+ },
+ {
+  "start": 130.01,
+  "end": 132.04,
+  "text": "new departures were frozen."
+ },
+ {
+  "start": 132.5,
+  "end": 135.17,
+  "text": "international flights heading to the US."
+ },
+ {
+  "start": 135.42,
+  "end": 137.48,
+  "text": "were handled case by case."
+ },
+ {
+  "start": 137.82,
+  "end": 139.43,
+  "text": "and by Friday evening."
+ },
+ {
+  "start": 139.77,
+  "end": 144.65,
+  "text": "The FAA said the stop would last until at least 11pm Eastern."
+ },
+ {
+  "start": 145.11,
+  "end": 147.17,
+  "text": "The first question everyone asked."
+ },
+ {
+  "start": 147.58,
+  "end": 148.84,
+  "text": "Was this an attack?"
+ },
+ {
+  "start": 149.34,
+  "end": 151.27,
+  "text": "So far officials say no."
+ },
+ {
+  "start": 151.74,
+  "end": 156.13,
+  "text": "The White House said there was no indication of a nefarious act."
+ },
+ {
+  "start": 156.63,
+  "end": 165.31,
+  "text": "Homeland Security Secretary Mark Wayne Mullen said it was not a threat to the country and not linked to this week's Microsoft Outage."
+ },
+ {
+  "start": 165.78,
+  "end": 172.2,
+  "text": "Bloomberg reported that investigators were looking at whether a software update could be behind it."
+ },
+ {
+  "start": 172.7,
+  "end": 174.41,
+  "text": "that has not been confirmed."
+ },
+ {
+  "start": 174.84,
+  "end": 179.91,
+  "text": "If the FAA announces an official cause, it will be pinned in the description."
+ },
+ {
+  "start": 180.5,
+  "end": 186.98,
+  "text": "By the afternoon, the flight tracking site FlightAware counted nearly 7,000 flights delayed."
+ },
+ {
+  "start": 187.26,
+  "end": 187.97,
+  "text": "or cancel."
+ },
+ {
+  "start": 188.41,
+  "end": 190.63,
+  "text": "at Chicago's two airports alone."
+ },
+ {
+  "start": 191.0,
+  "end": 193.06,
+  "text": "more than a thousand delays."
+ },
+ {
+  "start": 193.4,
+  "end": 196.04,
+  "text": "and the ground stop doesn't end when it's lifted."
+ },
+ {
+  "start": 196.6,
+  "end": 199.85,
+  "text": "Plains and crews end up in the wrong cities."
+ },
+ {
+  "start": 200.28,
+  "end": 203.17,
+  "text": "pilots hit their legal limit on working hours."
+ },
+ {
+  "start": 203.58,
+  "end": 207.24,
+  "text": "The next morning's first flights may not have a plane or a crew."
+ },
+ {
+  "start": 207.77,
+  "end": 210.53,
+  "text": "One afternoon can ripple into the whole weekend."
+ },
+ {
+  "start": 210.97,
+  "end": 211.43,
+  "text": "now."
+ },
+ {
+  "start": 211.77,
+  "end": 214.09,
+  "text": "The question this channel exists for."
+ },
+ {
+  "start": 214.68,
+  "end": 216.97,
+  "text": "How much does a day like this cost?"
+ },
+ {
+  "start": 217.5,
+  "end": 219.05,
+  "text": "Here's the honest answer."
+ },
+ {
+  "start": 219.38,
+  "end": 222.5,
+  "text": "Nobody has published a number for this outage yet."
+ },
+ {
+  "start": 223.26,
+  "end": 226.6,
+  "text": "Anyone giving you an exact figure today is guessing."
+ },
+ {
+  "start": 227.22,
+  "end": 228.87,
+  "text": "but we do have a yardstick."
+ },
+ {
+  "start": 229.34,
+  "end": 234.89,
+  "text": "The FAA has paid for studies on what flight delays cost the US economy."
+ },
+ {
+  "start": 235.32,
+  "end": 236.65,
+  "text": "for 2019."
+ },
+ {
+  "start": 237.14,
+  "end": 240.97,
+  "text": "That estimate was about $33 billion a year."
+ },
+ {
+  "start": 241.59,
+  "end": 246.34,
+  "text": "That counts what airlines lose, what passengers lose in wasted time."
+ },
+ {
+  "start": 246.68,
+  "end": 247.75,
+  "text": "Lost Bookings"
+ },
+ {
+  "start": 248.02,
+  "end": 250.47,
+  "text": "and the knock-on effect on the wider economy."
+ },
+ {
+  "start": 250.94,
+  "end": 253.7,
+  "text": "Divide that by 365."
+ },
+ {
+  "start": 253.94,
+  "end": 258.15,
+  "text": "and it's roughly $90 million a day on an ordinary day."
+ },
+ {
+  "start": 258.71,
+  "end": 260.1,
+  "text": "ordinary delays."
+ },
+ {
+  "start": 260.38,
+  "end": 262.34,
+  "text": "Friday was not an ordinary day."
+ },
+ {
+  "start": 262.71,
+  "end": 267.65,
+  "text": "So the real bill for this outage is almost certainly higher than a normal day."
+ },
+ {
+  "start": 268.02,
+  "end": 269.13,
+  "text": "How much higher?"
+ },
+ {
+  "start": 269.4,
+  "end": 271.78,
+  "text": "we'll only know when the airlines report."
+ },
+ {
+  "start": 272.66,
+  "end": 273.8,
+  "text": "So who pays?"
+ },
+ {
+  "start": 274.17,
+  "end": 284.57,
+  "text": "In the original FAA funded study, about half of the cost of delays fell on passengers, not airlines, missed meetings, extra hotel nights,"
+ },
+ {
+  "start": 284.73,
+  "end": 287.94,
+  "text": "lost work hours, a wedding you didn't make it to,"
+ },
+ {
+  "start": 288.22,
+  "end": 290.28,
+  "text": "Airlines pay for cruise."
+ },
+ {
+  "start": 290.74,
+  "end": 299.26,
+  "text": "Fuel burned while waiting, rebooking and hotel vouchers. And then there's everyone else. Hotels, rental cars."
+ },
+ {
+  "start": 299.35,
+  "end": 302.57,
+  "text": "and the businesses waiting for people who never arrived."
+ },
+ {
+  "start": 302.97,
+  "end": 305.19,
+  "text": "One more thing passengers should know."
+ },
+ {
+  "start": 305.56,
+  "end": 308.71,
+  "text": "when the cause is an air traffic control problem."
+ },
+ {
+  "start": 309.05,
+  "end": 310.82,
+  "text": "and not the airline itself,"
+ },
+ {
+  "start": 311.1,
+  "end": 315.62,
+  "text": "US airlines generally don't have to cover your hotel or your meals."
+ },
+ {
+  "start": 316.06,
+  "end": 317.35,
+  "text": "Some do it anyway."
+ },
+ {
+  "start": 317.69,
+  "end": 320.26,
+  "text": "Check your airline's policy before you assume."
+ },
+ {
+  "start": 320.79,
+  "end": 322.92,
+  "text": "But there is one thing you are owed."
+ },
+ {
+  "start": 323.19,
+  "end": 325.25,
+  "text": "no matter whose fault it was."
+ },
+ {
+  "start": 325.56,
+  "end": 327.17,
+  "text": "since 2024."
+ },
+ {
+  "start": 327.48,
+  "end": 331.72,
+  "text": "U.S. rules require airlines to give you an automatic cash refund."
+ },
+ {
+  "start": 332.09,
+  "end": 333.89,
+  "text": "if your flight is cancelled."
+ },
+ {
+  "start": 334.26,
+  "end": 336.23,
+  "text": "or significantly changed."
+ },
+ {
+  "start": 336.63,
+  "end": 338.5,
+  "text": "and you choose not to travel."
+ },
+ {
+  "start": 338.84,
+  "end": 340.74,
+  "text": "significantly change means."
+ },
+ {
+  "start": 341.14,
+  "end": 342.47,
+  "text": "for a domestic flight."
+ },
+ {
+  "start": 342.84,
+  "end": 346.05,
+  "text": "leaving or arriving more than three hours late."
+ },
+ {
+  "start": 346.52,
+  "end": 348.04,
+  "text": "for an international flight."
+ },
+ {
+  "start": 348.41,
+  "end": 349.51,
+  "text": "more than 6."
+ },
+ {
+  "start": 349.98,
+  "end": 352.23,
+  "text": "and the money has to come back fast."
+ },
+ {
+  "start": 352.82,
+  "end": 356.39,
+  "text": "within 7 business days if you paid by credit card."
+ },
+ {
+  "start": 356.95,
+  "end": 359.72,
+  "text": "within 20 days for other payment methods."
+ },
+ {
+  "start": 360.09,
+  "end": 361.06,
+  "text": "Not a voucher."
+ },
+ {
+  "start": 361.66,
+  "end": 362.85,
+  "text": "not a travel credit."
+ },
+ {
+  "start": 363.19,
+  "end": 364.42,
+  "text": "unless you accept one."
+ },
+ {
+  "start": 365.27,
+  "end": 365.73,
+  "text": "cash."
+ },
+ {
+  "start": 366.39,
+  "end": 367.43,
+  "text": "to the way you paid."
+ },
+ {
+  "start": 367.83,
+  "end": 371.88,
+  "text": "So if your flight was cancelled on Friday and you decided to stay home."
+ },
+ {
+  "start": 372.38,
+  "end": 375.97,
+  "text": "Don't let anyone talk you into a credit you didn't ask for."
+ },
+ {
+  "start": 376.44,
+  "end": 377.93,
+  "text": "This isn't the first time."
+ },
+ {
+  "start": 378.36,
+  "end": 380.87,
+  "text": "It's the first nationwide ground stop."
+ },
+ {
+  "start": 381.11,
+  "end": 383.17,
+  "text": "since January 2023."
+ },
+ {
+  "start": 383.8,
+  "end": 387.85,
+  "text": "time a system that sends safety notices to pilots."
+ },
+ {
+  "start": 388.12,
+  "end": 389.16,
+  "text": "called no time."
+ },
+ {
+  "start": 389.69,
+  "end": 390.31,
+  "text": "crashed."
+ },
+ {
+  "start": 390.71,
+  "end": 394.02,
+  "text": "The cause was traced to a damaged database file."
+ },
+ {
+  "start": 394.65,
+  "end": 397.06,
+  "text": "More than a thousand flights were cancelled."
+ },
+ {
+  "start": 397.4,
+  "end": 399.46,
+  "text": "and about 10,000 were delayed."
+ },
+ {
+  "start": 399.99,
+  "end": 402.44,
+  "text": "in 2025, controllers."
+ },
+ {
+  "start": 402.68,
+  "end": 404.33,
+  "text": "handling Newark Airport."
+ },
+ {
+  "start": 404.63,
+  "end": 407.14,
+  "text": "lost radar and radio contact."
+ },
+ {
+  "start": 407.45,
+  "end": 408.68,
+  "text": "more than once."
+ },
+ {
+  "start": 409.08,
+  "end": 410.12,
+  "text": "part of the problem."
+ },
+ {
+  "start": 410.49,
+  "end": 414.66,
+  "text": "radar data traveling over old copper telecom wires"
+ },
+ {
+  "start": 415.03,
+  "end": 416.68,
+  "text": "in September of this year."
+ },
+ {
+  "start": 416.98,
+  "end": 423.3,
+  "text": "The same Philadelphia facility lost both its main and its backup data lines at the same time."
+ },
+ {
+  "start": 423.8,
+  "end": 427.69,
+  "text": "Newark had almost no commercial landings for much of that day."
+ },
+ {
+  "start": 427.99,
+  "end": 431.65,
+  "text": "and now every air route traffic control center in the country."
+ },
+ {
+  "start": 432.22,
+  "end": 433.99,
+  "text": "The pattern is the same every time."
+ },
+ {
+  "start": 434.42,
+  "end": 435.56,
+  "text": "old equipment."
+ },
+ {
+  "start": 435.8,
+  "end": 438.25,
+  "text": "and backups that fail when they're needed."
+ },
+ {
+  "start": 438.78,
+  "end": 448.16,
+  "text": "Back in 2023, the FAA's own budget documents describe the no-time database as running on failing vintage hardware."
+ },
+ {
+  "start": 448.82,
+  "end": 451.37,
+  "text": "That's the agency describing itself."
+ },
+ {
+  "start": 451.9,
+  "end": 456.84,
+  "text": "Congress approved $12.5 billion last year to modernize"
+ },
+ {
+  "start": 457.18,
+  "end": 458.57,
+  "text": "air traffic control."
+ },
+ {
+  "start": 459.35,
+  "end": 462.89,
+  "text": "The FAA says it has already replaced."
+ },
+ {
+  "start": 463.48,
+  "end": 469.96,
+  "text": "1346 communication lines and 190 voice switches"
+ },
+ {
+  "start": 470.36,
+  "end": 475.27,
+  "text": "But Secretary Duffy has said finishing the job will take tens of billions more."
+ },
+ {
+  "start": 475.67,
+  "end": 479.94,
+  "text": "so the money is moving, but the system is being repaired while it's running."
+ },
+ {
+  "start": 480.34,
+  "end": 483.01,
+  "text": "like changing the engine of a plane in mid-flight."
+ },
+ {
+  "start": 483.54,
+  "end": 485.32,
+  "text": "Here's what we still don't know."
+ },
+ {
+  "start": 485.75,
+  "end": 487.62,
+  "text": "We don't know the official cause."
+ },
+ {
+  "start": 487.96,
+  "end": 491.85,
+  "text": "We don't know the final count of delays and cancellations."
+ },
+ {
+  "start": 492.09,
+  "end": 494.05,
+  "text": "once the ripple effect is over."
+ },
+ {
+  "start": 494.46,
+  "end": 496.1,
+  "text": "and we don't know the bill."
+ },
+ {
+  "start": 496.44,
+  "end": 501.64,
+  "text": "No airline or government agency has put a dollar figure on this day yet."
+ },
+ {
+  "start": 502.01,
+  "end": 508.39,
+  "text": "A country can spend billions building the safest air system in the world and still lose an afternoon."
+ },
+ {
+  "start": 508.66,
+  "end": 512.49,
+  "text": "and millions of dollars to a phone line that stops working."
+ },
+ {
+  "start": 513.02,
+  "end": 515.11,
+  "text": "This story is still developing."
+ },
+ {
+  "start": 515.51,
+  "end": 521.64,
+  "text": "Everything here is based on official statements and news reports from November 13th."
+ },
+ {
+  "start": 522.04,
+  "end": 523.27,
+  "text": "2026."
+ },
+ {
+  "start": 523.83,
+  "end": 526.12,
+  "text": "when the airlines and the FAA"
+ },
+ {
+  "start": 526.49,
+  "end": 527.97,
+  "text": "put a number on this."
+ },
+ {
+  "start": 528.28,
+  "end": 529.61,
+  "text": "I'll do the follow up."
+ },
+ {
+  "start": 530.26,
+  "end": 532.13,
+  "text": "Subscribe if you want to see it."
+ },
+ {
+  "start": 532.44,
+  "end": 536.77,
+  "text": "and tell me in the comments were you stuck in an airport on Friday?"
+ }
+]

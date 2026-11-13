@@ -1,0 +1,4 @@
+clips/
+audio/*.wav
+render.log
+__pycache__/

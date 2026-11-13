@@ -1,0 +1,37 @@
+On Friday, November 13th, at 2:54 in the afternoon, Central Time, the United States did something it almost never does. It stopped every departing flight in the country.
+
+Not because of a storm. Not because of an attack. Because the people who guide planes through the sky had a problem talking to them.
+
+In this video: what we know about the outage, why it keeps happening, and the question nobody has answered yet. How much money does a single afternoon like this burn?
+
+Here's what's confirmed. The Federal Aviation Administration ordered a nationwide ground stop after what it called a "temporary telecommunications outage."
+
+Transportation Secretary Sean Duffy said it was "a communication issue impacting all Air Route Traffic Control Centers." Those are the big regional centers that handle planes at cruising altitude, across the whole country.
+
+To understand how big that is, look at a normal day. According to the FAA's own numbers, its air traffic system handles more than forty-four thousand flights and more than three million airline passengers every single day. Across more than twenty-nine million square miles of airspace.
+
+Every one of those flights depends on a simple thing: a controller on the ground can talk to the pilot in the air. Voice over radio, and data over phone and network lines that link radar sites, towers, and control centers. When those links fail, controllers can lose the ability to talk to flights, or to see them.
+
+And when controllers can't safely talk to planes, the FAA does the only safe thing it can. It stops sending more planes up. That's a ground stop. Nothing new takes off until the people in charge are sure every flight can be guided.
+
+Planes already in the air were allowed to keep flying, and land. New departures were frozen. International flights heading to the U.S. were handled case by case. And by Friday evening, the FAA said the stop would last until at least 11 p.m. Eastern.
+
+The first question everyone asked: was this an attack?
+
+So far, officials say no. The White House said there was no indication of a "nefarious act." Homeland Security Secretary Markwayne Mullin said it was not a threat to the country, and not linked to this week's Microsoft outage.
+
+Bloomberg reported that investigators were looking at whether a software update could be behind it. That has not been confirmed. If the FAA announces an official cause, it will be pinned in the description.
+
+By the afternoon, the flight tracking site FlightAware counted nearly seven thousand flights delayed or canceled. At Chicago's two airports alone, more than a thousand delays.
+
+And a ground stop doesn't end when it's lifted. Planes and crews end up in the wrong cities. Pilots hit their legal limit on working hours. The next morning's first flights may not have a plane, or a crew. One afternoon can ripple into the whole weekend.
+
+Now, the question this channel exists for. How much does a day like this cost?
+
+Here's the honest answer: nobody has published a number for this outage yet. Anyone giving you an exact figure today is guessing.
+
+But we do have a yardstick. The FAA has paid for studies on what flight delays cost the U.S. economy. For 2019, that estimate was about thirty-three billion dollars a year. That counts what airlines lose, what passengers lose in wasted time, lost bookings, and the knock-on effect on the wider economy.
+
+Divide that by three hundred sixty-five, and it's roughly ninety million dollars a day. On an ordinary day. With ordinary delays.
+
+Friday was not an ordinary day. So the real bill for this outage is almost certainly higher than a normal day's. How much higher, we'll only know when the airlines report.

@@ -1,0 +1,635 @@
+1
+00:00:00,180 --> 00:00:02,049
+Friday, November 13.
+
+2
+00:00:02,680 --> 00:00:05,769
+2.54 in the afternoon, central time.
+
+3
+00:00:06,330 --> 00:00:10,339
+The United States did something it almost never does.
+
+4
+00:00:10,679 --> 00:00:13,769
+It stopped every departing flight in the country.
+
+5
+00:00:14,230 --> 00:00:15,689
+not because of a storm.
+
+6
+00:00:15,960 --> 00:00:17,510
+not because of an attack.
+
+7
+00:00:18,010 --> 00:00:22,850
+because the people who guide planes through the sky had a problem talking to them.
+
+8
+00:00:23,350 --> 00:00:24,449
+in this video.
+
+9
+00:00:24,699 --> 00:00:26,760
+what we know about the outage.
+
+10
+00:00:27,059 --> 00:00:28,550
+why it keeps happening.
+
+11
+00:00:28,859 --> 00:00:31,530
+and the question nobody has answered yet.
+
+12
+00:00:32,179 --> 00:00:35,649
+How much money does a single afternoon like this burn?
+
+13
+00:00:36,179 --> 00:00:37,670
+Here's what's confirmed.
+
+14
+00:00:38,170 --> 00:00:42,979
+The Federal Aviation Administration ordered a nationwide ground stop.
+
+15
+00:00:43,640 --> 00:00:47,909
+what it called a temporary telecommunications outage.
+
+16
+00:00:48,759 --> 00:00:53,729
+Transportation Secretary Sean Duffy said it was "a communication issue."
+
+17
+00:00:54,009 --> 00:00:57,450
+impacting all air route traffic control centers.
+
+18
+00:00:57,820 --> 00:01:02,570
+Those are the big regional centers that handle planes at cruising altitude.
+
+19
+00:01:02,869 --> 00:01:04,579
+across the whole country.
+
+20
+00:01:05,049 --> 00:01:08,329
+To understand how big that is, look at a normal day.
+
+21
+00:01:08,819 --> 00:01:15,909
+According to the FAA's own numbers, its air traffic system handles more than 44,000 flights.
+
+22
+00:01:16,280 --> 00:01:20,609
+and more than 3 million airline passengers every single day.
+
+23
+00:01:20,950 --> 00:01:24,900
+across more than 29 million square miles of airspace.
+
+24
+00:01:25,430 --> 00:01:27,049
+every one of those flights.
+
+25
+00:01:27,609 --> 00:01:29,250
+depends on a simple thing.
+
+26
+00:01:29,590 --> 00:01:32,969
+A controller on the ground can talk to the pilot in the air.
+
+27
+00:01:33,459 --> 00:01:36,810
+voice over radio and data over phone
+
+28
+00:01:37,079 --> 00:01:42,469
+and network lines that link radar sites, towers, and control centers.
+
+29
+00:01:42,969 --> 00:01:44,359
+when those links fail.
+
+30
+00:01:44,859 --> 00:01:48,840
+Controllers can lose the ability to talk to flights or to see them.
+
+31
+00:01:49,340 --> 00:01:55,329
+And when controllers can't safely talk to planes, the FAA does the only safe thing it can.
+
+32
+00:01:55,859 --> 00:01:57,890
+it stops sending more planes up.
+
+33
+00:01:58,390 --> 00:01:59,560
+That's a ground stop.
+
+34
+00:01:59,829 --> 00:02:05,219
+Nothing new takes off until the people in charge are sure every flight can be guided.
+
+35
+00:02:05,780 --> 00:02:08,740
+Planes already in the air were allowed to keep flying.
+
+36
+00:02:09,050 --> 00:02:09,729
+and land.
+
+37
+00:02:10,009 --> 00:02:12,039
+new departures were frozen.
+
+38
+00:02:12,500 --> 00:02:15,169
+international flights heading to the US.
+
+39
+00:02:15,419 --> 00:02:17,479
+were handled case by case.
+
+40
+00:02:17,819 --> 00:02:19,430
+and by Friday evening.
+
+41
+00:02:19,770 --> 00:02:24,650
+The FAA said the stop would last until at least 11pm Eastern.
+
+42
+00:02:25,110 --> 00:02:27,169
+The first question everyone asked.
+
+43
+00:02:27,580 --> 00:02:28,840
+Was this an attack?
+
+44
+00:02:29,340 --> 00:02:31,270
+So far officials say no.
+
+45
+00:02:31,740 --> 00:02:36,129
+The White House said there was no indication of a nefarious act.
+
+46
+00:02:36,629 --> 00:02:45,310
+Homeland Security Secretary Markwayne Mullin said it was not a threat to the country and not linked to this week's Microsoft outage.
+
+47
+00:02:45,780 --> 00:02:52,199
+Bloomberg reported that investigators were looking at whether a software update could be behind it.
+
+48
+00:02:52,699 --> 00:02:54,409
+that has not been confirmed.
+
+49
+00:02:54,840 --> 00:02:59,909
+If the FAA announces an official cause, it will be pinned in the description.
+
+50
+00:03:00,500 --> 00:03:06,979
+By the afternoon, the flight tracking site FlightAware counted nearly 7,000 flights delayed.
+
+51
+00:03:07,259 --> 00:03:07,969
+or canceled.
+
+52
+00:03:08,409 --> 00:03:10,629
+at Chicago's two airports alone.
+
+53
+00:03:11,000 --> 00:03:13,060
+more than a thousand delays.
+
+54
+00:03:13,400 --> 00:03:16,039
+and the ground stop doesn't end when it's lifted.
+
+55
+00:03:16,599 --> 00:03:19,849
+Planes and crews end up in the wrong cities.
+
+56
+00:03:20,280 --> 00:03:23,169
+pilots hit their legal limit on working hours.
+
+57
+00:03:23,580 --> 00:03:27,240
+The next morning's first flights may not have a plane or a crew.
+
+58
+00:03:27,770 --> 00:03:30,530
+One afternoon can ripple into the whole weekend.
+
+59
+00:03:30,969 --> 00:03:31,430
+now.
+
+60
+00:03:31,770 --> 00:03:34,090
+The question this channel exists for.
+
+61
+00:03:34,680 --> 00:03:36,969
+How much does a day like this cost?
+
+62
+00:03:37,500 --> 00:03:39,050
+Here's the honest answer.
+
+63
+00:03:39,379 --> 00:03:42,500
+Nobody has published a number for this outage yet.
+
+64
+00:03:43,259 --> 00:03:46,599
+Anyone giving you an exact figure today is guessing.
+
+65
+00:03:47,219 --> 00:03:48,870
+but we do have a yardstick.
+
+66
+00:03:49,340 --> 00:03:54,889
+The FAA has paid for studies on what flight delays cost the US economy.
+
+67
+00:03:55,319 --> 00:03:56,650
+for 2019.
+
+68
+00:03:57,139 --> 00:04:00,969
+That estimate was about $33 billion a year.
+
+69
+00:04:01,590 --> 00:04:06,340
+That counts what airlines lose, what passengers lose in wasted time.
+
+70
+00:04:06,680 --> 00:04:07,750
+Lost Bookings
+
+71
+00:04:08,020 --> 00:04:10,469
+and the knock-on effect on the wider economy.
+
+72
+00:04:10,939 --> 00:04:13,699
+Divide that by 365.
+
+73
+00:04:13,939 --> 00:04:18,149
+and it's roughly $90 million a day on an ordinary day.
+
+74
+00:04:18,709 --> 00:04:20,100
+ordinary delays.
+
+75
+00:04:20,379 --> 00:04:22,339
+Friday was not an ordinary day.
+
+76
+00:04:22,709 --> 00:04:27,649
+So the real bill for this outage is almost certainly higher than a normal day.
+
+77
+00:04:28,019 --> 00:04:29,129
+How much higher?
+
+78
+00:04:29,399 --> 00:04:31,779
+we'll only know when the airlines report.
+
+79
+00:04:32,660 --> 00:04:33,800
+So who pays?
+
+80
+00:04:34,170 --> 00:04:44,569
+In the original FAA funded study, about half of the cost of delays fell on passengers, not airlines, missed meetings, extra hotel nights,
+
+81
+00:04:44,730 --> 00:04:47,939
+lost work hours, a wedding you didn't make it to,
+
+82
+00:04:48,220 --> 00:04:50,279
+Airlines pay for crews.
+
+83
+00:04:50,740 --> 00:04:59,259
+Fuel burned while waiting, rebooking and hotel vouchers. And then there's everyone else. Hotels, rental cars.
+
+84
+00:04:59,350 --> 00:05:02,569
+and the businesses waiting for people who never arrived.
+
+85
+00:05:02,970 --> 00:05:05,189
+One more thing passengers should know.
+
+86
+00:05:05,560 --> 00:05:08,709
+when the cause is an air traffic control problem.
+
+87
+00:05:09,050 --> 00:05:10,819
+and not the airline itself,
+
+88
+00:05:11,100 --> 00:05:15,620
+US airlines generally don't have to cover your hotel or your meals.
+
+89
+00:05:16,060 --> 00:05:17,350
+Some do it anyway.
+
+90
+00:05:17,689 --> 00:05:20,259
+Check your airline's policy before you assume.
+
+91
+00:05:20,790 --> 00:05:22,920
+But there is one thing you are owed.
+
+92
+00:05:23,189 --> 00:05:25,250
+no matter whose fault it was.
+
+93
+00:05:25,560 --> 00:05:27,170
+since 2024.
+
+94
+00:05:27,480 --> 00:05:31,720
+U.S. rules require airlines to give you an automatic cash refund.
+
+95
+00:05:32,089 --> 00:05:33,889
+if your flight is cancelled.
+
+96
+00:05:34,259 --> 00:05:36,230
+or significantly changed.
+
+97
+00:05:36,629 --> 00:05:38,500
+and you choose not to travel.
+
+98
+00:05:38,839 --> 00:05:40,740
+significantly changed means.
+
+99
+00:05:41,139 --> 00:05:42,470
+for a domestic flight.
+
+100
+00:05:42,839 --> 00:05:46,050
+leaving or arriving more than three hours late.
+
+101
+00:05:46,519 --> 00:05:48,040
+for an international flight.
+
+102
+00:05:48,410 --> 00:05:49,509
+more than 6.
+
+103
+00:05:49,980 --> 00:05:52,230
+and the money has to come back fast.
+
+104
+00:05:52,819 --> 00:05:56,389
+within 7 business days if you paid by credit card.
+
+105
+00:05:56,949 --> 00:05:59,720
+within 20 days for other payment methods.
+
+106
+00:06:00,089 --> 00:06:01,060
+Not a voucher.
+
+107
+00:06:01,660 --> 00:06:02,850
+not a travel credit.
+
+108
+00:06:03,189 --> 00:06:04,420
+unless you accept one.
+
+109
+00:06:05,269 --> 00:06:05,730
+cash.
+
+110
+00:06:06,389 --> 00:06:07,430
+to the way you paid.
+
+111
+00:06:07,829 --> 00:06:11,879
+So if your flight was cancelled on Friday and you decided to stay home.
+
+112
+00:06:12,379 --> 00:06:15,970
+Don't let anyone talk you into a credit you didn't ask for.
+
+113
+00:06:16,439 --> 00:06:17,930
+This isn't the first time.
+
+114
+00:06:18,360 --> 00:06:20,870
+It's the first nationwide ground stop.
+
+115
+00:06:21,110 --> 00:06:23,170
+since January 2023.
+
+116
+00:06:23,800 --> 00:06:27,850
+That time, a system that sends safety notices to pilots,
+
+117
+00:06:28,120 --> 00:06:29,160
+called NOTAM,
+
+118
+00:06:29,689 --> 00:06:30,310
+crashed.
+
+119
+00:06:30,709 --> 00:06:34,019
+The cause was traced to a damaged database file.
+
+120
+00:06:34,649 --> 00:06:37,060
+More than a thousand flights were cancelled.
+
+121
+00:06:37,399 --> 00:06:39,459
+and about 10,000 were delayed.
+
+122
+00:06:39,990 --> 00:06:42,439
+in 2025, controllers.
+
+123
+00:06:42,680 --> 00:06:44,329
+handling Newark Airport.
+
+124
+00:06:44,629 --> 00:06:47,139
+lost radar and radio contact.
+
+125
+00:06:47,449 --> 00:06:48,680
+more than once.
+
+126
+00:06:49,079 --> 00:06:50,120
+part of the problem.
+
+127
+00:06:50,490 --> 00:06:54,660
+radar data traveling over old copper telecom wires
+
+128
+00:06:55,029 --> 00:06:56,680
+in September of this year.
+
+129
+00:06:56,980 --> 00:07:03,300
+The same Philadelphia facility lost both its main and its backup data lines at the same time.
+
+130
+00:07:03,800 --> 00:07:07,689
+Newark had almost no commercial landings for much of that day.
+
+131
+00:07:07,990 --> 00:07:11,649
+and now every air route traffic control center in the country.
+
+132
+00:07:12,220 --> 00:07:13,990
+The pattern is the same every time.
+
+133
+00:07:14,420 --> 00:07:15,560
+old equipment.
+
+134
+00:07:15,800 --> 00:07:18,250
+and backups that fail when they're needed.
+
+135
+00:07:18,779 --> 00:07:28,160
+Back in 2023, the FAA's own budget documents described the NOTAM database as running on failing vintage hardware.
+
+136
+00:07:28,819 --> 00:07:31,370
+That's the agency describing itself.
+
+137
+00:07:31,899 --> 00:07:36,839
+Congress approved $12.5 billion last year to modernize
+
+138
+00:07:37,180 --> 00:07:38,569
+air traffic control.
+
+139
+00:07:39,350 --> 00:07:42,889
+The FAA says it has already replaced.
+
+140
+00:07:43,480 --> 00:07:49,959
+1346 communication lines and 190 voice switches
+
+141
+00:07:50,360 --> 00:07:55,269
+But Secretary Duffy has said finishing the job will take tens of billions more.
+
+142
+00:07:55,670 --> 00:07:59,939
+so the money is moving, but the system is being repaired while it's running.
+
+143
+00:08:00,339 --> 00:08:03,009
+like changing the engine of a plane in mid-flight.
+
+144
+00:08:03,540 --> 00:08:05,319
+Here's what we still don't know.
+
+145
+00:08:05,750 --> 00:08:07,620
+We don't know the official cause.
+
+146
+00:08:07,959 --> 00:08:11,850
+We don't know the final count of delays and cancellations.
+
+147
+00:08:12,089 --> 00:08:14,050
+once the ripple effect is over.
+
+148
+00:08:14,459 --> 00:08:16,100
+and we don't know the bill.
+
+149
+00:08:16,439 --> 00:08:21,639
+No airline or government agency has put a dollar figure on this day yet.
+
+150
+00:08:22,009 --> 00:08:28,389
+A country can spend billions building the safest air system in the world and still lose an afternoon.
+
+151
+00:08:28,660 --> 00:08:32,490
+and millions of dollars to a phone line that stops working.
+
+152
+00:08:33,019 --> 00:08:35,110
+This story is still developing.
+
+153
+00:08:35,509 --> 00:08:41,639
+Everything here is based on official statements and news reports from November 13th.
+
+154
+00:08:42,039 --> 00:08:43,269
+2026.
+
+155
+00:08:43,830 --> 00:08:46,120
+when the airlines and the FAA
+
+156
+00:08:46,490 --> 00:08:47,970
+put a number on this.
+
+157
+00:08:48,279 --> 00:08:49,610
+I'll do the follow up.
+
+158
+00:08:50,259 --> 00:08:52,129
+Subscribe if you want to see it.
+
+159
+00:08:52,440 --> 00:08:56,769
+and tell me in the comments were you stuck in an airport on Friday?
