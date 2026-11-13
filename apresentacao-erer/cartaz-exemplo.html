@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Cartaz exemplo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Permanent+Marker&display=swap">
+<style>
+* { box-sizing: border-box; margin: 0; }
+html, body { width: 1080px; height: 1350px; }
+body { background: #d9d4cb; display: flex; align-items: center; justify-content: center; overflow: hidden;
+  background-image: radial-gradient(rgba(0,0,0,.05) 1px, transparent 1px); background-size: 6px 6px; }
+.poster { position: relative; width: 960px; height: 1250px; background: #FFD23F; border: 26px solid #111;
+  box-shadow: 14px 18px 0 rgba(0,0,0,.28); transform: rotate(-1.2deg); padding: 46px 40px 40px;
+  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+  background-image: radial-gradient(rgba(0,0,0,.035) 1.2px, transparent 1.2px); background-size: 7px 7px; }
+.tape { position: absolute; width: 220px; height: 58px; background: rgba(240,232,210,.88); top: -34px; box-shadow: 0 2px 4px rgba(0,0,0,.15); }
+.t1 { left: -60px; transform: rotate(-32deg); } .t2 { right: -60px; transform: rotate(30deg); }
+.l1 { font-family: Anton, Impact, sans-serif; font-size: 230px; line-height: .9; color: #111; letter-spacing: 2px; transform: rotate(-2deg); }
+.band { font-family: Anton, Impact, sans-serif; font-size: 150px; line-height: 1; color: #fff; background: #E3262E;
+  padding: 6px 30px 14px; transform: rotate(2.5deg); box-shadow: 10px 12px 0 #111; letter-spacing: 2px; }
+.l3 { font-family: Anton, Impact, sans-serif; font-size: 180px; line-height: .9; color: #111; transform: rotate(-1.5deg); }
+.mid { display: flex; align-items: center; gap: 26px; width: 100%; justify-content: center; }
+svg.mega { width: 400px; height: 300px; flex: none; }
+.pq { width: 100%; background: #fff; border: 8px solid #111; padding: 18px 26px 20px; transform: rotate(-1deg); box-shadow: 8px 10px 0 rgba(0,0,0,.85); }
+.pq b { display: block; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 40px; color: #E3262E; letter-spacing: 2px; }
+.pq p { font-family: "Permanent Marker", cursive; font-size: 40px; line-height: 1.25; color: #111; }
+</style>
+</head>
+<body>
+<div class="poster">
+  <span class="tape t1"></span><span class="tape t2"></span>
+  <div class="l1">RACISMO</div>
+  <div class="band">NÃO TEM VEZ</div>
+  <div class="mid">
+    <svg class="mega" viewBox="0 0 400 300" aria-label="megafone">
+      <g stroke="#111" stroke-width="12" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M70 110 L230 40 L230 260 L70 190 Z" fill="#E3262E"/>
+        <rect x="30" y="110" width="44" height="80" rx="8" fill="#111"/>
+        <path d="M95 196 L118 268 L162 268 L140 210" fill="#111"/>
+        <ellipse cx="230" cy="150" rx="24" ry="110" fill="#fff"/>
+      </g>
+      <g stroke="#111" stroke-width="16" stroke-linecap="round" fill="none">
+        <path d="M285 150 L380 150"/>
+        <path d="M280 95 L360 45"/>
+        <path d="M280 205 L360 255"/>
+      </g>
+    </svg>
+    <div class="l3">AQUI!</div>
+  </div>
+  <div class="pq"><b>POR QUE ISSO IMPORTA?</b><p>Na nossa sala, ninguém é tratado diferente pela cor da pele. Racismo é crime e a gente não aceita.</p></div>
+</div>
+</body>
+</html>
