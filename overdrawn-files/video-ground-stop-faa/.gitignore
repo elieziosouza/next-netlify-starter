@@ -1,4 +1,6 @@
 clips/
 audio/*.wav
 render.log
+shorts.log
 __pycache__/
+entrega/*VIDEO PRINCIPAL.mp4

@@ -496,12 +496,12 @@ def c_unknown(img, t, d):
 
 
 def c_close(img, t, d):
+    panel(img, (X0 - 40, 230, X0 + 1500, 860), 0.55, 20)
     f = F("serif", 76)
-    lines = ["Billions to build the safest", "air system in the world.", "", "Lost for an afternoon",
-             "to a line that stopped working."]
-    for i, ln in enumerate(lines):
-        if ln:
-            rise(img, ln, f, X0, 280 + i * 100, t, 0.3 + i * d * 0.12, RED if i >= 3 else WHITE)
+    for i, ln in enumerate(["Billions to build the safest", "air system in the world."]):
+        rise(img, ln, f, X0, 270 + i * 100, t, 0.3 + i * 0.3, WHITE)
+    for i, ln in enumerate(["LOST FOR AN AFTERNOON", "TO A LINE THAT STOPPED WORKING."]):
+        rise(img, ln, F("black", 70), X0, 560 + i * 100, t, d * 0.4 + i * 0.3, RED)
 
 
 def c_end(img, t, d):

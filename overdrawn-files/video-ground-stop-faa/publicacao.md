@@ -1,7 +1,15 @@
 # Publicação no YouTube — apagão no controle aéreo dos EUA
 
-Arquivo do vídeo: `ground-stop-final.mp4` (1920×1080, 8:59)
-Thumbnails: `thumbs/thumb-A.jpg`, `thumbs/thumb-B.jpg`, `thumbs/thumb-C.jpg`
+Tudo para baixar está na pasta `entrega/`:
+
+- `Overdrawn Files - Ground Stop EUA - VIDEO PRINCIPAL.mp4` (1920×1080, 8:59)
+- `Overdrawn Files - Ground Stop EUA - THUMB 1 PRINCIPAL.jpg`
+- `Overdrawn Files - Ground Stop EUA - THUMB 2 TESTE AB.jpg`
+- `Overdrawn Files - Ground Stop EUA - THUMB 3 TESTE AB.jpg`
+- `Overdrawn Files - Ground Stop EUA - LEGENDAS EN.srt`
+- `Overdrawn Files - Ground Stop EUA - SHORT 1 REEMBOLSO.mp4` (0:56)
+- `Overdrawn Files - Ground Stop EUA - SHORT 2 TODOS OS VOOS PARADOS.mp4` (0:48)
+- `Overdrawn Files - Ground Stop EUA - SHORT 3 QUANTO CUSTA.mp4` (0:58)
 
 ## Título
 
@@ -85,7 +93,7 @@ If your flight was canceled and you chose not to travel, you're owed a cash refu
 
 ## Configurações no envio
 
-- Idioma do vídeo: inglês. Legendas: suba o arquivo `legendas.srt`, ou deixe as automáticas.
+- Idioma do vídeo: inglês. Legendas: suba o arquivo `... LEGENDAS EN.srt`, ou deixe as automáticas.
 - Público: "Não é conteúdo para crianças".
 - Conteúdo alterado ou sintético: "Não". A narração é de voz sintética, mas não imita ninguém real, e não há imagem realista gerada por IA.
 - Categoria: Notícias e política.
@@ -98,3 +106,55 @@ If your flight was canceled and you chose not to travel, you're owed a cash refu
 1. Veja se a FAA já anunciou a causa oficial e a hora em que os voos voltaram. Se sim, acrescente uma linha no topo da descrição:
    `UPDATE: [causa / horário]`.
 2. Se o número de voos afetados mudou muito (o FlightAware atualiza), mencione isso no comentário fixado.
+
+---
+
+# Shorts
+
+Publique os Shorts **depois** do vídeo principal, um a cada 3 ou 4 horas (ou 1 por dia).
+Em cada Short, use "Vídeo relacionado" apontando para o vídeo principal: aparece um link clicável embaixo do Short.
+
+## Short 1 — Reembolso (publique primeiro, é o que mais compartilha)
+
+Título:
+```
+Flight Canceled? The Airline Owes You CASH, Not a Voucher
+```
+Descrição:
+```
+If your U.S. flight is canceled or significantly delayed and you choose not to travel, the airline must give you an automatic cash refund. Here's the rule, after Friday's nationwide ground stop.
+
+Full story: what the FAA outage cost, and who pays. Link above.
+
+#FlightRefund #GroundStop #TravelTips #Shorts
+```
+
+## Short 2 — Todos os voos parados
+
+Título:
+```
+Every Flight in America Just Stopped
+```
+Descrição:
+```
+At 2:54 p.m. Central Time on November 13, 2026, the FAA halted every departing flight in the U.S. after a communications outage hit air traffic control centers nationwide.
+
+Full story, and what it costs, linked above.
+
+#FAA #GroundStop #BreakingNews #Shorts
+```
+
+## Short 3 — Quanto custa
+
+Título:
+```
+What Does One Day of Grounded Flights Really Cost?
+```
+Descrição:
+```
+Nobody has an official number for Friday's FAA outage yet. But an FAA-funded estimate puts the cost of U.S. flight delays at about $33 billion a year. Here's the math.
+
+The $90M/day figure is a simple average of a yearly estimate, not an official cost for this outage.
+
+#FAA #FlightDelays #Economy #Shorts
+```
