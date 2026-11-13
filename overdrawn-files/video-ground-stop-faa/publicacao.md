@@ -125,7 +125,7 @@ Descrição:
 If your U.S. flight is canceled or significantly delayed and you choose not to travel, the airline must give you an automatic cash refund. Here's the rule, after Friday's nationwide ground stop.
 
 ▶ Full story: what the FAA outage cost, and who pays:
-https://youtu.be/COLE_O_ID_AQUI
+https://youtu.be/fRyaUgZScEw
 
 #FlightRefund #GroundStop #TravelTips #Shorts
 ```
@@ -141,7 +141,7 @@ Descrição:
 At 2:54 p.m. Central Time on November 13, 2026, the FAA halted every departing flight in the U.S. after a communications outage hit air traffic control centers nationwide.
 
 ▶ Full story, and what it costs:
-https://youtu.be/COLE_O_ID_AQUI
+https://youtu.be/fRyaUgZScEw
 
 #FAA #GroundStop #BreakingNews #Shorts
 ```
@@ -157,7 +157,7 @@ Descrição:
 Nobody has an official number for Friday's FAA outage yet. But an FAA-funded estimate puts the cost of U.S. flight delays at about $33 billion a year. Here's the math.
 
 ▶ Full story:
-https://youtu.be/COLE_O_ID_AQUI
+https://youtu.be/fRyaUgZScEw
 
 The $90M/day figure is a simple average of a yearly estimate, not an official cost for this outage.
 
