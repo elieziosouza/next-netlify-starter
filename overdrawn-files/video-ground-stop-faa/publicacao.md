@@ -163,3 +163,22 @@ The $90M/day figure is a simple average of a yearly estimate, not an official co
 
 #FAA #FlightDelays #Economy #Shorts
 ```
+
+---
+
+# Post de divulgação (aba Posts / Comunidade)
+
+Imagem: `entrega/Overdrawn Files - Ground Stop EUA - POST COMUNIDADE.jpg`
+Publicar 1 a 2 horas depois do vídeo principal. Anexe o vídeo ao post, se a opção aparecer, ou use a imagem com o link.
+
+```
+Every departing flight in the U.S. stopped on Friday. Nearly 7,000 flights delayed or canceled.
+
+Nobody has put a dollar figure on it yet, so I did the math, and looked at who actually pays the bill.
+
+Plus: if your flight was canceled, the airline may owe you cash, not a voucher.
+
+▶ Watch the full story: https://youtu.be/fRyaUgZScEw
+
+Were you stuck in an airport? Tell me where. 👇
+```

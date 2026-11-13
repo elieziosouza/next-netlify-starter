@@ -9,6 +9,7 @@ Canal em inglês, para público americano, sobre como o dinheiro some: escândal
 3. **3 thumbnails** (1 principal + 2 para o teste A/B do YouTube).
 4. Título principal + 2 alternativos, descrição com capítulos e fontes, tags, comentário fixado.
 5. Legendas em inglês (.srt).
+6. **Post de divulgação** do vídeo principal, feito depois dos cortes: texto em inglês + imagem quadrada 1080×1080 (`POST COMUNIDADE.jpg`), para a aba Posts do YouTube. Publicar 1 a 2 horas depois do vídeo principal.
 
 ## Shorts pensados desde o roteiro
 
@@ -22,6 +23,7 @@ Regras de cada trecho:
 - Começar com uma frase que funcione sem contexto (nada de "this channel" ou "as I said").
 - Terminar numa frase que fecha a ideia.
 - Ter um número ou uma imagem forte na tela.
+- Todo texto que vai para o YouTube (títulos, descrições, tags, posts) é em inglês.
 
 No roteiro, marque assim: `[SHORT 1 começa]` … `[SHORT 1 termina]`.
 
@@ -38,6 +40,7 @@ Overdrawn Files - <Pauta> - THUMB 2 TESTE AB.jpg
 Overdrawn Files - <Pauta> - THUMB 3 TESTE AB.jpg
 Overdrawn Files - <Pauta> - LEGENDAS EN.srt
 Overdrawn Files - <Pauta> - SHORT 1 <TEMA>.mp4
+Overdrawn Files - <Pauta> - POST COMUNIDADE.jpg
 ```
 
 ## Visual
