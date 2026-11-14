@@ -12,29 +12,28 @@ const Base: React.FC<{ from: number; children: React.ReactNode }> = ({ from, chi
   useFonts();
   return (<AbsoluteFill style={{ background: "#0a1a38" }}>
     <OffthreadVideo src={staticFile("v7.mp4")} startFrom={from} muted style={{ width: 1080, height: 1920, objectFit: "cover" }} />
-    <div style={{ position: "absolute", left: 0, right: 0, top: 1130, bottom: 0, background: "linear-gradient(180deg, rgba(8,20,48,0) 0%, rgba(8,20,48,.78) 55%, rgba(8,20,48,.86) 100%)" }} />
+    <div style={{ position: "absolute", left: 0, right: 0, top: 1020, bottom: 0, background: "linear-gradient(180deg, rgba(8,20,48,0) 0%, rgba(8,20,48,.78) 40%, rgba(8,20,48,.86) 100%)" }} />
     {children}
   </AbsoluteFill>);
 };
-export const Palavras7: React.FC = () => {
-  const { t } = useT();
-  return (
-    <Base from={18}>
-      <Fade a={0.2} b={3.5}>
-        <Pop at={0.3} y={1370} from={0.3}><div style={{ font: "400 190px Anton", color: YEL, ...Outline } as any}>7 PALAVRAS</div></Pop>
-        <Pop at={0.65} y={1545}><div style={{ font: "800 48px Montserrat", color: "#fff", textAlign: "center", width: 940, lineHeight: 1.2, ...Outline, WebkitTextStroke: "9px #0a1a38" } as any}>EM INGLÊS QUE TODO MUNDO PRECISA SABER</div></Pop>
-      </Fade>
-      <Fade a={3.6} b={7.2}>
-        <Pop at={3.7} y={1345}><div style={{ font: "800 58px Montserrat", color: "#fff", ...Outline, WebkitTextStroke: "10px #0a1a38" } as any}>AS 7 ESTÃO NA</div></Pop>
-        <Pop at={3.85} y={1475} from={0.3}><div style={{ font: "400 190px Anton", color: YEL, ...Outline } as any}>LEGENDA</div></Pop>
-        <Pop at={4.2} y={1650}><Emoji e="👇" size={110} style={{ transform: `translateY(${14 * Math.sin((t - 4.2) * 7)}px)` }} /></Pop>
-      </Fade>
-    </Base>
-  );
-};
+const Bloco1: React.FC<{ at: number }> = ({ at }) => (<>
+  <Pop at={at} y={1190} from={0.3}><div style={{ font: "400 150px Anton", color: YEL, ...Outline } as any}>7 PALAVRAS</div></Pop>
+  <Pop at={at + 0.35} y={1300}><div style={{ font: "800 40px Montserrat", color: "#fff", textAlign: "center", width: 940, lineHeight: 1.2, ...Outline, WebkitTextStroke: "8px #0a1a38" } as any}>EM INGLÊS QUE TODO MUNDO PRECISA SABER</div></Pop>
+</>);
+const Bloco2: React.FC<{ at: number }> = ({ at }) => { const { t } = useT(); return (<>
+  <Pop at={at} y={1440}><div style={{ font: "800 46px Montserrat", color: "#fff", ...Outline, WebkitTextStroke: "9px #0a1a38" } as any}>AS 7 ESTÃO NA</div></Pop>
+  <Pop at={at + 0.15} y={1545} from={0.3}><div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+    <div style={{ font: "400 150px Anton", color: YEL, ...Outline } as any}>LEGENDA</div>
+    <Emoji e="👇" size={84} style={{ transform: `translateY(${12 * Math.sin((t - at) * 7)}px)` }} /></div></Pop>
+</>); };
+export const Palavras7: React.FC = () => (
+  <Base from={18}>
+    <Fade a={0.2} b={99}><Bloco1 at={0.3} /></Fade>
+    <Fade a={3.6} b={99}><Bloco2 at={3.7} /></Fade>
+  </Base>
+);
 export const Palavras7Capa: React.FC = () => (
   <Base from={75}>
-    <Pop at={0} y={1370}><div style={{ font: "400 190px Anton", color: YEL, ...Outline } as any}>7 PALAVRAS</div></Pop>
-    <Pop at={0} y={1545}><div style={{ font: "800 48px Montserrat", color: "#fff", textAlign: "center", width: 940, lineHeight: 1.2, ...Outline, WebkitTextStroke: "9px #0a1a38" } as any}>EM INGLÊS QUE TODO MUNDO PRECISA SABER</div></Pop>
+    <Bloco1 at={-3} /><Bloco2 at={-3} />
   </Base>
 );
