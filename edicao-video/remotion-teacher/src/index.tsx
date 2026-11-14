@@ -21,6 +21,7 @@ import { QuizRest, QuizRestCapa } from "./QuizRest";
 import TQR from "./timings/quizrest.json";
 import { QuizHotel, QuizHotelCapa } from "./QuizHotel";
 import TQH from "./timings/quizhotel.json";
+import { Palavras7, Palavras7Capa } from "./Palavras7";
 import TPP from "./timings/ppsp.json";
 import { WasWere, WasWereCapa } from "./WasWere";
 import TWW from "./timings/waswere.json";
@@ -67,6 +68,8 @@ const Root: React.FC = () => (
     <Still id="QuizRestCapa" component={QuizRestCapa} width={1080} height={1920} />
     <Composition id="QuizHotel" component={QuizHotel} width={1080} height={1920} fps={TQH.fps} durationInFrames={Math.round(TQH.total * TQH.fps)} />
     <Still id="QuizHotelCapa" component={QuizHotelCapa} width={1080} height={1920} />
+    <Composition id="Palavras7" component={Palavras7} width={1080} height={1920} fps={30} durationInFrames={210} />
+    <Still id="Palavras7Capa" component={Palavras7Capa} width={1080} height={1920} />
     <Composition id="WasWere" component={WasWere} width={1080} height={1920} fps={TWW.fps} durationInFrames={Math.round(TWW.total * TWW.fps)} />
     <Still id="WasWereCapa" component={WasWereCapa} width={1080} height={1920} />
     <Composition id="Viagem1" component={Viagem1} width={1920} height={1080} fps={TV1.fps} durationInFrames={Math.round(TV1.total * TV1.fps)} />
