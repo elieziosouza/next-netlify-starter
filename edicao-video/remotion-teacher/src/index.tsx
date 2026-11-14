@@ -10,6 +10,8 @@ import { SimplePast, ExplicacaoStill, LicaoStill, SimplePastCapa } from "./Simpl
 import TS from "./timings/simplepast.json";
 import { Superlativos, SuperlativosCapa } from "./Superlativos";
 import TSU from "./timings/superlativos.json";
+import { PPSP, PPSPCapa } from "./PPSP";
+import TPP from "./timings/ppsp.json";
 import { WasWere, WasWereCapa } from "./WasWere";
 import TWW from "./timings/waswere.json";
 import { Viagem1, Viagem1Capa, Viagem1Capa916, CursoQuadrado, CursoCheckout, CursoModulo } from "./Viagem1";
@@ -43,6 +45,8 @@ const Root: React.FC = () => (
     <Still id="SimplePastCapa" component={SimplePastCapa} width={1920} height={1080} />
     <Composition id="Superlativos" component={Superlativos} width={1080} height={1920} fps={TSU.fps} durationInFrames={Math.round(TSU.total * TSU.fps)} />
     <Still id="SuperlativosCapa" component={SuperlativosCapa} width={1080} height={1920} />
+    <Composition id="PPSP" component={PPSP} width={1080} height={1920} fps={TPP.fps} durationInFrames={Math.round(TPP.total * TPP.fps)} />
+    <Still id="PPSPCapa" component={PPSPCapa} width={1080} height={1920} />
     <Composition id="WasWere" component={WasWere} width={1080} height={1920} fps={TWW.fps} durationInFrames={Math.round(TWW.total * TWW.fps)} />
     <Still id="WasWereCapa" component={WasWereCapa} width={1080} height={1920} />
     <Composition id="Viagem1" component={Viagem1} width={1920} height={1080} fps={TV1.fps} durationInFrames={Math.round(TV1.total * TV1.fps)} />

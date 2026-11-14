@@ -141,11 +141,11 @@ const Opcao: React.FC<{ i: number; s: string; good: boolean; ta: number; rv: num
   return <Center y={790 + i * 150}><div style={{ ...p.style, opacity: (p.style.opacity as number) * (rvd && !good ? 0.55 : 1) }}>
     <div style={{ width: 760, height: 124, borderRadius: 30, background: fill, border: `5px solid ${rvd ? fill : YEL}`, display: "flex", alignItems: "center", position: "relative", transform: `scale(${sc})`, boxShadow: "0 14px 30px rgba(0,0,0,.35)" }}>
       <div style={{ position: "absolute", left: 20, width: 84, height: 84, borderRadius: "50%", background: rvd ? "#fff" : INK, color: rvd ? fill : "#fff", font: "800 44px Montserrat", display: "grid", placeItems: "center" }}>{i + 1}</div>
-      <div style={{ flex: 1, textAlign: "center", font: "800 56px Montserrat", color: rvd ? "#fff" : INK, paddingLeft: 60 }}>{s}</div>
+      <div style={{ flex: 1, textAlign: "center", font: `800 ${s.length > 28 ? 34 : s.length > 20 ? 40 : 56}px Montserrat`, color: rvd ? "#fff" : INK, paddingLeft: 60 }}>{s}</div>
       {rvd && <Emoji e={good ? "✅" : "❌"} size={70} style={{ position: "absolute", right: -100, transform: `scale(${spring({ frame: Math.round((t - rv) * 30), fps: 30 })})` }} />}
     </div></div></Center>;
 };
-export type QuizItem = { e: string; before?: string; answer: string; after?: string; opts: [string, boolean][]; tip: React.ReactNode };
+export type QuizItem = { e: string; before?: string; answer: string; after?: string; opts: [string, boolean][]; tip: React.ReactNode; fs?: number };
 /** quiz com 2 perguntas: tempos em tm.quiz (contador e revelação) e tm.t.quiz / q1 / q2 / cta */
 export const Quiz: React.FC<{ items: QuizItem[] }> = ({ items }) => {
   const TM = useTM(); const T = TM.t; const { t } = useT(); const a = T.quiz, b = T.cta; const k = env(t, a, b); if (k <= 0) return null;
@@ -158,7 +158,7 @@ export const Quiz: React.FC<{ items: QuizItem[] }> = ({ items }) => {
       <Center y={400}><div style={{ font: "800 40px Montserrat", color: MUTED }}>PERGUNTA {qi + 1} DE 2</div></Center>
       <Pop at={qa} y={560}><div style={{ display: "flex", alignItems: "center", gap: 30 }}>
         <Emoji e={q.e} size={110} style={{ transform: `rotate(${6 * Math.sin(t * 4)}deg)` }} />
-        <span style={{ font: "400 110px Anton", color: "#fff", ...Outline } as any}>{q.before ? q.before + " " : ""}<span style={{ color: rvd ? YEL : MUTED }}>{rvd ? q.answer : "____"}</span>{q.after ? " " + q.after : ""}</span></div></Pop>
+        <span style={{ font: `400 ${q.fs ?? 110}px Anton`, color: "#fff", ...Outline } as any}>{q.before ? q.before + " " : ""}<span style={{ color: rvd ? YEL : MUTED }}>{rvd ? q.answer : "____"}</span>{q.after ? " " + q.after : ""}</span></div></Pop>
       <Confete t0={rv} x0={540} y0={790 + ok * 150} />
       {q.opts.map(([s, good], i) => <Opcao key={qi + "-" + i} i={i} s={s} good={good} ta={qa + 0.25 + i * 0.3} rv={rv} />)}
       {t >= c0 && t < rv && <Anel c0={c0} />}
