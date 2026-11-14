@@ -6,7 +6,7 @@ import numpy as np
 import legenda_dinamica as L
 FD=L.FD; W,H=1080,1920; CX=540; CY=1500; MAXW=780  # o vídeo final troca CX, CY e MAXW; MAXW=780
 WHITE=(250,248,244); GOLD=(222,196,138)
-SIGLAS={"STF","PGR","MP"}
+SIGLAS={"STF","PGR","MP","CNH","ANTT","R$"}
 def font(n,s): return ImageFont.truetype(f"{FD}/{n}.ttf",s)
 cache={}
 def word_img(text,fname,size,track,fill):
