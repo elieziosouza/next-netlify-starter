@@ -6,7 +6,7 @@ Canal em inglês, para público americano, sobre como o dinheiro some: escândal
 
 1. **Vídeo principal** de 8 a 10 minutos (acima de 8 libera anúncios no meio).
 2. **3 Shorts no mínimo**, já planejados no roteiro (ver abaixo).
-3. **3 thumbnails** (1 principal + 2 para o teste A/B do YouTube).
+3. **3 thumbnails** (1 principal + 2 para o teste A/B do YouTube). Estilo preferido: o mesmo do post (foto escurecida com rosto, etiqueta vermelha com local e data, 2 linhas brancas com o fato e uma pergunta grande em vermelho).
 4. Título principal + 2 alternativos, descrição com capítulos e fontes, tags, comentário fixado.
 5. Legendas em inglês (.srt).
 6. **Post de divulgação** do vídeo principal, feito depois dos cortes: texto em inglês + imagem quadrada 1080×1080 (`POST COMUNIDADE.jpg`), para a aba Posts do YouTube. Publicar 1 a 2 horas depois do vídeo principal.
