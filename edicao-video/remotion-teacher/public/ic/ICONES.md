@@ -12,3 +12,6 @@ Atenção: o conector entrega só 200 px; para ficar nítido em tamanho grande, 
 | croissant.png | MAHa2fTNUCQ | teste, ainda sem uso |
 | house.png | MAHa2cZHZuU | teste, ainda sem uso |
 | clock.png | MAHa2TAne-8 | teste, ainda sem uso |
+| passport.png | MAHa56G1XLw | Quiz do aeroporto (passaporte) |
+| gate.png | MAHa54y_rTA | Quiz do aeroporto (portão) |
+| stamp.png | MAHa54eNfzY | Quiz do aeroporto (alfândega) |

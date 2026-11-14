@@ -15,6 +15,8 @@ import { ForSince, ForSinceCapa } from "./ForSince";
 import TFS from "./timings/forsince.json";
 import { Aero, AeroCapa } from "./Aero";
 import TAE from "./timings/aero.json";
+import { QuizAero, QuizAeroCapa } from "./QuizAero";
+import TQA from "./timings/quizaero.json";
 import TPP from "./timings/ppsp.json";
 import { WasWere, WasWereCapa } from "./WasWere";
 import TWW from "./timings/waswere.json";
@@ -55,6 +57,8 @@ const Root: React.FC = () => (
     <Still id="ForSinceCapa" component={ForSinceCapa} width={1080} height={1920} />
     <Composition id="Aero" component={Aero} width={1080} height={1920} fps={TAE.fps} durationInFrames={Math.round(TAE.total * TAE.fps)} />
     <Still id="AeroCapa" component={AeroCapa} width={1080} height={1920} />
+    <Composition id="QuizAero" component={QuizAero} width={1080} height={1920} fps={TQA.fps} durationInFrames={Math.round(TQA.total * TQA.fps)} />
+    <Still id="QuizAeroCapa" component={QuizAeroCapa} width={1080} height={1920} />
     <Composition id="WasWere" component={WasWere} width={1080} height={1920} fps={TWW.fps} durationInFrames={Math.round(TWW.total * TWW.fps)} />
     <Still id="WasWereCapa" component={WasWereCapa} width={1080} height={1920} />
     <Composition id="Viagem1" component={Viagem1} width={1920} height={1080} fps={TV1.fps} durationInFrames={Math.round(TV1.total * TV1.fps)} />
