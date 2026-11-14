@@ -15,3 +15,10 @@ Atenção: o conector entrega só 200 px; para ficar nítido em tamanho grande, 
 | passport.png | MAHa56G1XLw | Quiz do aeroporto (passaporte) |
 | gate.png | MAHa54y_rTA | Quiz do aeroporto (portão) |
 | stamp.png | MAHa54eNfzY | Quiz do aeroporto (alfândega) |
+| table.png | MAHa6MRsmxc | Quiz do restaurante (mesa) |
+| menu.png | MAHa6DdEO74 | Quiz do restaurante (cardápio) |
+| waiter.png | MAHa6McRk7g | Quiz do restaurante (garçom) |
+| booking.png | MAHa6OCXwoI | Quiz do restaurante (reserva) |
+| dish.png | MAHa6Jhiz2c | Quiz do restaurante (prato principal) |
+| receipt.png | MAHa6MzNEwo | Quiz do restaurante (conta) |
+| tip.png | MAHa6OQUqd8 | Quiz do restaurante (gorjeta) |

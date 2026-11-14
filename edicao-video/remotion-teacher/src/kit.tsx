@@ -65,6 +65,9 @@ export const Fundo: React.FC = () => (
 );
 
 // ---------- avatar 3D: troca de expressão com fusão, balanço e brilho guiados pela voz
+// segunda folha de expressões (14/11/2026): ids 101..112 → public/av2/ (guardada só na pasta de trabalho, fora do repositório público)
+const AV2 = ["sorrindo", "bravo", "desconfiado", "piscando", "surpreso", "sobrancelha", "pensando-lado", "piscando-2", "bravo-livro", "assustado", "pensando-queixo", "malicioso"];
+const avSrc = (id: number) => id >= 100 ? `av2/av2_${String(id - 100).padStart(2, "0")}_${AV2[id - 101]}.png` : `av/av3d_${id}.png`;
 export const Avatar: React.FC<{ tt?: number }> = ({ tt }) => {
   const TM = useTM(); const { t: t0, f } = useT(); const t = tt ?? t0;
   const amp = tt !== undefined ? 0 : (TM.amp[Math.min(f, TM.amp.length - 1)] ?? 0);
@@ -76,8 +79,8 @@ export const Avatar: React.FC<{ tt?: number }> = ({ tt }) => {
       <div style={{ position: "absolute", inset: -40, borderRadius: "50%", background: YEL, opacity: (90 + 90 * amp) / 255, filter: "blur(24px)" }} />
       <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: YEL }} />
       <div style={{ position: "absolute", left: 18, top: 18, width: 360, height: 360, transform: `rotate(${rot}deg)` }}>
-        <Img src={staticFile(`av/av3d_${prv}.png`)} style={{ position: "absolute", width: 360, height: 360 }} />
-        <Img src={staticFile(`av/av3d_${cur}.png`)} style={{ position: "absolute", width: 360, height: 360, opacity: k }} />
+        <Img src={staticFile(avSrc(prv))} style={{ position: "absolute", width: 360, height: 360 }} />
+        <Img src={staticFile(avSrc(cur))} style={{ position: "absolute", width: 360, height: 360, opacity: k }} />
       </div>
     </div>
   );
