@@ -44,7 +44,9 @@ export const Box: React.FC<{ c: string; size: number; tight?: boolean; children:
     boxShadow: `0 6px 0 rgba(0,0,0,.25), 0 0 40px ${c}66` }}>{children}</span>
 );
 export const Outline: React.CSSProperties = { WebkitTextStroke: "10px " + INK, paintOrder: "stroke fill" } as any;
-export const Emoji: React.FC<{ e: string; size: number; style?: React.CSSProperties }> = ({ e, size, style }) => (
+export const Emoji: React.FC<{ e: string; size: number; style?: React.CSSProperties }> = ({ e, size, style }) => e.startsWith("ic/") ? (
+  <Img src={staticFile(e)} style={{ width: size * 1.6, height: size * 1.6, display: "inline-block", filter: "drop-shadow(0 10px 16px rgba(0,0,0,.4))", ...style }} />
+) : (
   <span style={{ fontFamily: "Noto Color Emoji", fontSize: size, lineHeight: 1, display: "inline-block", filter: "drop-shadow(0 8px 14px rgba(0,0,0,.35))", ...style }}>{e}</span>
 );
 export const Center: React.FC<{ y: number; children: React.ReactNode; style?: React.CSSProperties }> = ({ y, children, style }) => (

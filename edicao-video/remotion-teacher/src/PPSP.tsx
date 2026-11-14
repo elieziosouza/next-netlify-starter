@@ -5,22 +5,22 @@ import TM from "./timings/ppsp.json";
 import { useT, usePop, Chip, Box, Outline, Emoji, Center, Pop, Cena, Card, Quiz, Chamada, Licao, CapaBase, QuizItem,
   INK, YEL, MUTED, C_A, C_AN, C_THE, GREY, GREEN, RED, clamp } from "./kit";
 const T = TM.t as Record<string, number>;
-const C_B1 = "#e0a612";
-const W = { font: "400 84px Anton", color: "#fff", ...Outline } as any;
-const TLY = 770, XA = 90, XB = 990, XNOW = 880;      // linha do tempo: y, início, fim e posição do "agora"
+export const C_B1 = "#e0a612";
+export const W = { font: "400 84px Anton", color: "#fff", ...Outline } as any;
+export const TLY = 770, XA = 90, XB = 990, XNOW = 880;      // linha do tempo: y, início, fim e posição do "agora"
 
 /** coloca um elemento no centro (x, y) com a entrada em mola */
-const At: React.FC<{ at: number; x: number; y: number; dx?: number; from?: number; children: React.ReactNode }> = ({ at, x, y, dx, from, children }) => {
+export const At: React.FC<{ at: number; x: number; y: number; dx?: number; from?: number; children: React.ReactNode }> = ({ at, x, y, dx, from, children }) => {
   const p = usePop(at, { dx, from }); if (!p.visible) return null;
   return <div style={{ position: "absolute", left: x, top: y, transform: "translate(-50%, -50%)" }}><div style={p.style}>{children}</div></div>;
 };
-const Barra: React.FC<{ x0: number; x1: number; at: number; c: string; h?: number; dur?: number; glow?: boolean }> = ({ x0, x1, at, c, h = 22, dur = 0.5, glow }) => {
+export const Barra: React.FC<{ x0: number; x1: number; at: number; c: string; h?: number; dur?: number; glow?: boolean }> = ({ x0, x1, at, c, h = 22, dur = 0.5, glow }) => {
   const { t } = useT(); const k = clamp((t - at) / dur); if (k <= 0) return null;
   const e = 1 - Math.pow(1 - k, 3);
   return <div style={{ position: "absolute", left: x0, top: TLY - h / 2, width: (x1 - x0) * e, height: h, borderRadius: h / 2, background: c, boxShadow: glow ? `0 0 46px ${c}` : "0 6px 0 rgba(0,0,0,.25)" }} />;
 };
 /** a linha do tempo base: passado → agora → futuro */
-const Trilho: React.FC<{ at: number }> = ({ at }) => {
+export const Trilho: React.FC<{ at: number }> = ({ at }) => {
   const { t } = useT(); const k = clamp((t - at) / 0.4); const pulse = 1 + 0.08 * Math.sin(t * 5);
   return (<div style={{ opacity: k }}>
     <div style={{ position: "absolute", left: XA, top: TLY - 9, width: XB - XA, height: 18, borderRadius: 9, background: "#3c5480" }} />
@@ -29,7 +29,7 @@ const Trilho: React.FC<{ at: number }> = ({ at }) => {
     <div style={{ position: "absolute", left: XNOW, top: TLY + 54, transform: "translateX(-50%)", font: "800 34px Montserrat", color: YEL, ...Outline, WebkitTextStroke: "6px " + INK } as any}>AGORA</div>
   </div>);
 };
-const Pin: React.FC<{ at: number; x: number; label: string; up: boolean; c: string }> = ({ at, x, label, up, c }) => {
+export const Pin: React.FC<{ at: number; x: number; label: string; up: boolean; c: string }> = ({ at, x, label, up, c }) => {
   const p = usePop(at, { dy: up ? -20 : 20 }); if (!p.visible) return null;
   return (<>
     <div style={{ position: "absolute", left: x - 3, top: up ? TLY - 110 : TLY, width: 6, height: 110, background: c, opacity: p.style.opacity as number, borderRadius: 3 }} />
