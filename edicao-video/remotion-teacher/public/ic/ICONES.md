@@ -22,3 +22,10 @@ Atenção: o conector entrega só 200 px; para ficar nítido em tamanho grande, 
 | dish.png | MAHa6Jhiz2c | Quiz do restaurante (prato principal) |
 | receipt.png | MAHa6MzNEwo | Quiz do restaurante (conta) |
 | tip.png | MAHa6OQUqd8 | Quiz do restaurante (gorjeta) |
+| bed.png | MAHa6V6cuHA | Quiz do hotel (quarto) |
+| key.png | MAHa6YSOQrE | Quiz do hotel (chave) |
+| towel.png | MAHa6Y7Ku50 | Quiz do hotel (toalha) |
+| breakfast.png | MAHa6dqtXwI | Quiz do hotel (café da manhã) |
+| bell.png | MAHa6fk2dVI | Quiz do hotel (recepção) |
+| elevator.png | MAHa6Q59PSA | Quiz do hotel (elevador) |
+| stairs.png | MAHa6bzXqB0 | Quiz do hotel (andar) |

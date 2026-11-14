@@ -23,8 +23,9 @@ def words(chunks):
     return out
 caps = []
 for lg, ch in CAP:
+    solo = lg == "pt!"; lg = "pt" if solo else lg   # "pt!" = tradução falada que aparece sozinha (ex.: abertura em português)
     c = dict(lang=lg, start=round(f(ch[0][0]), 3), end=round(f(ch[-1][1]), 3), words=words(ch))
-    if lg == "pt" and caps and caps[-1]["lang"] == "en" and "pt" not in caps[-1]: caps[-1]["pt"] = c
+    if lg == "pt" and not solo and caps and caps[-1]["lang"] == "en" and "pt" not in caps[-1]: caps[-1]["pt"] = c
     else: caps.append(c)
 for i, c in enumerate(caps): c["until"] = round(caps[i + 1]["start"] - 0.1, 3) if i + 1 < len(caps) else TOTAL
 # expressões do avatar: 1 sorrindo, 2 desconfiado, 7 surpreso, 8 piscando, 9 pensando (mão no queixo), 10 bravo, 11 assustado
