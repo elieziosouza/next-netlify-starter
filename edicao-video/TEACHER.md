@@ -36,3 +36,6 @@ outra abertura.
   contador e silêncio aberto na fala: `PINS` e `GAP`).
 
 - **Fechamento aprovado (06/11/2026):** ele gostou do fim da aula de Superlativos, com a voz dizendo "Follow Teacher Eliezio!" junto do cartão SIGA @teacher.eliezio. Usar esse fechamento nas próximas aulas.
+- **Abertura sempre traduzida (14/11/2026):** em todo vídeo novo, a abertura é falada em inglês e logo depois em português (ex.: "Hello! Today: quick quiz! ... At the hotel!" + "Olá! Hoje: quiz relâmpago! ... No hotel!"). Na legenda, o português aparece abaixo do inglês (entradas `pt` no `CAP`). A série "Como se fala em inglês" usa o formato do Quiz relâmpago de 7 palavras (`QuizAero.tsx`, `QuizRest.tsx`; palavra em português, contador de 3 s, resposta em inglês).
+- **Expressões do avatar (14/11/2026):** segunda folha com 12 expressões (ids 101..112 em `kit.tsx`, arquivos em `public/av2/`, guardados só na pasta de trabalho, fora do repositório público). Em aulas com quiz, usar `THINK_LIST` e `REVEAL_LIST` no arquivo da aula para variar a expressão a cada pergunta.
+- **Ícones 3D (Canva):** catálogo em `remotion-teacher/public/ic/ICONES.md`; reaproveitar os existentes antes de gerar novos.
