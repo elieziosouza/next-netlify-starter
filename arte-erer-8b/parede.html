@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Inter:wght@500;700;800&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;height:1350px;background:#f4ede1;font-family:Inter,sans-serif;position:relative;overflow:hidden;color:#141414}
+/* faixa de padrão no topo, lembrando grafismo */
+.pattern{position:absolute;top:0;left:0;right:0;height:22px;background:
+ repeating-linear-gradient(90deg,#d7262e 0 60px,#141414 60px 80px,#f2b705 80px 140px,#141414 140px 160px,#2e8b57 160px 220px,#141414 220px 240px)}
+.pattern.b{top:auto;bottom:0}
+header{position:absolute;top:50px;left:56px;right:56px}
+.kicker{font-weight:800;font-size:19px;letter-spacing:.18em;text-transform:uppercase}
+h1{font-family:Anton,sans-serif;font-size:118px;line-height:.95;margin-top:8px}
+h1 span{color:#d7262e}
+.badge{position:absolute;top:10px;right:-10px;width:170px;height:170px;border-radius:50%;background:#141414;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(8deg);box-shadow:7px 7px 0 #d7262e;z-index:6}
+.badge small{font-weight:800;font-size:14px;letter-spacing:.25em;color:#f2b705;margin-bottom:4px}
+.badge b{font-family:Anton;font-size:78px;line-height:.9;color:#fff}
+.badge sup{font-size:.38em;vertical-align:top;position:relative;top:.25em;text-decoration:underline}
+.photo{position:absolute;background:#fff;padding:11px;box-shadow:0 14px 30px rgba(0,0,0,.22)}
+.photo img{display:block;width:100%;height:100%;object-fit:cover}
+.wall{left:40px;top:340px;width:1000px;height:345px;transform:rotate(-1.5deg)}
+.group{left:40px;top:835px;width:1000px;height:330px;transform:rotate(1.2deg)}
+.tape{position:absolute;width:130px;height:34px;background:rgba(242,183,5,.75);z-index:4}
+.tags{position:absolute;left:30px;right:30px;top:715px;display:flex;flex-wrap:wrap;gap:12px 14px;justify-content:center;z-index:5}
+.tag{font-family:'Archivo Black';text-transform:uppercase;padding:7px 13px;font-size:18px;line-height:1.05;box-shadow:4px 4px 0 #141414;border:3px solid #141414}
+.tag:nth-child(odd){transform:rotate(-2deg)}.tag:nth-child(even){transform:rotate(2deg)}
+.c1{background:#f7c6d0}.c2{background:#bfe6d6}.c3{background:#bcd9f0}.c4{background:#f2b705}.c5{background:#fff}.c6{background:#d7262e;color:#fff}
+.label{position:absolute;left:70px;top:1110px;z-index:6;background:#141414;color:#fff;font-weight:800;font-size:18px;letter-spacing:.12em;padding:8px 14px;transform:rotate(-2deg)}
+footer{position:absolute;left:0;right:0;bottom:56px;text-align:center}
+footer .big{display:inline-block;background:#141414;color:#fff;font-family:Anton;font-size:44px;padding:8px 28px}
+footer .big em{font-style:normal;color:#f2b705}
+.hand{position:absolute;font-family:Caveat;font-size:42px;color:#d7262e;right:70px;top:1100px;transform:rotate(-5deg);z-index:6;background:#f4ede1;padding:0 14px;box-shadow:3px 3px 0 #141414}
+</style></head>
+<body>
+<div class="pattern"></div>
+<header>
+  <div class="kicker">Projeto ERER · Relações Étnico-Raciais</div>
+  <h1>PAREDE DA<br><span>CONSCIÊNCIA</span></h1>
+  <div class="badge"><small>TURMA</small><b>8<sup>o</sup>B</b></div>
+</header>
+<div class="photo wall"><img src="fotos/parede.jpg"></div>
+<div class="tape" style="left:90px;top:325px;transform:rotate(-8deg)"></div>
+<div class="tape" style="left:860px;top:318px;transform:rotate(6deg)"></div>
+<div class="tags">
+  <div class="tag c6">Racismo é crime. Denuncie!</div>
+  <div class="tag c5">Minha cor não é defeito</div>
+  <div class="tag c4">Racismo não tem vez aqui!</div>
+  <div class="tag c1">Meu cabelo, minha coroa</div>
+  <div class="tag c2">Vidas indígenas importam</div>
+  <div class="tag c3">Respeitar é conhecer</div>
+</div>
+<div class="photo group"><img src="fotos/turma-parede.jpg" style="object-position:50% 40%"></div>
+<div class="label">A TURMA QUE FEZ ACONTECER</div>
+<div class="hand">obrigado, 8ºB!</div>
+<footer><div class="big">CADA UM TEM SEU VALOR, <em>INDEPENDENTE DA COR</em></div></footer>
+<div class="pattern b"></div>
+</body></html>
