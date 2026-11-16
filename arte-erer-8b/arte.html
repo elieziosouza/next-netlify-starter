@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Inter:wght@500;700;800&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;height:1350px;background:#f4ede1;font-family:Inter,sans-serif;position:relative;overflow:hidden;color:#141414}
+/* faixa de padrão no topo, lembrando grafismo */
+.pattern{position:absolute;top:0;left:0;right:0;height:22px;background:
+ repeating-linear-gradient(90deg,#d7262e 0 60px,#141414 60px 80px,#f2b705 80px 140px,#141414 140px 160px,#2e8b57 160px 220px,#141414 220px 240px)}
+.pattern.b{top:auto;bottom:0}
+header{position:absolute;top:50px;left:56px;right:56px}
+.kicker{font-weight:800;font-size:19px;letter-spacing:.18em;text-transform:uppercase}
+h1{font-family:Anton,sans-serif;font-size:150px;line-height:.95;margin-top:6px}
+h1 span{color:#d7262e}
+.sub{font-weight:700;font-size:22px;margin-top:6px;line-height:1.3}
+.badge{position:absolute;top:-8px;right:-10px;width:180px;height:180px;border-radius:50%;background:#141414;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(8deg);box-shadow:7px 7px 0 #d7262e;z-index:6}
+.badge small{font-weight:800;font-size:15px;letter-spacing:.25em;color:#f2b705;margin-bottom:4px}
+.badge b{font-family:Anton;font-size:84px;line-height:.9;color:#fff}
+.badge sup{font-size:.38em;vertical-align:top;position:relative;top:.25em;text-decoration:underline}
+.photo{position:absolute;background:#fff;padding:11px;box-shadow:0 14px 30px rgba(0,0,0,.22)}
+.photo img{display:block;width:100%;height:100%;object-fit:cover}
+.p1{left:44px;top:345px;width:690px;height:370px;transform:rotate(-2deg)}
+.p2{left:720px;top:325px;width:320px;height:430px;transform:rotate(3.5deg)}
+.p3{left:40px;top:770px;width:245px;height:330px;transform:rotate(3deg)}
+.p4{left:290px;top:790px;width:245px;height:330px;transform:rotate(-3deg)}
+.p5{left:545px;top:770px;width:245px;height:330px;transform:rotate(2.5deg)}
+.p6{left:798px;top:790px;width:245px;height:330px;transform:rotate(-2deg)}
+.tag{position:absolute;font-family:'Archivo Black';text-transform:uppercase;padding:8px 14px;font-size:19px;line-height:1.08;box-shadow:4px 4px 0 #141414;border:3px solid #141414;z-index:5;text-align:center}
+.t1{background:#f7c6d0;left:62px;top:1060px;transform:rotate(-4deg)}
+.t2{background:#bfe6d6;left:305px;top:1085px;transform:rotate(3deg)}
+.t3{background:#f2b705;left:560px;top:1062px;transform:rotate(-3deg)}
+.t4{background:#bcd9f0;left:830px;top:1085px;transform:rotate(3deg)}
+.t5{background:#fff;left:70px;top:672px;transform:rotate(-3deg);font-size:21px}
+.t6{background:#d7262e;color:#fff;left:745px;top:710px;transform:rotate(4deg);font-size:20px}
+footer{position:absolute;left:0;right:0;bottom:62px;text-align:center}
+footer .big{display:inline-block;background:#141414;color:#fff;font-family:Anton;font-size:52px;padding:8px 30px}
+footer .big em{font-style:normal;color:#f2b705}
+footer p{font-weight:700;font-size:18px;margin-top:12px;letter-spacing:.06em}
+.hand{position:absolute;font-family:Caveat;font-size:40px;color:#d7262e;left:590px;top:280px;transform:rotate(-6deg);z-index:6}
+</style></head>
+<body>
+<div class="pattern"></div>
+<header>
+  <div class="kicker">Educação antirracista na escola</div>
+  <h1>PROJETO <span>ERER</span></h1>
+  <p class="sub">Educação para as Relações Étnico-Raciais</p>
+  <div class="badge"><small>TURMA</small><b>8<sup>o</sup>B</b></div>
+</header>
+<div class="hand">mãos à obra!</div>
+<div class="photo p1"><img src="fotos/turma1.jpg"></div>
+<div class="photo p2"><img src="fotos/brasil.jpg" style="object-position:50% 45%"></div>
+<div class="photo p3"><img src="fotos/coroa.jpg" style="object-position:50% 55%"></div>
+<div class="photo p4"><img src="fotos/indigenas.jpg" style="object-position:30% 40%"></div>
+<div class="photo p5"><img src="fotos/raizes.jpg" style="object-position:50% 30%"></div>
+<div class="photo p6"><img src="fotos/respeitar.jpg" style="object-position:60% 30%"></div>
+<div class="tag t1">Meu cabelo,<br>minha coroa</div>
+<div class="tag t2">Vidas indígenas<br>importam</div>
+<div class="tag t3">Orgulho das<br>nossas raízes</div>
+<div class="tag t4">Respeitar<br>é conhecer</div>
+<div class="tag t5">Preconceito se aprende. Respeito também.</div>
+<div class="tag t6">O Brasil também é<br>africano e indígena</div>
+<footer><div class="big">DIFERENÇA <em>NÃO É</em> DESIGUALDADE</div><p>8ºB · cartazes feitos pelos alunos</p></footer>
+<div class="pattern b"></div>
+</body></html>
