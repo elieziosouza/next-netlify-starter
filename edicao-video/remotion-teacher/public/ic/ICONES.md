@@ -29,3 +29,9 @@ Atenção: o conector entrega só 200 px; para ficar nítido em tamanho grande, 
 | bell.png | MAHa6fk2dVI | Quiz do hotel (recepção) |
 | elevator.png | MAHa6Q59PSA | Quiz do hotel (elevador) |
 | stairs.png | MAHa6bzXqB0 | Quiz do hotel (andar) |
+| map.png | MAHbOaSzdyQ | Quiz do passeio turístico (mapa) |
+| guide.png | MAHbOeAz4RE | Quiz do passeio turístico (guia) |
+| museum.png | MAHbOU2BEho | Quiz do passeio turístico (museu) |
+| souvenir.png | MAHbOTRf7LE | Quiz do passeio turístico (lembrança) |
+| queue.png | MAHbOQsvec4 | Quiz do passeio turístico (fila) |
+| landmark.png | MAHbOe_KZp0 | Quiz do passeio turístico (ponto turístico) |
