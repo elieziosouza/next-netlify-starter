@@ -330,3 +330,6 @@ O Eliezio pediu: a cada vídeo, procurar sempre melhorar. Cada vídeo novo traz 
 
 ## Canal de história e assuntos gerais: EZ Vídeos (21/11/2026)
 YouTube: @ezvideos2979 (www.youtube.com/@ezvideos2979), no ar desde 17/03/2022. Os vídeos de história (colagem vintage e documentário animado 2D) vão para este canal. Colocar `@ezvideos2979` no fim da descrição.
+
+## Regra da capa no primeiro quadro (21/11/2026)
+Todo vídeo vertical 9:16, de qualquer canal, leva a capa também no primeiro frame (capa parada no início e depois entra o vídeo, como nos Reels e Shorts: a capa vira miniatura). Isso vale para os vídeos de opinião, de inglês (Teacher), de história (Gazeta do Passado / EZ Vídeos) e de corretor. Na entrega, mostrar a capa e o vídeo com ela embutida. Nos vídeos de história em animação, a capa fica 0,5 s com dissolve de 0,3 s.
