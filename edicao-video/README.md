@@ -327,3 +327,6 @@ Em vídeo de campanha, lembrar que o eleitor não pode pagar impulsionamento.
 
 ## Regra de melhoria contínua (18/11/2026)
 O Eliezio pediu: a cada vídeo, procurar sempre melhorar. Cada vídeo novo traz ao menos uma melhoria visível ou de áudio em relação ao anterior, sem mudar as regras fixas do canal, e a entrega avisa qual foi. Ver também `TEACHER.md`.
+
+## Canal de história e assuntos gerais: EZ Vídeos (21/11/2026)
+YouTube: @ezvideos2979 (www.youtube.com/@ezvideos2979), no ar desde 17/03/2022. Os vídeos de história (colagem vintage e documentário animado 2D) vão para este canal. Colocar `@ezvideos2979` no fim da descrição.

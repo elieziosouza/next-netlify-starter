@@ -1,0 +1,300 @@
+{
+"fps": 30,
+"total": 58.7,
+"spans": [
+[
+0.0,
+3.03
+],
+[
+3.24,
+6.66
+],
+[
+7.04,
+10.18
+],
+[
+10.43,
+14.32
+],
+[
+14.62,
+22.04
+],
+[
+22.39,
+26.46
+],
+[
+26.71,
+32.23
+],
+[
+32.52,
+36.41
+],
+[
+36.72,
+45.02
+],
+[
+45.3,
+51.12
+],
+[
+51.48,
+58.13
+]
+],
+"M": {
+"d1": 0.15,
+"porto": 3.42,
+"prende": 5.13,
+"maior": 7.72,
+"sul": 9.95,
+"invade": 13.11,
+"mt": 13.55,
+"maio": 14.9,
+"brasil": 16.07,
+"segredo": 19.55,
+"triplice": 20.54,
+"junho": 22.58,
+"riach": 24.19,
+"destroi": 24.8,
+"humaita": 27.97,
+"cai": 28.59,
+"cerco": 31.76,
+"jan": 32.83,
+"assuncao": 34.43,
+"ocupada": 35.62,
+"termina": 37.67,
+"marco": 39.35,
+"cerro": 40.6,
+"morte": 41.92,
+"solano": 44.08,
+"brasilN": 45.55,
+"n150": 47.37,
+"n50": 49.53,
+"parN": 51.71,
+"n300": 54.65,
+"fome": 57.76
+},
+"caps": [
+{
+"t": 0.0,
+"e": 2.37,
+"text": "11 de novembro de"
+},
+{
+"t": 2.37,
+"e": 3.03,
+"text": "1864."
+},
+{
+"t": 3.24,
+"e": 4.44,
+"text": "No porto de Assunção,"
+},
+{
+"t": 4.44,
+"e": 5.7,
+"text": "o Paraguai prende um"
+},
+{
+"t": 5.7,
+"e": 6.66,
+"text": "navio brasileiro."
+},
+{
+"t": 7.04,
+"e": 8.46,
+"text": "Começava a maior guerra"
+},
+{
+"t": 8.46,
+"e": 9.77,
+"text": "da história da América"
+},
+{
+"t": 9.77,
+"e": 10.18,
+"text": "do Sul."
+},
+{
+"t": 10.43,
+"e": 11.71,
+"text": "Seis semanas depois,"
+},
+{
+"t": 11.71,
+"e": 13.55,
+"text": "o exército paraguaio invade"
+},
+{
+"t": 13.55,
+"e": 14.32,
+"text": "Mato Grosso."
+},
+{
+"t": 14.62,
+"e": 16.07,
+"text": "Em maio de 1865,"
+},
+{
+"t": 16.07,
+"e": 16.7,
+"text": "Brasil,"
+},
+{
+"t": 16.7,
+"e": 19.27,
+"text": "Argentina e Uruguai assinam,"
+},
+{
+"t": 19.27,
+"e": 20.26,
+"text": "em segredo,"
+},
+{
+"t": 20.26,
+"e": 22.04,
+"text": "a Tríplice Aliança."
+},
+{
+"t": 22.39,
+"e": 22.95,
+"text": "Em junho,"
+},
+{
+"t": 22.95,
+"e": 24.19,
+"text": "a Batalha Naval de"
+},
+{
+"t": 24.19,
+"e": 25.85,
+"text": "Riachuelo destrói a frota"
+},
+{
+"t": 25.85,
+"e": 26.46,
+"text": "paraguaia."
+},
+{
+"t": 26.71,
+"e": 28.59,
+"text": "A fortaleza de Humaitá"
+},
+{
+"t": 28.59,
+"e": 29.86,
+"text": "cai em julho de"
+},
+{
+"t": 29.86,
+"e": 30.26,
+"text": "1868,"
+},
+{
+"t": 30.26,
+"e": 31.76,
+"text": "depois de um longo"
+},
+{
+"t": 31.76,
+"e": 32.23,
+"text": "cerco."
+},
+{
+"t": 32.52,
+"e": 34.43,
+"text": "Em janeiro de 1869,"
+},
+{
+"t": 34.43,
+"e": 36.41,
+"text": "Assunção é ocupada."
+},
+{
+"t": 36.72,
+"e": 38.25,
+"text": "A guerra só termina"
+},
+{
+"t": 38.25,
+"e": 39.78,
+"text": "em primeiro de março"
+},
+{
+"t": 39.78,
+"e": 40.37,
+"text": "de 1870,"
+},
+{
+"t": 40.37,
+"e": 41.4,
+"text": "em Cerro Corá,"
+},
+{
+"t": 41.4,
+"e": 42.58,
+"text": "com a morte do"
+},
+{
+"t": 42.58,
+"e": 44.08,
+"text": "presidente paraguaio,"
+},
+{
+"t": 44.08,
+"e": 45.02,
+"text": "Solano López."
+},
+{
+"t": 45.3,
+"e": 47.12,
+"text": "O Brasil enviou cerca"
+},
+{
+"t": 47.12,
+"e": 48.56,
+"text": "de 150 mil homens,"
+},
+{
+"t": 48.56,
+"e": 49.77,
+"text": "e cerca de 50"
+},
+{
+"t": 49.77,
+"e": 51.12,
+"text": "mil não voltaram."
+},
+{
+"t": 51.48,
+"e": 52.88,
+"text": "O Paraguai perdeu,"
+},
+{
+"t": 52.88,
+"e": 54.35,
+"text": "segundo estimativas,"
+},
+{
+"t": 54.35,
+"e": 55.84,
+"text": "até 300 mil pessoas,"
+},
+{
+"t": 55.84,
+"e": 56.94,
+"text": "entre combates,"
+},
+{
+"t": 56.94,
+"e": 58.13,
+"text": "doenças e fome."
+}
+]
+}
