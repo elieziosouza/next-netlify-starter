@@ -1,0 +1,287 @@
+{
+"fps": 30,
+"total": 55.0,
+"spans": [
+[
+0.0,
+6.48
+],
+[
+6.69,
+9.05
+],
+[
+9.29,
+17.41
+],
+[
+17.59,
+20.2
+],
+[
+20.51,
+26.75
+],
+[
+27.18,
+28.17
+],
+[
+28.43,
+31.51
+],
+[
+31.78,
+37.39
+],
+[
+37.55,
+43.28
+],
+[
+43.64,
+47.88
+],
+[
+48.11,
+52.51
+],
+[
+52.75,
+54.49
+]
+],
+"M": {
+"seculo": 0.6,
+"pern": 1.78,
+"engenhos": 4.06,
+"serra": 5.48,
+"barriga": 6.01,
+"quilombo": 7.43,
+"palmares": 8.39,
+"auge": 9.53,
+"n11": 12.02,
+"n20": 12.8,
+"afric": 13.95,
+"indig": 14.7,
+"colonos": 15.69,
+"maior": 18.01,
+"a1680": 21.12,
+"a1686": 21.96,
+"seis": 23.4,
+"exped": 23.92,
+"fracas": 27.55,
+"zumbi1": 28.43,
+"lider": 30.07,
+"a1694": 32.07,
+"artil": 34.79,
+"destroi": 35.81,
+"zumbi2": 37.55,
+"n20n": 38.98,
+"a1695": 40.42,
+"embosc": 42.5,
+"a1995": 43.91,
+"heroi": 46.59,
+"a2024": 48.78,
+"feriado": 50.72,
+"pais": 52.14,
+"consc": 53.39
+},
+"caps": [
+{
+"t": 0.0,
+"e": 1.02,
+"text": "No fim do século"
+},
+{
+"t": 1.02,
+"e": 1.6,
+"text": "dezesseis,"
+},
+{
+"t": 1.6,
+"e": 2.42,
+"text": "em Pernambuco,"
+},
+{
+"t": 2.42,
+"e": 4.06,
+"text": "escravizados que fugiam dos"
+},
+{
+"t": 4.06,
+"e": 5.48,
+"text": "engenhos se refugiam na"
+},
+{
+"t": 5.48,
+"e": 6.48,
+"text": "Serra da Barriga."
+},
+{
+"t": 6.69,
+"e": 8.39,
+"text": "Nascia o Quilombo dos"
+},
+{
+"t": 8.39,
+"e": 9.05,
+"text": "Palmares."
+},
+{
+"t": 9.29,
+"e": 9.91,
+"text": "No auge,"
+},
+{
+"t": 9.91,
+"e": 12.25,
+"text": "historiadores estimam entre 11"
+},
+{
+"t": 12.25,
+"e": 13.34,
+"text": "mil e 20 mil"
+},
+{
+"t": 13.34,
+"e": 13.95,
+"text": "pessoas:"
+},
+{
+"t": 13.95,
+"e": 14.7,
+"text": "africanos,"
+},
+{
+"t": 14.7,
+"e": 17.41,
+"text": "indígenas e colonos marginalizados."
+},
+{
+"t": 17.59,
+"e": 18.89,
+"text": "Era o maior quilombo"
+},
+{
+"t": 18.89,
+"e": 20.2,
+"text": "da história do Brasil."
+},
+{
+"t": 20.51,
+"e": 22.47,
+"text": "Entre 1680 e 1686,"
+},
+{
+"t": 22.47,
+"e": 25.03,
+"text": "ao menos seis expedições"
+},
+{
+"t": 25.03,
+"e": 26.75,
+"text": "tentam destruí-lo."
+},
+{
+"t": 27.18,
+"e": 28.17,
+"text": "Todas fracassam."
+},
+{
+"t": 28.43,
+"e": 29.49,
+"text": "Zumbi se torna a"
+},
+{
+"t": 29.49,
+"e": 31.51,
+"text": "principal liderança da resistência."
+},
+{
+"t": 31.78,
+"e": 32.54,
+"text": "Em 1694,"
+},
+{
+"t": 32.54,
+"e": 34.41,
+"text": "uma grande ofensiva,"
+},
+{
+"t": 34.41,
+"e": 35.81,
+"text": "com artilharia,"
+},
+{
+"t": 35.81,
+"e": 37.39,
+"text": "destrói Palmares."
+},
+{
+"t": 37.55,
+"e": 39.22,
+"text": "Zumbi resiste até 20"
+},
+{
+"t": 39.22,
+"e": 40.82,
+"text": "de novembro de 1695,"
+},
+{
+"t": 40.82,
+"e": 42.5,
+"text": "quando é morto numa"
+},
+{
+"t": 42.5,
+"e": 43.28,
+"text": "emboscada."
+},
+{
+"t": 43.64,
+"e": 44.34,
+"text": "Em 1995,"
+},
+{
+"t": 44.34,
+"e": 46.59,
+"text": "Zumbi é reconhecido como"
+},
+{
+"t": 46.59,
+"e": 47.88,
+"text": "herói nacional."
+},
+{
+"t": 48.11,
+"e": 49.15,
+"text": "E desde 2024,"
+},
+{
+"t": 49.15,
+"e": 50.5,
+"text": "o 20 de novembro"
+},
+{
+"t": 50.5,
+"e": 51.91,
+"text": "é feriado em todo"
+},
+{
+"t": 51.91,
+"e": 52.51,
+"text": "o país:"
+},
+{
+"t": 52.75,
+"e": 54.12,
+"text": "o Dia da Consciência"
+},
+{
+"t": 54.12,
+"e": 54.49,
+"text": "Negra."
+}
+]
+}

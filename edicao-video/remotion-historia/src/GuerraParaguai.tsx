@@ -8,13 +8,13 @@ import topo from "world-atlas/countries-50m.json";
 import TM from "./gp.json";
 
 const M = TM.M as Record<string, number>;
-const P = { ink: "#12161d", night: "#101a2b", deep: "#1b2a3d", teal: "#24505f", terra: "#c2603a", ochre: "#d9a441", cream: "#f0e4c9", sand: "#cdb98f",
+export const P = { ink: "#12161d", night: "#101a2b", deep: "#1b2a3d", teal: "#24505f", terra: "#c2603a", ochre: "#d9a441", cream: "#f0e4c9", sand: "#cdb98f",
   red: "#b3362b", olive: "#6f8f5a", slate: "#5f84a0", water: "#1f4558", smoke: "#8d8f98" };
-const clamp = (x: number, a = 0, b = 1) => Math.max(a, Math.min(b, x));
-const ease = (x: number) => 1 - Math.pow(1 - clamp(x), 3);
-const rnd = (a: number) => { const x = Math.sin(a * 127.1 + 4.1) * 43758.5453; return x - Math.floor(x); };
-const useT = () => { const f = useCurrentFrame(); const { fps } = useVideoConfig(); return { t: f / fps, f, fps }; };
-const FONT = `
+export const clamp = (x: number, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+export const ease = (x: number) => 1 - Math.pow(1 - clamp(x), 3);
+export const rnd = (a: number) => { const x = Math.sin(a * 127.1 + 4.1) * 43758.5453; return x - Math.floor(x); };
+export const useT = () => { const f = useCurrentFrame(); const { fps } = useVideoConfig(); return { t: f / fps, f, fps }; };
+export const FONT = `
 @font-face{font-family:DMS;src:url(${staticFile("fonts/DMSerifDisplay-Regular.ttf")})}
 @font-face{font-family:PF;src:url(${staticFile("fonts/PlayfairDisplay-Regular.ttf")})}
 @font-face{font-family:PFI;src:url(${staticFile("fonts/PlayfairDisplay-Italic.ttf")})}
@@ -32,28 +32,28 @@ const MAP = saF.map((f: any) => ({ name: f.properties.name as string, d: gp(f) a
 const pt = (lon: number, lat: number) => proj([lon, lat]) as [number, number];
 const ASU = pt(-57.63, -25.28), COR = pt(-57.65, -19.0), RIO = pt(-43.2, -22.9), BUE = pt(-58.4, -34.6), MON = pt(-56.2, -34.9), PAR = pt(-58.0, -23.4);
 
-const Grain: React.FC = () => {
+export const Grain: React.FC = () => {
   const { f } = useT();
   return (<AbsoluteFill style={{ pointerEvents: "none", mixBlendMode: "multiply", opacity: 0.32 }}>
     <svg width="1080" height="1920"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed={f % 9} /><feColorMatrix values="0 0 0 0 .3  0 0 0 0 .22  0 0 0 0 .12  0 0 0 .9 -.12" /></filter><rect width="1080" height="1920" filter="url(#gr)" /></svg>
   </AbsoluteFill>);
 };
-const Vig: React.FC = () => <AbsoluteFill style={{ pointerEvents: "none", background: "radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 52%, rgba(8,6,4,.62) 100%)" }} />;
+export const Vig: React.FC = () => <AbsoluteFill style={{ pointerEvents: "none", background: "radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 52%, rgba(8,6,4,.62) 100%)" }} />;
 
 // ------------------------------------------------------------ peças reutilizáveis
-const Sc: React.FC<{ a: number; b: number; zoom?: number; ov?: React.ReactNode; children: React.ReactNode }> = ({ a, b, zoom = 0.07, ov, children }) => {
+export const Sc: React.FC<{ a: number; b: number; zoom?: number; ov?: React.ReactNode; children: React.ReactNode }> = ({ a, b, zoom = 0.07, ov, children }) => {
   const { t } = useT(); if (t < a - 0.01 || t > b + 0.01) return null;
   const k = clamp((t - a) / 0.35) * clamp((b - t) / 0.35), p = clamp((t - a) / (b - a));
   return (<AbsoluteFill style={{ opacity: k }}>
     <div style={{ position: "absolute", inset: 0, transform: `scale(${1 + zoom * p})`, transformOrigin: "50% 42%" }}>{children}</div>{ov}
   </AbsoluteFill>);
 };
-const Puffs: React.FC<{ x: number; y: number; n?: number; sp?: number; c?: string; sz?: number }> = ({ x, y, n = 7, sp = 42, c = P.smoke, sz = 26 }) => {
+export const Puffs: React.FC<{ x: number; y: number; n?: number; sp?: number; c?: string; sz?: number }> = ({ x, y, n = 7, sp = 42, c = P.smoke, sz = 26 }) => {
   const { t } = useT();
   return (<g>{Array.from({ length: n }, (_, i) => { const ph = ((t * sp / 220 + i / n) % 1), r = sz * (0.5 + 1.6 * ph);
     return <circle key={i} cx={x + ph * 120 + 10 * Math.sin(i * 3 + t)} cy={y - ph * 220} r={r} fill={c} opacity={0.55 * (1 - ph)} />; })}</g>);
 };
-const Water: React.FC<{ y: number; h?: number; c?: string; line?: string; amp?: number }> = ({ y, h = 600, c = P.water, line = "rgba(255,255,255,.12)", amp = 6 }) => {
+export const Water: React.FC<{ y: number; h?: number; c?: string; line?: string; amp?: number }> = ({ y, h = 600, c = P.water, line = "rgba(255,255,255,.12)", amp = 6 }) => {
   const { t } = useT();
   return (<g><rect x="-50" y={y} width="1180" height={h} fill={c} />
     {Array.from({ length: 14 }, (_, i) => { const yy = y + 24 + i * (h / 14) * 0.95, w = 80 + 60 * rnd(i), x0 = ((rnd(i + 9) * 1200 + t * (30 + 9 * (i % 4)) * (i % 2 ? 1 : -1)) % 1300) - 100;
@@ -74,17 +74,17 @@ const Vapor: React.FC<{ x: number; y: number; s?: number; flip?: boolean; name?:
     {name && <text x="0" y="33" textAnchor="middle" fontFamily="MB" fontSize="17" fill={P.cream} letterSpacing="3" transform={flip ? "scale(-1 1)" : undefined}>{name}</text>}
   </g>);
 };
-const Flash: React.FC<{ x: number; y: number; at: number; big?: number }> = ({ x, y, at, big = 1 }) => {
+export const Flash: React.FC<{ x: number; y: number; at: number; big?: number }> = ({ x, y, at, big = 1 }) => {
   const { t } = useT(); const u = (t - at) / 0.5; if (u < 0 || u > 1) return null;
   return (<g><circle cx={x} cy={y} r={(30 + 90 * u) * big} fill={P.ochre} opacity={(1 - u) * 0.9} /><circle cx={x} cy={y} r={(14 + 40 * u) * big} fill="#fff6d0" opacity={1 - u} />
     <circle cx={x + 40 * u} cy={y - 50 * u} r={(40 + 80 * u) * big} fill={P.smoke} opacity={0.45 * (1 - u)} /></g>);
 };
-const Star: React.FC<{ n?: number }> = ({ n = 60 }) => (<g>{Array.from({ length: n }, (_, i) => <circle key={i} cx={rnd(i) * 1080} cy={rnd(i + 50) * 800} r={1 + 2 * rnd(i + 99)} fill="#fff" opacity={0.3 + 0.5 * rnd(i + 7)} />)}</g>);
-const Hills: React.FC<{ y: number; c: string; amp?: number; seed?: number; dx?: number }> = ({ y, c, amp = 90, seed = 1, dx = 0 }) => {
+export const Star: React.FC<{ n?: number }> = ({ n = 60 }) => (<g>{Array.from({ length: n }, (_, i) => <circle key={i} cx={rnd(i) * 1080} cy={rnd(i + 50) * 800} r={1 + 2 * rnd(i + 99)} fill="#fff" opacity={0.3 + 0.5 * rnd(i + 7)} />)}</g>);
+export const Hills: React.FC<{ y: number; c: string; amp?: number; seed?: number; dx?: number }> = ({ y, c, amp = 90, seed = 1, dx = 0 }) => {
   let d = `M-60 ${y + 400} L-60 ${y}`; for (let i = 0; i <= 12; i++) d += ` L${i * 100 - 60 + dx} ${y - amp * (0.5 + 0.5 * Math.sin(i * 1.3 + seed) * rnd(i + seed))}`; d += ` L1200 ${y + 400} Z`;
   return <path d={d} fill={c} />;
 };
-const Cartela: React.FC<{ at: number; to: number; date: string; sub?: string; y?: number; fs?: number }> = ({ at, to, date, sub, y = 130, fs = 58 }) => {
+export const Cartela: React.FC<{ at: number; to: number; date: string; sub?: string; y?: number; fs?: number }> = ({ at, to, date, sub, y = 130, fs = 58 }) => {
   const { t } = useT(); if (t < at || t > to + 0.4) return null;
   const k = ease((t - at) / 0.5) * clamp((to + 0.4 - t) / 0.4);
   return (<div style={{ position: "absolute", left: 56 + (1 - k) * -520, top: y, opacity: k, padding: "16px 30px 18px", background: "rgba(16,20,28,.86)", borderLeft: `8px solid ${P.ochre}`, boxShadow: "0 10px 30px rgba(0,0,0,.4)" }}>
@@ -219,12 +219,12 @@ const Humaita: React.FC = () => {
 };
 
 // ------------------------------------------------------------ soldados e palmeiras
-const Soldado: React.FC<{ x: number; y: number; s?: number; ph?: number; c?: string }> = ({ x, y, s = 1, ph = 0, c = "#15181f" }) => {
+export const Soldado: React.FC<{ x: number; y: number; s?: number; ph?: number; c?: string }> = ({ x, y, s = 1, ph = 0, c = "#15181f" }) => {
   const { t } = useT(); const bob = 4 * Math.sin(t * 7 + ph);
   return (<g transform={`translate(${x} ${y + bob}) scale(${s})`} fill={c}><circle cx="0" cy="-92" r="13" /><rect x="-4" y="-80" width="8" height="8" /><path d="M-15 -76 L15 -76 L18 -20 L-18 -20 Z" /><rect x="-16" y="-20" width="12" height="58" /><rect x="4" y="-20" width="12" height="58" />
     <rect x="-18" y="-108" width="36" height="10" rx="3" /><line x1="22" y1="-120" x2="22" y2="30" stroke={c} strokeWidth="5" /></g>);
 };
-const Palma: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s = 1 }) => {
+export const Palma: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s = 1 }) => {
   const { t } = useT();
   return (<g transform={`translate(${x} ${y}) scale(${s})`}><path d="M-6 0 Q-10 -90 0 -180 L8 -180 Q0 -90 6 0 Z" fill="#2a2018" />
     {Array.from({ length: 7 }, (_, i) => <path key={i} d={`M0 -180 Q${60 * Math.cos(i * 0.9)} ${-230 + 30 * Math.sin(t * 2 + i)} ${130 * Math.cos(i * 0.9 - 0.2)} ${-150 + 60 * Math.sin(i)}`} stroke="#1f3a2a" strokeWidth="12" fill="none" strokeLinecap="round" />)}</g>);
@@ -273,7 +273,7 @@ const Cerro: React.FC = () => {
 };
 
 // ------------------------------------------------------------ cena 8: números
-const Contagem: React.FC<{ to: number; at: number; dur?: number; suf?: string }> = ({ to, at, dur = 1.4, suf = " mil" }) => {
+export const Contagem: React.FC<{ to: number; at: number; dur?: number; suf?: string }> = ({ to, at, dur = 1.4, suf = " mil" }) => {
   const { t } = useT(); const k = ease((t - at) / dur); if (t < at) return <span style={{ opacity: 0 }}>{to}{suf}</span>; return <>{Math.round(to * k)}{suf}</>;
 };
 const Numeros: React.FC = () => {
