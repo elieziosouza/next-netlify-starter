@@ -13,3 +13,6 @@ Segundo vídeo: `src/Palmares.tsx` (tempos em `src/pal.json`, gerados por `scrip
 
 ## Canudos (22/11/2026)
 Terceiro vídeo: `src/Canudos.tsx` (tempos em `src/can.json`, gerados por `scripts/historia/can_timings.py`). Novidade: legenda com a palavra falada em dourado. Cuidados: sem violência explícita (só silhuetas, fumaça e clarões); execuções citadas na fonte ficaram de fora; moradores e mortos aparecem como estimativa; mapa com fronteiras de hoje.
+
+## Lampião (22/11/2026)
+Primeiro vídeo **horizontal** (1920x1080, ~4 min): `src/Lampiao.tsx`, tempos em `src/lamp.json` (`scripts/historia/lamp_timings.py`), roteiro em `lampiao-roteiro.txt`. Voz Edmilson sem aceleração (a aceleração de 7% é só para os Shorts). Novidades: capítulos numerados com barra de progresso, mapa do Nordeste com os 7 estados acendendo (`src/br_states.json`, malha de estados simplificada; os polígonos precisam da orientação certa para o d3-geo, ver o ajuste por `geoArea`), legenda com a palavra falada em dourado. Cuidados: sem violência explícita; datas incertas aparecem como faixa ("entre 1897 e 1900"); números de mortos são estimativas.
