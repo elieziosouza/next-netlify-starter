@@ -10,3 +10,6 @@ Formato novo (21/11/2026): vertical 1080x1920, cerca de 1 min, animação 2D pla
 
 ## Quilombo dos Palmares (22/11/2026)
 Segundo vídeo: `src/Palmares.tsx` (tempos em `src/pal.json`, gerados por `scripts/historia/pal_timings.py`). Peças comuns (cartela, mapa, legenda, fumaça, colinas) foram exportadas de `GuerraParaguai.tsx`. Novidade: linha do tempo animada no pé da tela (1590 a 2024). Cuidados: sem violência explícita (só silhuetas); a Dandara ficou de fora porque não aparece nas fontes do século XVII; a exposição da cabeça de Zumbi foi omitida; população de Palmares é estimativa.
+
+## Canudos (22/11/2026)
+Terceiro vídeo: `src/Canudos.tsx` (tempos em `src/can.json`, gerados por `scripts/historia/can_timings.py`). Novidade: legenda com a palavra falada em dourado. Cuidados: sem violência explícita (só silhuetas, fumaça e clarões); execuções citadas na fonte ficaram de fora; moradores e mortos aparecem como estimativa; mapa com fronteiras de hoje.
