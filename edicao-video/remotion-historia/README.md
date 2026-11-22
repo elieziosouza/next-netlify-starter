@@ -16,3 +16,6 @@ Terceiro vídeo: `src/Canudos.tsx` (tempos em `src/can.json`, gerados por `scrip
 
 ## Lampião (22/11/2026)
 Primeiro vídeo **horizontal** (1920x1080, ~4 min): `src/Lampiao.tsx`, tempos em `src/lamp.json` (`scripts/historia/lamp_timings.py`), roteiro em `lampiao-roteiro.txt`. Voz Edmilson sem aceleração (a aceleração de 7% é só para os Shorts). Novidades: capítulos numerados com barra de progresso, mapa do Nordeste com os 7 estados acendendo (`src/br_states.json`, malha de estados simplificada; os polígonos precisam da orientação certa para o d3-geo, ver o ajuste por `geoArea`), legenda com a palavra falada em dourado. Cuidados: sem violência explícita; datas incertas aparecem como faixa ("entre 1897 e 1900"); números de mortos são estimativas.
+
+## Lampião curto, Instagram e TikTok (22/11/2026)
+`src/LampiaoCurto.tsx` (vertical, 58,6 s; tempos em `src/lampcur.json`, gerados por `scripts/historia/lampcur_timings.py`). Reaproveita os desenhos do `Lampiao.tsx` (agora exportados). Áreas seguras: nada importante nos ~450 px de baixo nem nos ~130 px da direita (botões e texto do Instagram/TikTok); a capa também fica dentro do recorte 3:4 da grade do perfil. Termina chamando para o vídeo completo no YouTube.

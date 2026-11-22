@@ -9,6 +9,8 @@ import { Canudos, CanudosCapa } from "./Canudos";
 import TC from "./can.json";
 import { Lampiao, LampiaoCapa } from "./Lampiao";
 import TL from "./lamp.json";
+import { LampiaoCurto, LampiaoCurtoCapa } from "./LampiaoCurto";
+import TLC from "./lampcur.json";
 const Root: React.FC = () => (<>
   <Composition id="GuerraParaguai" component={GuerraParaguai} width={1080} height={1920} fps={TM.fps} durationInFrames={Math.round(TM.total * TM.fps)} />
   <Still id="GuerraParaguaiCapa" component={GuerraParaguaiCapa} width={1080} height={1920} />
@@ -20,5 +22,7 @@ const Root: React.FC = () => (<>
   <Still id="CanudosCapa" component={CanudosCapa} width={1080} height={1920} />
   <Composition id="Lampiao" component={Lampiao} width={1920} height={1080} fps={TL.fps} durationInFrames={Math.round(TL.total * TL.fps)} />
   <Still id="LampiaoCapa" component={LampiaoCapa} width={1920} height={1080} />
+  <Composition id="LampiaoCurto" component={LampiaoCurto} width={1080} height={1920} fps={TLC.fps} durationInFrames={Math.round(TLC.total * TLC.fps)} />
+  <Still id="LampiaoCurtoCapa" component={LampiaoCurtoCapa} width={1080} height={1920} />
 </>);
 registerRoot(Root);

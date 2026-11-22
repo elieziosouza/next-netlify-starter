@@ -13,13 +13,13 @@ const S = TM.spans as number[][];
 const W = 1920, H = 1080;
 
 // ------------------------------------------------------------ mapa (estados do Brasil, fronteiras de hoje)
-const FS: any[] = (statesJson as any).features;
-const NE = ["Bahia", "Sergipe", "Alagoas", "Pernambuco", "Paraíba", "Rio Grande do Norte", "Ceará", "Piauí"];
+export const FS: any[] = (statesJson as any).features;
+export const NE = ["Bahia", "Sergipe", "Alagoas", "Pernambuco", "Paraíba", "Rio Grande do Norte", "Ceará", "Piauí"];
 const projN = geoMercator().fitExtent([[880, 70], [1860, 1010]], { type: "FeatureCollection", features: FS.filter((f) => NE.includes(f.properties.name)) } as any);
 const gN = geoPath(projN);
 const STATES = FS.map((f) => ({ n: f.properties.name as string, d: gN(f) as string })).filter((x) => x.d);
 const pt = (lon: number, lat: number) => projN([lon, lat]) as [number, number];
-const SEVEN: [string, string][] = [["Pernambuco", "PE"], ["Alagoas", "AL"], ["Paraíba", "PB"], ["Rio Grande do Norte", "RN"], ["Ceará", "CE"], ["Bahia", "BA"], ["Sergipe", "SE"]];
+export const SEVEN: [string, string][] = [["Pernambuco", "PE"], ["Alagoas", "AL"], ["Paraíba", "PB"], ["Rio Grande do Norte", "RN"], ["Ceará", "CE"], ["Bahia", "BA"], ["Sergipe", "SE"]];
 const ST = pt(-38.29, -7.99), JUA = pt(-39.32, -7.21), MOS = pt(-37.34, -5.19);
 
 const Grain: React.FC = () => {
@@ -44,12 +44,12 @@ const Rain: React.FC<{ o?: number }> = ({ o = 0.35 }) => {
 };
 
 // ------------------------------------------------------------ peças
-const Mandacaru: React.FC<{ x: number; y: number; s?: number; c: string }> = ({ x, y, s = 1, c }) => (
+export const Mandacaru: React.FC<{ x: number; y: number; s?: number; c: string }> = ({ x, y, s = 1, c }) => (
   <g transform={`translate(${x} ${y}) scale(${s})`} fill={c}><rect x="-14" y="-150" width="28" height="150" rx="14" /><path d="M-14 -70 L-52 -70 L-52 -118 L-34 -118 L-34 -90 L-14 -90 Z" /><path d="M14 -50 L50 -50 L50 -104 L32 -104 L32 -72 L14 -72 Z" /></g>);
-const Arbusto: React.FC<{ x: number; y: number; s?: number; c: string }> = ({ x, y, s = 1, c }) => (
+export const Arbusto: React.FC<{ x: number; y: number; s?: number; c: string }> = ({ x, y, s = 1, c }) => (
   <g transform={`translate(${x} ${y}) scale(${s})`} stroke={c} strokeWidth="6" fill="none" strokeLinecap="round"><path d="M0 0 L0 -60 M0 -30 L-34 -66 M0 -40 L30 -80 M0 -60 L-14 -96 M-34 -66 L-52 -64 M30 -80 L52 -78" /></g>);
 // cangaceiro: chapéu de couro de aba virada com estrelas, cartucheiras cruzadas e rifle
-const Cang: React.FC<{ x: number; y: number; s?: number; ph?: number; c?: string; walk?: boolean; flip?: boolean; rifle?: boolean }> = ({ x, y, s = 1, ph = 0, c = "#12151c", walk = true, flip, rifle = true }) => {
+export const Cang: React.FC<{ x: number; y: number; s?: number; ph?: number; c?: string; walk?: boolean; flip?: boolean; rifle?: boolean }> = ({ x, y, s = 1, ph = 0, c = "#12151c", walk = true, flip, rifle = true }) => {
   const { t } = useT(); const bob = walk ? 4 * Math.sin(t * 6 + ph) : 0, sw = walk ? 7 * Math.sin(t * 6 + ph) : 0;
   return (<g transform={`translate(${x} ${y + bob}) scale(${flip ? -s : s} ${s})`} fill={c}>
     <rect x={-16 + sw} y="-22" width="12" height="58" /><rect x="4" y="-22" width="12" height="58" transform={`translate(${-sw} 0)`} /><path d="M-15 -78 L15 -78 L18 -22 L-18 -22 Z" />
@@ -58,22 +58,22 @@ const Cang: React.FC<{ x: number; y: number; s?: number; ph?: number; c?: string
     <path d="M-14 -76 L16 -30" stroke="#4a4f5a" strokeWidth="5" fill="none" /><path d="M14 -76 L-16 -30" stroke="#4a4f5a" strokeWidth="5" fill="none" />
     {rifle && <g><line x1="-22" y1="-52" x2="30" y2="-66" stroke={c} strokeWidth="6" strokeLinecap="round" /></g>}</g>);
 };
-const Boi: React.FC<{ x: number; y: number; s?: number; c?: string; flip?: boolean; ph?: number }> = ({ x, y, s = 1, c = "#3a2a20", flip, ph = 0 }) => {
+export const Boi: React.FC<{ x: number; y: number; s?: number; c?: string; flip?: boolean; ph?: number }> = ({ x, y, s = 1, c = "#3a2a20", flip, ph = 0 }) => {
   const { t } = useT(); const bob = 2 * Math.sin(t * 1.5 + ph);
   return (<g transform={`translate(${x} ${y + bob}) scale(${flip ? -s : s} ${s})`} fill={c}><rect x="-60" y="-70" width="120" height="48" rx="22" /><path d="M52 -66 L84 -78 L92 -52 L58 -32 Z" /><path d="M86 -78 L96 -96 M80 -80 L76 -98" stroke={c} strokeWidth="5" fill="none" />
     {[-44, -26, 28, 46].map((lx) => <rect key={lx} x={lx - 5} y="-26" width="10" height="42" />)}<path d="M-60 -60 Q-82 -50 -78 -22" stroke={c} strokeWidth="6" fill="none" strokeLinecap="round" /></g>);
 };
-const Cavalo: React.FC<{ x: number; y: number; s?: number; c?: string; flip?: boolean; ph?: number; rider?: boolean; speed?: number }> = ({ x, y, s = 1, c = "#1b1612", flip, ph = 0, rider = true, speed = 9 }) => {
+export const Cavalo: React.FC<{ x: number; y: number; s?: number; c?: string; flip?: boolean; ph?: number; rider?: boolean; speed?: number }> = ({ x, y, s = 1, c = "#1b1612", flip, ph = 0, rider = true, speed = 9 }) => {
   const { t } = useT(); const g = Math.sin(t * speed + ph);
   return (<g transform={`translate(${x} ${y + 3 * Math.abs(g)}) scale(${flip ? -s : s} ${s})`}>
     <g fill={c}><ellipse cx="0" cy="-90" rx="82" ry="34" /><path d="M60 -100 L112 -146 L136 -132 L132 -112 L88 -66 Z" /><path d="M112 -146 L120 -166 L128 -146 Z" /><path d="M-76 -96 Q-110 -70 -104 -20" stroke={c} strokeWidth="9" fill="none" strokeLinecap="round" />
       {[[-52, 1], [-30, -1], [36, -1], [58, 1]].map(([lx, sg], i) => <path key={i} d={`M${lx} -66 L${lx + 16 * g * (sg as number)} -6 L${lx + 20 * g * (sg as number)} 24`} stroke={c} strokeWidth="11" fill="none" strokeLinecap="round" />)}</g>
     {rider && <Cang x={0} y={-96} s={0.78} walk={false} c={c === "#1b1612" ? "#0e0c10" : c} />}</g>);
 };
-const Casa: React.FC<{ x: number; y: number; s?: number; wall?: string; roof?: string; fire?: boolean; ruin?: boolean }> = ({ x, y, s = 1, wall = "#c9a171", roof = "#8a6a38", ruin }) => (
+export const Casa: React.FC<{ x: number; y: number; s?: number; wall?: string; roof?: string; fire?: boolean; ruin?: boolean }> = ({ x, y, s = 1, wall = "#c9a171", roof = "#8a6a38", ruin }) => (
   <g transform={`translate(${x} ${y}) scale(${s})`}><rect x="-70" y="-70" width="140" height="70" fill={wall} />{ruin ? <path d="M-84 -70 L-24 -98 L0 -80 L34 -102 L84 -70 Z" fill={roof} opacity=".6" /> : <path d="M-92 -68 L0 -134 L92 -68 Z" fill={roof} />}<path d="M-16 0 L-16 -46 Q0 -58 16 -46 L16 0 Z" fill="#2a1e14" /><rect x="34" y="-52" width="22" height="26" fill="#2a1e14" opacity=".7" /></g>);
-const Barraca: React.FC<{ x: number; y: number; s?: number; c?: string }> = ({ x, y, s = 1, c = "#3a3a44" }) => (<g transform={`translate(${x} ${y}) scale(${s})`}><path d="M-90 0 L0 -96 L90 0 Z" fill={c} /><path d="M-18 0 L0 -50 L18 0 Z" fill="#14141a" /></g>);
-const Cerca: React.FC<{ x: number; y: number; w: number; h?: number; c?: string }> = ({ x, y, w, h = 120, c = "#6b4a28" }) => (
+export const Barraca: React.FC<{ x: number; y: number; s?: number; c?: string }> = ({ x, y, s = 1, c = "#3a3a44" }) => (<g transform={`translate(${x} ${y}) scale(${s})`}><path d="M-90 0 L0 -96 L90 0 Z" fill={c} /><path d="M-18 0 L0 -50 L18 0 Z" fill="#14141a" /></g>);
+export const Cerca: React.FC<{ x: number; y: number; w: number; h?: number; c?: string }> = ({ x, y, w, h = 120, c = "#6b4a28" }) => (
   <g>{Array.from({ length: Math.floor(w / 28) }, (_, i) => <path key={i} d={`M${x + i * 28} ${y} L${x + i * 28} ${y - h} L${x + i * 28 + 12} ${y - h - 20} L${x + i * 28 + 24} ${y - h} L${x + i * 28 + 24} ${y} Z`} fill={c} stroke="#3d2a14" strokeWidth="2" />)}<rect x={x} y={y - h * 0.6} width={w} height="9" fill="#3d2a14" opacity=".7" /></g>);
 
 // ------------------------------------------------------------ cartela, pílula, destaques
@@ -109,7 +109,7 @@ const Pin: React.FC<{ p: [number, number]; at: number; z: number; label: string;
 };
 
 // ------------------------------------------------------------ cenas
-const sunset = (id: string, a: string, b: string, c: string, d: string) => (<linearGradient id={id} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={a} /><stop offset=".45" stopColor={b} /><stop offset=".75" stopColor={c} /><stop offset="1" stopColor={d} /></linearGradient>);
+export const sunset = (id: string, a: string, b: string, c: string, d: string) => (<linearGradient id={id} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={a} /><stop offset=".45" stopColor={b} /><stop offset=".75" stopColor={c} /><stop offset="1" stopColor={d} /></linearGradient>);
 // 0: abertura
 const Abertura: React.FC = () => {
   const { t } = useT();
