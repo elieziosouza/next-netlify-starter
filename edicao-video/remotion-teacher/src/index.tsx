@@ -25,6 +25,8 @@ import { QuizPasseio, QuizPasseioCapa } from "./QuizPasseio";
 import TQP from "./timings/quizpasseio.json";
 import { CoresAula, CoresCapa } from "./Cores";
 import TCO from "./timings/cores.json";
+import { DiasAula, DiasCapa } from "./Dias";
+import TDI from "./timings/dias.json";
 import { Palavras7, Palavras7Capa } from "./Palavras7";
 import TPP from "./timings/ppsp.json";
 import { WasWere, WasWereCapa } from "./WasWere";
@@ -76,6 +78,8 @@ const Root: React.FC = () => (
     <Still id="QuizPasseioCapa" component={QuizPasseioCapa} width={1080} height={1920} />
     <Composition id="Cores" component={CoresAula} width={1080} height={1920} fps={TCO.fps} durationInFrames={Math.round(TCO.total * TCO.fps)} />
     <Still id="CoresCapa" component={CoresCapa} width={1080} height={1920} />
+    <Composition id="Dias" component={DiasAula} width={1080} height={1920} fps={TDI.fps} durationInFrames={Math.round(TDI.total * TDI.fps)} />
+    <Still id="DiasCapa" component={DiasCapa} width={1080} height={1920} />
     <Composition id="Palavras7" component={Palavras7} width={1080} height={1920} fps={30} durationInFrames={210} />
     <Still id="Palavras7Capa" component={Palavras7Capa} width={1080} height={1920} />
     <Composition id="WasWere" component={WasWere} width={1080} height={1920} fps={TWW.fps} durationInFrames={Math.round(TWW.total * TWW.fps)} />
