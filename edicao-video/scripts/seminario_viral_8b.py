@@ -13,19 +13,19 @@ GOLD = (255, 214, 64); WHITE = (255, 255, 255); INK = (16, 22, 36); RED = (236, 
 
 # ---------------------------------------------------------------- planos
 # kind: wide4 (4 alunas em pé), wide (cena da música, 3 alunas), sing (cantora), perc (percussão), left (aluna da esquerda)
-CROPS = {"wide4": (880, 0, 2500, 2160), "wide": (0, 0, 3300, 2160), "duoL": (750, 0, 1500, 2160), "duoR": (1950, 0, 1500, 2160), "sing": (1344, 386, 972, 1728), "perc": (2314, 432, 972, 1728), "left": (0, 100, 972, 1728)}
+CROPS = {"wide4": (600, 0, 3000, 2160), "wide": (0, 0, 3300, 2160), "duoL": (750, 0, 1500, 2160), "duoR": (1950, 0, 1500, 2160), "sing": (1344, 386, 972, 1728), "perc": (2314, 432, 972, 1728), "left": (0, 100, 972, 1728)}
 SHOTS = []   # (src_ini, dur, kind, zoom_ini, zoom_fim)
 def add(src, dur, kind, z0=1.0, z1=1.05): SHOTS.append((src, dur, kind, z0, z1))
 # A: abertura (4 alunas em pé, 'I'm nervous...' e palmas)
-add(1.0, 8.0, "wide4", 1.0, 1.08)
+add(1.0, 8.0, "wide4", 1.0, 1.04)
 # P: apresentação em grupo (melhores momentos): risadas, leitura da letra e o "chegou a hora" (4:50)
-PRES = [(28.0, 6.0, "wide4", 1.0, 1.06), (64.5, 6.0, "duoL", 1.0, 1.05), (88.0, 8.0, "wide4", 1.04, 1.0), (104.0, 8.0, "duoR", 1.0, 1.05),
-        (134.0, 7.0, "duoL", 1.0, 1.05), (198.0, 6.0, "wide4", 1.0, 1.06), (214.0, 3.0, "duoL", 1.05, 1.0), (278.0, 8.0, "wide4", 1.0, 1.06)]
+PRES = [(28.0, 6.0, "wide4", 1.0, 1.04), (64.5, 6.0, "wide4", 1.04, 1.0), (88.0, 8.0, "wide4", 1.0, 1.04), (104.0, 8.0, "wide4", 1.04, 1.0),
+        (134.0, 7.0, "wide4", 1.0, 1.04), (198.0, 6.0, "wide4", 1.04, 1.0), (214.0, 3.0, "wide4", 1.0, 1.03), (282.5, 9.0, "wide4", 1.0, 1.03)]   # o último vai até 4:51,5: a frase "chegou o momento…" termina inteira
 JUMPS = []; _t = 8.0
 for pr in PRES: SHOTS.append(pr); JUMPS.append(_t); _t += pr[1]
 PRES_DUR = sum(p[1] for p in PRES)
 # B: "vamos cantar" (5:05)
-add(305.0, 6.0, "wide", 1.0, 1.06)
+add(304.3, 6.0, "wide", 1.0, 1.05)
 # C: contagem "3, 4, vai!" (5:30)
 add(330.0, 6.0, "wide", 1.06, 1.0)
 # D: 5:36 a 5:58
