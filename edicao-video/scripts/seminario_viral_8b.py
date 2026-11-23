@@ -8,15 +8,22 @@ ORIG = "/tmp/claude-0/-home-user/6cb4edb9-4741-58aa-b5a5-8666ade60fc3/scratchpad
 FD = "/home/user/next-netlify-starter/edicao-video/assets/fonts"
 W, H, FPS = 1080, 1920, 30
 SW, SH = 3840, 2160
+WIDEK = ("wide4", "wide", "duoL", "duoR")
 GOLD = (255, 214, 64); WHITE = (255, 255, 255); INK = (16, 22, 36); RED = (236, 84, 84)
 
 # ---------------------------------------------------------------- planos
 # kind: wide4 (4 alunas em pé), wide (cena da música, 3 alunas), sing (cantora), perc (percussão), left (aluna da esquerda)
-CROPS = {"wide4": (880, 0, 2500, 2160), "wide": (0, 0, 3300, 2160), "sing": (1344, 386, 972, 1728), "perc": (2314, 432, 972, 1728), "left": (0, 100, 972, 1728)}
+CROPS = {"wide4": (880, 0, 2500, 2160), "wide": (0, 0, 3300, 2160), "duoL": (750, 0, 1500, 2160), "duoR": (1950, 0, 1500, 2160), "sing": (1344, 386, 972, 1728), "perc": (2314, 432, 972, 1728), "left": (0, 100, 972, 1728)}
 SHOTS = []   # (src_ini, dur, kind, zoom_ini, zoom_fim)
 def add(src, dur, kind, z0=1.0, z1=1.05): SHOTS.append((src, dur, kind, z0, z1))
 # A: abertura (4 alunas em pé, 'I'm nervous...' e palmas)
 add(1.0, 8.0, "wide4", 1.0, 1.08)
+# P: apresentação em grupo (melhores momentos): risadas, leitura da letra e o "chegou a hora" (4:50)
+PRES = [(28.0, 6.0, "wide4", 1.0, 1.06), (64.5, 6.0, "duoL", 1.0, 1.05), (88.0, 8.0, "wide4", 1.04, 1.0), (104.0, 8.0, "duoR", 1.0, 1.05),
+        (134.0, 7.0, "duoL", 1.0, 1.05), (198.0, 6.0, "wide4", 1.0, 1.06), (214.0, 3.0, "duoL", 1.05, 1.0), (278.0, 8.0, "wide4", 1.0, 1.06)]
+JUMPS = []; _t = 8.0
+for pr in PRES: SHOTS.append(pr); JUMPS.append(_t); _t += pr[1]
+PRES_DUR = sum(p[1] for p in PRES)
 # B: "vamos cantar" (5:05)
 add(305.0, 6.0, "wide", 1.0, 1.06)
 # C: contagem "3, 4, vai!" (5:30)
@@ -34,7 +41,9 @@ t = 422.0
 for dur, k in [(2.5, "sing"), (3.0, "perc"), (3.0, "sing"), (3.0, "wide"), (3.5, "sing"), (3.0, "perc"), (2.5, "sing"), (7.5, "wide")]:
     add(t, dur, k); t += dur
 TOTAL = sum(s[1] for s in SHOTS)
-BLOCKS = [0, 8.0, 14.0, 20.0, 42.0, 62.0]   # início de cada bloco no vídeo final
+_B = 8.0 + PRES_DUR
+BLOCKS = [0, 8.0] + JUMPS[1:] + [_B, _B + 6.0, _B + 12.0, _B + 34.0, _B + 54.0]   # emendas entre trechos não contínuos (áudio com fusão curta)
+OFF = PRES_DUR
 
 # ---------------------------------------------------------------- áudio
 def audio():
@@ -73,9 +82,13 @@ def pill(txt, size=34, bg=(16, 22, 36, 215), fill=WHITE):
 ANTON = lambda s: F("Anton-Regular.ttf", s)
 # (t0, t1, imagem, y do topo, tipo) — tipo: "pop" entra com um pulinho; "fade" só esmaece
 OV = []
-def ov(t0, t1, im, y, kind="pop"): OV.append((t0, t1, im, y, kind))
-BADGE = pill("SEMINÁRIO DE INGLÊS · 8º ANO B", 30)
-ov(0.0, TOTAL, BADGE, 205, "fade")
+def ov(t0, t1, im, y, kind="pop", shift=True):
+    if shift and t0 >= 8.0 and t1 != TOTAL: t0 += OFF; t1 += OFF
+    OV.append((t0, t1, im, y, kind))
+BADGE = pill("ENGLISH SEMINAR", 32)
+ov(0.0, TOTAL, BADGE, 205, "fade", shift=False)
+ov(8.4, 11.8, texto("PARTE 1 · A APRESENTAÇÃO", ANTON(74), GOLD, maxw=1060, pad=20), 330, shift=False)
+ov(8.0 + OFF + 0.3, 8.0 + OFF + 3.2, texto("PARTE 2 · O ENCERRAMENTO", ANTON(74), GOLD, maxw=1060, pad=20), 340, shift=False)
 ov(0.2, 3.4, texto("ELAS NÃO SÓ APRESENTARAM…", ANTON(80), GOLD, maxw=1060, pad=20), 340)
 ov(1.6, 4.0, texto("ELAS CANTARAM!", ANTON(150), WHITE, maxw=1000), 430)
 ov(4.2, 7.9, pill("Nervosas, mas prontas", 44), 1385)
@@ -85,7 +98,7 @@ ov(20.2, 24.5, pill("AO VIVO", 38, bg=(236, 84, 84, 235)), 1385)
 ov(42.3, 46.0, texto("QUE ENERGIA!", ANTON(120), GOLD, maxw=1000), 340)
 ov(62.4, 66.5, pill("Cada vez mais forte", 44), 1385)
 ov(82.4, 87.0, texto("E A SALA APLAUDIU", ANTON(112), GOLD, maxw=1000), 340)
-ov(86.6, 90.0, texto("PARABÉNS, 8º ANO B!", ANTON(120), WHITE, maxw=1000), 340)
+ov(86.6, 90.0, texto("PARABÉNS, MENINAS!", ANTON(120), WHITE, maxw=1000), 340)
 
 # ---------------------------------------------------------------- composição
 def blend(frame, im, x, y, a):
@@ -114,6 +127,98 @@ def barras(frame, audio_seg, y0=1230, n=28, alt=64):
     for i in range(m):
         h = int(10 + alt * v[i]); xx = x0 + i * (bw + gap)
         cv2.rectangle(frame, (xx, y0 - h // 2), (xx + bw, y0 + h // 2), (255, 214, 64), -1, cv2.LINE_AA)
+
+# ---------------------------------------------------------------- motion graphics (modo premium)
+def eob(x):   # ease-out-back (entra passando um pouco e assenta)
+    x = min(1, max(0, x)); c1 = 1.70158; c3 = c1 + 1; return 1 + c3 * (x - 1) ** 3 + c1 * (x - 1) ** 2
+def eoc(x): x = min(1, max(0, x)); return 1 - (1 - x) ** 3
+_cache = {}
+def letra(ch, size, fill):
+    k = (ch, size, fill)
+    if k not in _cache:
+        f = ANTON(size); d0 = ImageDraw.Draw(Image.new("RGBA", (10, 10))); w = int(d0.textlength(ch, font=f)) + 40
+        im = Image.new("RGBA", (w, int(size * 1.4)), (0, 0, 0, 0)); ImageDraw.Draw(im).text((20, 10), ch, font=f, fill=fill, stroke_width=12, stroke_fill=INK); _cache[k] = (im, w - 40)
+    return _cache[k]
+def titulo_cinetico(frame, t, t0, t1, linhas, y0, size=190):
+    """letras que caem com um quique, uma a uma; saem juntas com um esmaecer"""
+    if t < t0 or t > t1 + 0.3: return
+    sai = min(1, max(0, (t1 - t) / 0.3)) if t > t1 - 0.3 else 1
+    n = 0
+    for li, (txt, fill) in enumerate(linhas):
+        ws = [letra(c, size, fill) for c in txt]; tot = sum(w for _, w in ws) + 4 * (len(txt) - 1); x = (W - tot) // 2
+        for im, w in ws:
+            p = eob((t - t0 - 0.045 * n) / 0.45); n += 1
+            if p > 0: blend(frame, im, x - 20, int(y0 + li * size * 1.02 - (1 - p) * 320), min(1, p * 2.2) * sai)
+            x += w + 4
+def barra_credito(frame, t, t0, t1, l1="Professor Eliézio", l2="ENGLISH TEACHER", y=1250):
+    if t < t0 or t > t1: return
+    pin = eoc((t - t0) / 0.45); pout = eoc((t1 - t) / 0.35); p = min(pin, pout)
+    key = ("cred", l1, l2)
+    if key not in _cache:
+        im = Image.new("RGBA", (760, 170), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+        d.rounded_rectangle((0, 0, 759, 169), radius=26, fill=(16, 22, 36, 235)); d.rounded_rectangle((0, 0, 16, 169), radius=8, fill=(255, 214, 64, 255))
+        d.text((48, 22), l1, font=ANTON(76), fill=(255, 255, 255)); d.text((50, 112), l2, font=F("Montserrat-Bold.ttf", 32), fill=(255, 214, 64))
+        _cache[key] = im
+    im = _cache[key]; blend(frame, im, int(-780 + (60 + 780) * p), y, min(1, p * 1.5))
+def cartao_capitulo(frame, t, t0, t1, num, titulo):
+    if t < t0 or t > t1: return
+    pin = eoc((t - t0) / 0.5); pout = eoc((t1 - t) / 0.4); p = min(pin, pout)
+    key = ("cap", num, titulo)
+    if key not in _cache:
+        im = Image.new("RGBA", (980, 280), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+        d.rounded_rectangle((0, 0, 979, 279), radius=30, fill=(16, 22, 36, 232)); d.text((34, 10), num, font=ANTON(210), fill=(255, 214, 64))
+        d.text((300, 40), titulo[0], font=ANTON(78), fill=(255, 255, 255)); d.text((302, 170), titulo[1], font=F("Montserrat-Bold.ttf", 36), fill=(255, 214, 64))
+        _cache[key] = im
+    im = _cache[key]; blend(frame, im, int(50 - (1 - p) * 1100), 300, min(1, p * 1.6))
+    # linha dourada que cresce
+    cv2.rectangle(frame, (50, 590), (50 + int(980 * eoc((t - t0 - 0.2) / 0.6)), 598), (255, 214, 64), -1)
+def flash(frame, t, instantes, dur=0.14, forca=0.55):
+    for j in instantes:
+        if 0 <= t - j < dur: frame += (255 - frame) * (forca * (1 - (t - j) / dur) ** 2)
+def punch(frame, t, instantes, dur=0.28, z=0.05):
+    for j in instantes:
+        if 0 <= t - j < dur:
+            k = 1 + z * (1 - (t - j) / dur) ** 2; h, w = frame.shape[:2]; cw, ch = int(w / k), int(h / k); x0, y0 = (w - cw) // 2, (h - ch) // 2
+            return cv2.resize(frame[y0:y0 + ch, x0:x0 + cw], (w, h), interpolation=cv2.INTER_LINEAR)
+    return frame
+def nota_img(sz, cor):
+    k = ("nota", sz, cor)
+    if k not in _cache:
+        im = Image.new("RGBA", (sz * 2, sz * 3), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+        d.ellipse((sz * 0.2, sz * 1.9, sz * 1.0, sz * 2.5), fill=cor + (255,)); d.rectangle((sz * 0.92, sz * 0.4, sz * 1.04, sz * 2.2), fill=cor + (255,))
+        d.polygon([(sz * 1.04, sz * 0.4), (sz * 1.7, sz * 0.9), (sz * 1.5, sz * 1.5), (sz * 1.04, sz * 1.0)], fill=cor + (255,)); _cache[k] = im
+    return _cache[k]
+def notas(frame, t, t0, t1, taxa=2.2):
+    """notas musicais que sobem e esmaecem durante a música"""
+    for i in range(int((t1 - t0) * taxa)):
+        ts = t0 + i / taxa; u = (t - ts) / 3.4
+        if u < 0 or u > 1: continue
+        r = np.random.default_rng(i); x = int(80 + r.random() * 860 + 40 * math.sin(u * 6 + i)); y = int(1250 - u * 760); sz = int(22 + r.random() * 24)
+        blend(frame, nota_img(sz, (255, 214, 64) if i % 2 else (255, 255, 255)), x, y, 0.85 * min(1, u * 6) * (1 - u) ** 0.6)
+def confete(frame, t, t0, dur=2.4, n=150):
+    u = t - t0
+    if u < 0 or u > dur: return
+    cols = [(255, 214, 64), (46, 184, 92), (64, 150, 255), (236, 84, 84), (255, 255, 255), (180, 120, 255)]; al = min(1, (dur - u) / 0.6)
+    ov_ = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(ov_)
+    for i in range(n):
+        r = np.random.default_rng(1000 + i); side = i % 2; ang = -math.pi * (0.08 + 0.34 * r.random()) if side == 0 else -math.pi * (0.58 + 0.34 * r.random())
+        v = 900 + 1100 * r.random(); x = (0 if side == 0 else W) + math.cos(ang) * v * u * 0.8 + 20 * math.sin(u * 4 + i); y = 1450 + math.sin(ang) * v * u + 1700 * u * u
+        w = 14 + 16 * r.random(); h = w * 0.5 * abs(math.cos(u * (5 + 6 * r.random()) + i)) + 3; c = cols[i % 6]
+        d.polygon([(x - w, y - h), (x + w, y - h), (x + w, y + h), (x - w, y + h)], fill=c + (int(255 * al),))
+    blend(frame, ov_, 0, 0, 1.0)
+def motion(frame, t):
+    if not PREMIUM: return frame
+    P0 = 8.0; B0 = 8.0 + OFF
+    titulo_cinetico(frame, t, 0.15, 2.7, [("ENGLISH", (255, 214, 64)), ("SEMINAR", (255, 255, 255))], 330)
+    barra_credito(frame, t, 6.0, 8.0, y=1190)
+    cartao_capitulo(frame, t, P0 + 0.2, P0 + 3.8, "01", ("A APRESENTAÇÃO", "O GRUPO EM AÇÃO"))
+    cartao_capitulo(frame, t, B0 + 0.3, B0 + 3.9, "02", ("O ENCERRAMENTO", "ELAS CANTARAM"))
+    notas(frame, t, B0 + 12.5, B0 + 75.5)
+    confete(frame, t, B0 + 76.0)
+    barra_credito(frame, t, TOTAL - 3.6, TOTAL - 0.2, y=1190)
+    return frame
+FX_AT = [j for j in JUMPS[1:]] + [8.0 + OFF, 8.0 + OFF + 6.0, 8.0 + OFF + 12.0, 8.0 + OFF + 34.0, 8.0 + OFF + 54.0]
+
 def blur_bg(fg):
     h, w = fg.shape[:2]; cw = int(w * h / H * W / W * 0 + (h * W / H))   # largura da fatia com a proporção 9:16
     x0 = (w - cw) // 2; sl = fg[:, x0:x0 + cw]
@@ -125,7 +230,7 @@ def blur_bg(fg):
 
 def frames_do_plano(src, dur, kind, z0, z1):
     x0, y0, cw, chh = CROPS[kind]
-    if kind in ("wide4", "wide"):
+    if kind in WIDEK:
         fw, fh = W, int(round(chh * W / cw)); fh -= fh % 2
         vf = f"crop={cw}:{chh}:{x0}:{y0},scale={fw}:{fh}:flags=lanczos,fps={FPS}"
     else:
@@ -136,7 +241,7 @@ def frames_do_plano(src, dur, kind, z0, z1):
         buf = p.stdout.read(fw * fh * 3)
         if len(buf) < fw * fh * 3: break
         fr = np.frombuffer(buf, np.uint8).reshape(fh, fw, 3); u = k / max(1, n - 1); z = z0 + (z1 - z0) * (u * u * (3 - 2 * u))
-        if kind in ("wide4", "wide"):
+        if kind in WIDEK:
             if z > 1.001:   # zoom suave no plano aberto
                 cw2, ch2 = int(fw / z), int(fh / z); xx, yy = (fw - cw2) // 2, (fh - ch2) // 2
                 fr = cv2.resize(fr[yy:yy + ch2, xx:xx + cw2], (fw, fh), interpolation=cv2.INTER_LINEAR)
@@ -149,12 +254,18 @@ def frames_do_plano(src, dur, kind, z0, z1):
             yield fr.astype(np.float32), "close"
         k += 1
     while k < n:   # se faltar quadro no fim, repete o último
-        yield canvas if kind in ("wide4", "wide") else fr.astype(np.float32), kind; k += 1
+        yield canvas if kind in WIDEK else fr.astype(np.float32), kind; k += 1
     p.stdout.close(); p.wait()
 
 import os
 MODO = os.environ.get("MODO", "sem_id")   # sem_id: textos sem nenhuma identificação do professor · limpo: nenhum texto nem equalizador
 if MODO == "limpo": OV.clear()
+PREMIUM = MODO == "premium"
+if PREMIUM:
+    OV[:] = OV[5:]
+    OV.append((3.0, TOTAL, BADGE, 205, "fade"))
+    OV.append((2.9, 5.7, texto("ELAS NÃO SÓ APRESENTARAM…", ANTON(80), GOLD, maxw=1060, pad=20), 340, "pop"))
+    OV.append((3.5, 5.9, texto("ELAS CANTARAM!", ANTON(150), WHITE, maxw=1000), 430, "pop"))
 def main():
     out = sys.argv[1]; t_ini = float(sys.argv[2]) if len(sys.argv) > 2 else 0.0; t_fim = float(sys.argv[3]) if len(sys.argv) > 3 else TOTAL
     au = audio(); sr = 48000
@@ -167,13 +278,17 @@ def main():
             tt = t + i / FPS
             if tt < t_ini or tt >= t_fim: continue
             frame = np.clip(fr, 0, 255).astype(np.float32) if fr.dtype != np.float32 else fr.copy()
+            if PREMIUM: frame = punch(frame, tt, FX_AT); flash(frame, tt, FX_AT)
             # faixa escura embaixo para a legibilidade em plano fechado
             if mode == "close" and MODO != "limpo":
                 g = np.linspace(0, 0.6, 640)[:, None, None]; frame[H - 640:H] *= (1 - g)
             if MODO == "limpo": pass
             elif mode == "close": barras(frame, au[int(tt * sr):int(tt * sr) + 2048], y0=1365)
-            elif kind_atual == "wide": barras(frame, au[int(tt * sr):int(tt * sr) + 2048], y0=(H - 707) // 2 - 40 + 707 + 50)
+            elif kind_atual in WIDEK:
+                _x0, _y0, _cw, _ch = CROPS[kind_atual]; _fh = int(round(_ch * W / _cw)); _fh -= _fh % 2; _bot = (H - _fh) // 2 - 40 + _fh
+                if _bot + 60 < 1440: barras(frame, au[int(tt * sr):int(tt * sr) + 2048], y0=_bot + 50)
             overlays(frame, tt)
+            frame = motion(frame, tt)
             enc.stdin.write(np.clip(frame, 0, 255).astype(np.uint8).tobytes())
         t += dur
     enc.stdin.close(); enc.wait()
