@@ -12,3 +12,11 @@ Passo a passo (rodar dentro da pasta de trabalho, com `src.mp4` = vídeo dele):
 ## Segundo vídeo no padrão: "Free flow" (14/11/2026)
 Pasta `freeflow/`: `align.py` (texto corrigido por trecho), `video_freeflow.py` (zooms, palavras gigantes, caixa fixa, CTA) e `capas_freeflow.py` (capas A, B e C). Usa `legenda_dinamica.py`/`sons.py` com `KEY`, `IMPACTO` e `ASSUNTO` trocados para o assunto (copiar a pasta de trabalho e ajustar essas listas).
 Novidades: o corte limpo tira pausas e tentativas erradas antes (trechos mantidos listados num `filter.txt` com `trim`/`atrim` e `concat`), a fala fica 7% mais rápida (`setpts=PTS/1.07` e `atempo=1.07`, tom preservado), e `R$`, `CNH` e `ANTT` ficam em maiúsculas na legenda (`SIGLAS` em `estilo_alto.py`). Sons com tempo antes de 0 s precisam de `max(0.02, t)` (a primeira palavra gigante pode entrar logo no início).
+
+## Terceiro vídeo no padrão: conversa com o ChatGPT (23/11/2026)
+Pasta `chat_ia/`: vídeo dele conversando por voz com o ChatGPT (vertical, 4min30 → 2min51). `cut.py` faz o corte limpo (lista `SEGS` com início, fim e o texto de cada fala, marcando quem fala: `E` = ele, `A` = IA) e calcula o tempo das palavras só nos trechos com voz; `video_chat.py` monta (mesmo padrão do free flow + etiqueta **CHATGPT** sobre a legenda quando a IA fala, caixa fixa "RESPOSTAS DA IA"); `capas_chat.py` faz as capas A, B e C.
+Cuidados aprendidos:
+- Cada trecho cortado precisa ter duração múltipla de 1/30 s e o vídeo sai com `-frames:v` exato; senão o vídeo vai "ficando atrás" do áudio (0,5 s no fim de 22 cortes) e as palavras saem fora do tempo.
+- Cortar um trecho por vez (22 `trim` no mesmo filtro estoura a memória).
+- Fim do vídeo: medir quando a voz termina em `src.mp4` e fixar `LAST` e `END` (a estimativa por VAD errou 0,3 s).
+- Respostas da IA não são fonte: mantêm etiqueta e aviso na caixa fixa, e a capa só pergunta.
