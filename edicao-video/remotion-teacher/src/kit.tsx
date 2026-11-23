@@ -68,12 +68,16 @@ export const Fundo: React.FC = () => (
 // segunda folha de expressões (14/11/2026): ids 101..112 → public/av2/ (guardada só na pasta de trabalho, fora do repositório público)
 const AV2 = ["sorrindo", "bravo", "desconfiado", "piscando", "surpreso", "sobrancelha", "pensando-lado", "piscando-2", "bravo-livro", "assustado", "pensando-queixo", "malicioso"];
 const avSrc = (id: number) => id >= 100 ? `av2/av2_${String(id - 100).padStart(2, "0")}_${AV2[id - 101]}.png` : `av/av3d_${id}.png`;
+/** média móvel centrada (±4 quadros) da amplitude da voz: tira o tremido do avatar */
+export const ampSuave = (a: number[], f: number, r = 4) => { let s = 0, n = 0; for (let i = Math.max(0, f - r); i <= Math.min(a.length - 1, f + r); i++) { s += a[i]; n++; } return n ? s / n : 0; };
 export const Avatar: React.FC<{ tt?: number }> = ({ tt }) => {
   const TM = useTM(); const { t: t0, f } = useT(); const t = tt ?? t0;
-  const amp = tt !== undefined ? 0 : (TM.amp[Math.min(f, TM.amp.length - 1)] ?? 0);
+  // estabilidade (23/11/2026): a amplitude da voz muda a cada quadro e fazia o avatar tremer (saltos de até 10 px por quadro).
+  // Agora ela passa por uma média móvel de 9 quadros e os movimentos são pequenos e lentos.
+  const amp = tt !== undefined ? 0 : ampSuave(TM.amp, f);
   const ex = TM.expr as [number, number][]; let i = 0; ex.forEach((e, k) => { if (e[0] <= t) i = k; });
   const cur = ex[i][1], prv = i ? ex[i - 1][1] : cur, k = clamp((t - ex[i][0]) / 0.18);
-  const bob = -10 * amp + 3 * Math.sin(t * 1.7), sc = 1 + 0.04 * amp, rot = 2 * Math.sin(t * 2.3) * (0.3 + amp);
+  const bob = -4 * amp + 2 * Math.sin(t * 1.7), sc = 1 + 0.015 * amp, rot = 0.8 * Math.sin(t * 2.3) * (0.5 + amp);
   return (
     <div style={{ position: "absolute", left: 540 - 198, top: 1715 - 198 + bob, width: 396, height: 396, transform: `scale(${sc})` }}>
       <div style={{ position: "absolute", inset: -40, borderRadius: "50%", background: YEL, opacity: (90 + 90 * amp) / 255, filter: "blur(24px)" }} />
@@ -92,7 +96,7 @@ const Linha: React.FC<{ words: { w: string; t: number }[]; t: number; size: numb
     {words.map((w, i) => {
       const said = hl && t >= w.t - 0.02; const key = w.w.replace(/[:,.!?]$/, "");
       const box = hl ? HL[key] ?? HL[w.w] : undefined;
-      const pulse = said ? 1 + 0.08 * Math.exp(-(t - w.t) * 9) : 1;
+      const pulse = said ? 1 + 0.035 * Math.exp(-(t - w.t) * 7) : 1;
       return <span key={i} style={{ display: "inline-block", marginRight: size * 0.26, transform: `scale(${pulse})`, color: said ? YEL : base }}>
         {box ? <span style={{ background: box, color: "#fff", borderRadius: 10, padding: "0 10px", WebkitTextStroke: "0px" } as any}>{w.w}</span> : w.w}</span>;
     })}
