@@ -86,7 +86,6 @@ ov(42.3, 46.0, texto("QUE ENERGIA!", ANTON(120), GOLD, maxw=1000), 340)
 ov(62.4, 66.5, pill("Cada vez mais forte", 44), 1385)
 ov(82.4, 87.0, texto("E A SALA APLAUDIU", ANTON(112), GOLD, maxw=1000), 340)
 ov(86.6, 90.0, texto("PARABÉNS, 8º ANO B!", ANTON(120), WHITE, maxw=1000), 340)
-ov(87.6, 90.0, pill("SIGA @teacher.eliezio", 40, bg=(255, 214, 64, 245), fill=INK), 1385)
 
 # ---------------------------------------------------------------- composição
 def blend(frame, im, x, y, a):
@@ -153,6 +152,9 @@ def frames_do_plano(src, dur, kind, z0, z1):
         yield canvas if kind in ("wide4", "wide") else fr.astype(np.float32), kind; k += 1
     p.stdout.close(); p.wait()
 
+import os
+MODO = os.environ.get("MODO", "sem_id")   # sem_id: textos sem nenhuma identificação do professor · limpo: nenhum texto nem equalizador
+if MODO == "limpo": OV.clear()
 def main():
     out = sys.argv[1]; t_ini = float(sys.argv[2]) if len(sys.argv) > 2 else 0.0; t_fim = float(sys.argv[3]) if len(sys.argv) > 3 else TOTAL
     au = audio(); sr = 48000
@@ -166,9 +168,10 @@ def main():
             if tt < t_ini or tt >= t_fim: continue
             frame = np.clip(fr, 0, 255).astype(np.float32) if fr.dtype != np.float32 else fr.copy()
             # faixa escura embaixo para a legibilidade em plano fechado
-            if mode == "close":
+            if mode == "close" and MODO != "limpo":
                 g = np.linspace(0, 0.6, 640)[:, None, None]; frame[H - 640:H] *= (1 - g)
-            if mode == "close": barras(frame, au[int(tt * sr):int(tt * sr) + 2048], y0=1365)
+            if MODO == "limpo": pass
+            elif mode == "close": barras(frame, au[int(tt * sr):int(tt * sr) + 2048], y0=1365)
             elif kind_atual == "wide": barras(frame, au[int(tt * sr):int(tt * sr) + 2048], y0=(H - 707) // 2 - 40 + 707 + 50)
             overlays(frame, tt)
             enc.stdin.write(np.clip(frame, 0, 255).astype(np.uint8).tobytes())
