@@ -143,7 +143,7 @@ export const Anel: React.FC<{ c0: number }> = ({ c0 }) => {
       <circle cx={130} cy={130} r={R} fill="none" stroke={col} strokeWidth={16} strokeLinecap="round" strokeDasharray={L} strokeDashoffset={L * u} transform="rotate(-90 130 130)" /></svg>
     <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", font: "400 115px Anton", color: col, transform: `scale(${1 + 0.25 * (1 - Easing.out(Easing.cubic)(clamp(fz / 0.3)))})` }}>{n}</div></div></Center>;
 };
-const Opcao: React.FC<{ i: number; s: string; good: boolean; ta: number; rv: number }> = ({ i, s, good, ta, rv }) => {
+export const Opcao: React.FC<{ i: number; s: string; good: boolean; ta: number; rv: number }> = ({ i, s, good, ta, rv }) => {
   const { t } = useT(); const p = usePop(ta, { dx: i ? 200 : -200 }); if (!p.visible) return null; const rvd = t >= rv;
   const fill = rvd ? (good ? GREEN : GREY) : "#fff"; const sp = spring({ frame: Math.round((t - rv) * 30), fps: 30, config: { damping: 8 } });
   const sc = rvd && good ? 1 + 0.06 * sp : 1;
