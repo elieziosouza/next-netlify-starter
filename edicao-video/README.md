@@ -336,3 +336,6 @@ Todo vídeo vertical 9:16, de qualquer canal, leva a capa também no primeiro fr
 
 ## Edição viral de vídeo de sala (23/11/2026): seminário do 8º ano B
 `scripts/seminario_viral_8b.py`: do original 4K 60 fps faz um vertical de 90 s (Instagram e TikTok) com planos abertos (fundo desfocado) e planos fechados recortados direto do 4K, equalizador ligado ao áudio, textos nas áreas seguras e áudio original com compressão e -14 LUFS. Os trechos (`SHOTS`) e os recortes (`CROPS`) foram escolhidos olhando o áudio (volume, transcrição) e quadros-chave. O vídeo original e os arquivos de trabalho (com menores de idade) ficam só na pasta de trabalho, fora do repositório.
+
+## Peças novas testadas (28/11/2026)
+Teste em `scripts/demo_estilo.py` (vídeo de referência que ele mandou: pessoa andando, palavras grandes, números subindo, celulares flutuando). Peças: ícones em neon desenhados, preto e branco com palavra colorida, número subindo, **celulares flutuando em 3D** (perspectiva girando, espessura em camadas, brilho no vidro, corações subindo) e cartão de contato. **Ele gostou dos celulares em 3D** (aprovado para usar). Regra reforçada: **nunca cortar o rosto** também nesses testes; usar o enquadramento do canal (ele a 88% com fundo desfocado, deslocado para o rosto caber inteiro, `caber()`), nunca o quadro original quando o rosto encosta na borda.
